@@ -31,6 +31,7 @@ void creditos() {
 
     printf("Este programa fue desarrollado por:\n");
     printf("\tGuillermo Ortega\n");
+    printf("\tSerio Sarabia\n");
 
     printf("\n\nPresiona enter para entrar al sistema...");
 
