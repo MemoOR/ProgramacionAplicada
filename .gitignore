@@ -1,6 +1,4 @@
-*.h~
-*.c~
-*.raw
-*.raw~
-Practica1
-Practica2
+*
+!*/
+!*.c
+!*.h
