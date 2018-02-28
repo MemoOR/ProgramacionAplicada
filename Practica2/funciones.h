@@ -41,3 +41,45 @@ void creditos() {
 
     CLS;
 }
+
+void insertar_lista(lista_t **inicio,char simbolo,int prob){
+  lista_t *temp,*ant,*pos;
+  
+  temp=(lista_t* ) malloc(sizeof(lista_t));
+  temp->sim=simbolo;
+  temp->prob=prob;
+
+  if(*inicio==NULL){
+    temp->sig=*inicio;
+    *inicio=temp;
+  }else{
+    pos=*inicio;
+    while(pos!=NULL && pos->sim < temp->sim){
+      pos=pos->sig;
+    }
+    if(pos!=*inicio){
+      ant=*inicio;
+      while(ant->sig!=pos){
+	ant=ant->sig;
+      }
+      ant->sig=temp;
+      temp->sig=pos;
+    }
+    else{
+      temp->sig=*inicio;
+      *inicio=temp;
+    }
+  }
+}
+
+void imprimir_lista(lista_t *inicio){
+  lista_t *temp;
+  temp=inicio;
+  while(temp!=NULL){
+    printf("Simbolo: %c\n",temp->sim);
+    printf("Probabilidad: %.3f%c \n\n",temp->prob,'%');
+    temp=temp->sig;
+  }
+}
+
+
