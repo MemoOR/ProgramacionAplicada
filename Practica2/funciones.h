@@ -75,6 +75,10 @@ void insertar_lista(lista_t **inicio,char simbolo,int prob){
 void imprimir_lista(lista_t *inicio){
   lista_t *temp;
   temp=inicio;
+  if(temp==NULL){
+    printf("No se han ingresado símbolos\n");
+    return;
+  }
   while(temp!=NULL){
     printf("Simbolo: %c\n",temp->sim);
     printf("Probabilidad: %.3f%c \n\n",temp->prob,'%');
@@ -86,6 +90,11 @@ void borrar_simbolo(lista_t **inicio,char sim){
   lista_t *temp;
   temp=*inicio;
 
+  if(temp==NULL){
+    printf("No se han ingresado símbolos\n");
+    return;
+  }
+  
   while((temp!=NULL)&&(temp->sim != sim))
     temp=temp->sig;
 
@@ -94,9 +103,13 @@ void borrar_simbolo(lista_t **inicio,char sim){
       *inicio=temp->sig;
       free(temp);
     }
-    if(temp->sig!=NULL){
+    else if(temp->sig!=NULL){
       temp->ant->sig=temp->sig;
       temp->sig->ant=temp->ant;
+      free(temp);
+    }
+    else if(temp->sig==NULL){
+      
       free(temp);
     }
   }
