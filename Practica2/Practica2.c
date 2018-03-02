@@ -49,10 +49,9 @@ int main(){
 
   lista_t *primero=NULL;
   int opcion;
-  char simbolo;
+  char simbolo,eliminar;
   float probabilidad;
   
-
   do{
   menu(&opcion);
 
@@ -68,7 +67,10 @@ int main(){
     imprimir_lista(primero);
     break;
   case 3:
-    //borrar_simbolo(primero);
+    printf("Ingresa el símbolo que quieres borrar:");
+    scanf("%c",&eliminar);
+    getchar();
+    borrar_simbolo(&primero,eliminar);
     break;
   case 4:
     break;

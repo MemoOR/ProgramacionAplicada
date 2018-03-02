@@ -5,4 +5,5 @@
         void enable_canonical();
         void insertar_lista(lista_t **inicio,char simbolo,int prob);
         void imprimir_lista(lista_t *inicio);
+        void borrar_simbolo(lista_t **inicio,char sim);
 #endif

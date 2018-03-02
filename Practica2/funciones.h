@@ -54,7 +54,7 @@ void insertar_lista(lista_t **inicio,char simbolo,int prob){
     *inicio=temp;
   }else{
     pos=*inicio;
-    while(pos!=NULL && pos->sim < temp->sim){
+    while(pos!=NULL && pos->prob < temp->prob){
       pos=pos->sig;
     }
     if(pos!=*inicio){
@@ -81,5 +81,27 @@ void imprimir_lista(lista_t *inicio){
     temp=temp->sig;
   }
 }
+
+void borrar_simbolo(lista_t **inicio,char sim){
+  lista_t *temp;
+  temp=*inicio;
+
+  while((temp!=NULL)&&(temp->sim != sim))
+    temp=temp->sig;
+
+  if(temp!=NULL){
+    if(temp==*inicio){
+      *inicio=temp->sig;
+      free(temp);
+    }
+    if(temp->sig!=NULL){
+      temp->ant->sig=temp->sig;
+      temp->sig->ant=temp->ant;
+      free(temp);
+    }
+  }
+}
+
+
 
 
