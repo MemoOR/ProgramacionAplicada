@@ -189,7 +189,52 @@ void Guardar_lista(lista_t *inicio){
   fclose(archivo);
 }
 
-int salir(lista_t *inicio){
+void Leer_lista(lista_t **inicio){
+  FILE *archivo;
+  char filename[] = {"Simbolos.txt"};
+  char opcion,simbolo;
+  float probabilidad;
+
+  archivo=fopen(filename,"r");
+  if(archivo==NULL){
+    printf("\nNo hay ningun archivo guardado\n\n");
+    return;
+  }
+
+  if(*inicio!=NULL){
+    printf("\nYa ingresaste símbolos, ¿deseas sobreescribirlos con los del archivo?[s/n]\n\n");
+    do{
+      scanf("%c",&opcion);
+    }while(opcion!='s' && opcion!='n');
+    getchar();
+
+    if(opcion=='s'){
+      Borrar_lista(*inicio);
+      while (!feof(archivo)) {
+	fscanf(archivo, "%c ",&simbolo);
+	fscanf(archivo, "%f\n",&probabilidad);
+	insertar_lista(inicio,simbolo,probabilidad);
+      }
+      fclose(archivo);
+      return;
+    }
+    else{
+      printf("\nNo se leyó el archivo\n\n");
+      return;
+    }
+  }
+
+  if(archivo!=NULL){
+    while (!feof(archivo)) {
+      fscanf(archivo, "%c ",&simbolo);
+      fscanf(archivo, "%f\n",&probabilidad);
+      insertar_lista(inicio,simbolo,probabilidad);
+    }
+  }
+  fclose(archivo);
+}
+
+int Borrar_lista(lista_t *inicio){
  lista_t *temp;
   temp=inicio;
   while(temp!=NULL){

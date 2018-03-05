@@ -85,7 +85,7 @@ int main(){
   case 8:
     break;
   default:
-    salir(primero_lista);
+    Borrar_lista(primero_lista);
     break;
   }
   }while(opcion>0 && opcion<9);
