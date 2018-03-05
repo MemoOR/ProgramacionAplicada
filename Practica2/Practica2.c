@@ -26,7 +26,8 @@ typedef struct lista_t{
 }lista_t;
 
 #include"define.h"//fichero para declarar las funciones 
-#include"funciones.h"//fichero con algunas funciones utilizadas
+#include"funciones1-5.h"//fichero con primeras cinco opciones del menú
+#inclide"funciones6-9.h"//fichero con las funciones para generar el código
 
 
 void menu(int *opcion){
