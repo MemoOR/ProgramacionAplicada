@@ -16,7 +16,10 @@
 #define CLS system("clear")
 
 typedef struct nodo_t{
-  
+  char simbolo;
+  float probabilidad;
+  int codigo;
+  nodo_t *arriba,*izq,*der;
 }nodo_t;
 
 typedef struct lista_t{
@@ -27,7 +30,7 @@ typedef struct lista_t{
 
 #include"define.h"//fichero para declarar las funciones 
 #include"funciones1-5.h"//fichero con primeras cinco opciones del menú
-#inclide"funciones6-9.h"//fichero con las funciones para generar el código
+#include"funciones6-9.h"//fichero con las funciones para generar el código
 
 
 void menu(int *opcion){
@@ -80,13 +83,17 @@ int main(){
     Leer_lista(&primero_lista);
     break;
   case 6:
+    codigos(primero_lista);
     break;
   case 7:
+    codificar();
     break;
   case 8:
+    decodificar();
     break;
   default:
     Borrar_lista(primero_lista);
+    Borrar_arbol();
     break;
   }
   }while(opcion>0 && opcion<9);
