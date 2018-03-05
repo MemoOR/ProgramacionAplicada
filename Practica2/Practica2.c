@@ -47,7 +47,7 @@ void menu(int *opcion){
 int main(){
   creditos();
 
-  lista_t *primero=NULL;
+  lista_t *primero_lista=NULL;
   int opcion;
   char simbolo,eliminar;
   float probabilidad;
@@ -61,20 +61,22 @@ int main(){
     scanf("%c",&simbolo);
     printf("Ingresa la probabilidad: ");
     scanf("%f",&probabilidad);
-    insertar_lista(&primero,simbolo,probabilidad);
+    insertar_lista(&primero_lista,simbolo,probabilidad);
     break;
   case 2:
-    imprimir_lista(primero);
+    imprimir_lista(primero_lista);
     break;
   case 3:
     printf("Ingresa el símbolo que quieres borrar:");
     scanf("%c",&eliminar);
     getchar();
-    borrar_simbolo(&primero,eliminar);
+    borrar_simbolo(&primero_lista,eliminar);
     break;
   case 4:
+    Guardar_lista(primero_lista);
     break;
   case 5:
+    Leer_lista(&primero_lista);
     break;
   case 6:
     break;
@@ -82,9 +84,11 @@ int main(){
     break;
   case 8:
     break;
-  default: break;
+  default:
+    salir(primero_lista);
+    break;
   }
-  }while(opcion==1 || opcion==2 || opcion==3);
+  }while(opcion>0 && opcion<9);
   return 0;
 }
 

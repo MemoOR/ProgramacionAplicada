@@ -51,7 +51,9 @@ void insertar_lista(lista_t **inicio,char simbolo,int prob){
   if(*inicio==NULL){
     temp->sig=*inicio;
     *inicio=temp;
+    (*inicio)->ant=NULL;
   }else{
+    
     //valida que no se haya ingresado el símbolo anteriormente
     temp2=*inicio;
     while(temp2!=NULL){
@@ -66,6 +68,7 @@ void insertar_lista(lista_t **inicio,char simbolo,int prob){
     while(pos!=NULL && pos->prob < temp->prob){
       pos=pos->sig;
     }
+    
     if(pos!=*inicio){
       ant=*inicio;
       while(ant->sig!=pos){
@@ -73,10 +76,12 @@ void insertar_lista(lista_t **inicio,char simbolo,int prob){
       }
       ant->sig=temp;
       temp->sig=pos;
+      temp->ant=ant;
     }
     else{
       temp->sig=*inicio;
       *inicio=temp;
+      (*inicio)->ant=NULL;
     }
   }
 }
@@ -111,15 +116,86 @@ void borrar_simbolo(lista_t **inicio,char sim){
     if(temp==*inicio){
       *inicio=temp->sig;
       free(temp);
-    }
-    else if(temp->sig!=NULL){
+    }else if(temp->sig==NULL){
+    temp->ant->sig=temp->sig;
+    free(temp);
+    }else{
       temp->ant->sig=temp->sig;
       temp->sig->ant=temp->ant;
       free(temp);
     }
-    else if(temp->sig==NULL){
-      (temp->ant)->sig=NULL;
-      free(temp);
+  }
+}
+
+void Guardar_lista(lista_t *inicio){
+  lista_t *temp,*temp2;
+  temp=inicio;
+  temp2=inicio;
+  int suma=0,total=0;
+
+  //valida que existan símbolos ingresados y que la suma de
+  //probabilidades sea igual a 100%
+  if(temp==NULL){
+    printf("No se han ingresado símbolos\n");
+    return;
+  }
+  while(temp!=NULL){
+    suma+=temp->prob;
+    total++;
+    temp=temp->sig;
+  }
+  if(suma!=100){
+    printf("\nLa suma de probabilidades es diferente a 100%c\n\n",'%');
+    return;
+  }
+
+  //Guarda el archivo si se cumplen las condiciones anteriores
+  FILE *archivo;
+  char filename[]={"Simbolos.txt"};
+
+  archivo=fopen(filename,"r");
+
+  if(archivo==NULL){
+    archivo=fopen(filename,"wt");
+    while(temp2!=NULL){
+      fprintf(archivo, "%c ",temp2->sim);
+      fprintf(archivo, "%.2f\n",temp2->prob);
+      temp2=temp2->sig;
+    }
+  }else{
+    fclose(archivo);
+    char opcion;
+    printf("\nYa existe un archivo de símbolos, ¿deseas sobreescribirlo? [s/n]\n");
+    
+    do{
+      scanf("%c",&opcion);
+    }while(opcion!='s' && opcion!='n');
+    getchar();
+    
+    if(opcion=='s'){
+      archivo=fopen(filename,"wt");
+      while(temp2!=NULL){
+      fprintf(archivo, "%c ",temp2->sim);
+      fprintf(archivo, "%.2f\n",temp2->prob);
+      temp2=temp2->sig;
+      }
+    }else{
+      printf("\nNo se guardaron los símbolos\n\n");
+      return;
     }
   }
+  printf("\nGuardado correctamente en %s\n\n",filename);
+  
+  fclose(archivo);
+}
+
+int salir(lista_t *inicio){
+ lista_t *temp;
+  temp=inicio;
+  while(temp!=NULL){
+    inicio=temp->sig;
+    free(temp);
+    temp=inicio;
+  }
+  return 0;
 }
