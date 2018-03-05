@@ -1,4 +1,3 @@
-
 // Esta función deshabilita el modo canónico en la terminal,
 // con el fin de evitar que se tenga que presionar enter
 // en la pantalla principal.
@@ -43,9 +42,9 @@ void creditos() {
 }
 
 void insertar_lista(lista_t **inicio,char simbolo,int prob){
-  lista_t *temp,*ant,*pos;
+  lista_t *temp,*temp2,*ant,*pos;
   
-  temp=(lista_t* ) malloc(sizeof(lista_t));
+  temp=(lista_t* ) calloc(1,sizeof(lista_t));
   temp->sim=simbolo;
   temp->prob=prob;
 
@@ -53,6 +52,16 @@ void insertar_lista(lista_t **inicio,char simbolo,int prob){
     temp->sig=*inicio;
     *inicio=temp;
   }else{
+    //valida que no se haya ingresado el símbolo anteriormente
+    temp2=*inicio;
+    while(temp2!=NULL){
+      if(temp2->sim==simbolo){
+	printf("\nSímbolo ya ingresado\n\n");
+	return;
+      }
+      temp2=temp2->sig;
+    }
+    
     pos=*inicio;
     while(pos!=NULL && pos->prob < temp->prob){
       pos=pos->sig;
@@ -80,8 +89,8 @@ void imprimir_lista(lista_t *inicio){
     return;
   }
   while(temp!=NULL){
-    printf("Simbolo: %c\n",temp->sim);
-    printf("Probabilidad: %.3f%c \n\n",temp->prob,'%');
+    printf("Símbolo: %c\n",temp->sim);
+    printf("Probabilidad: %.2f%c \n\n",temp->prob,'%');
     temp=temp->sig;
   }
 }
@@ -91,7 +100,7 @@ void borrar_simbolo(lista_t **inicio,char sim){
   temp=*inicio;
 
   if(temp==NULL){
-    printf("No se han ingresado símbolos\n");
+    printf("\nNo se han ingresado símbolos\n\n");
     return;
   }
   
@@ -109,12 +118,8 @@ void borrar_simbolo(lista_t **inicio,char sim){
       free(temp);
     }
     else if(temp->sig==NULL){
-      
+      (temp->ant)->sig=NULL;
       free(temp);
     }
   }
 }
-
-
-
-
