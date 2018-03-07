@@ -10,8 +10,11 @@
         int Borrar_lista(lista_t *inicio);
         void Borrar_arbol(struct nodo_t *p);
         void Leer_lista(lista_t **inicio);
-        void codigos(lista_t *inicio);
-        void insertar_arbol(nodo_t *hojas_1,nodo_t *hojas_2);
+        void codigos_arbol(lista_t **inicio);
+        void insertar_arbol(nodo_t *padre);
+        lista_t *pop(lista_t **inicio);
+        nodo_t *crear_nodo(char letra, char code, float prob,
+                           nodo_t *izq, nodo_t *der, nodo_t *padre);
         void generar_codigo();
         void guardar_codigo();
         void codificar();

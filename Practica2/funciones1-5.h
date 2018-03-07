@@ -57,7 +57,7 @@ void insertar_lista(lista_t **inicio,char simbolo,int prob){
     //valida que no se haya ingresado el símbolo anteriormente
     temp2=*inicio;
     while(temp2!=NULL){
-      if(temp2->sim==simbolo){
+      if(temp2->sim==simbolo && simbolo!=0){
 	printf("\nSímbolo ya ingresado\n\n");
 	return;
       }

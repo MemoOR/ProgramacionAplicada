@@ -19,7 +19,7 @@ typedef struct nodo_t{
   char simbolo;
   float probabilidad;
   int codigo;
-  struct nodo_t *arriba,*izq,*der;
+  struct nodo_t *padre,*izq,*der;
 }nodo_t;
 
 typedef struct lista_t{
@@ -84,7 +84,7 @@ int main(){
     Leer_lista(&primero_lista);
     break;
   case 6:
-    codigos(primero_lista);
+    codigos_arbol(&primero_lista);
     break;
   case 7:
     codificar();
