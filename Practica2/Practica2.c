@@ -84,7 +84,7 @@ int main(){
     Leer_lista(&primero_lista);
     break;
   case 6:
-    codigos_arbol(&primero_lista);
+    codigos_arbol(&primero_lista,raiz);
     break;
   case 7:
     codificar();
