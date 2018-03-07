@@ -11,7 +11,7 @@
         void Borrar_arbol(struct nodo_t *p);
         void Leer_lista(lista_t **inicio);
         void codigos(lista_t *inicio);
-        void insetar_arbol();
+        void insertar_arbol(nodo_t *hojas_1,nodo_t *hojas_2);
         void generar_codigo();
         void guardar_codigo();
         void codificar();

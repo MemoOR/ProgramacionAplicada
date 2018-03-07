@@ -19,7 +19,7 @@ typedef struct nodo_t{
   char simbolo;
   float probabilidad;
   int codigo;
-  nodo_t *arriba,*izq,*der;
+  struct nodo_t *arriba,*izq,*der;
 }nodo_t;
 
 typedef struct lista_t{
@@ -42,7 +42,7 @@ void menu(int *opcion){
   printf("[6]Generar código\n");
   printf("[7]Codificar mensaje\n");
   printf("[8]Decodificar mensaje\n");
-  printf("Para salir pulsa cualquier otro número\n");
+  printf("[9]Salir\n");
   scanf("%d",opcion);
   getchar();
   CLS;
@@ -52,6 +52,7 @@ int main(){
   creditos();
 
   lista_t *primero_lista=NULL;
+  nodo_t *raiz;
   int opcion;
   char simbolo,eliminar;
   float probabilidad;
@@ -93,10 +94,10 @@ int main(){
     break;
   default:
     Borrar_lista(primero_lista);
-    Borrar_arbol();
+    Borrar_arbol(raiz);
     break;
   }
-  }while(opcion>0 && opcion<9);
+  }while(opcion!=9);
   return 0;
 }
 
