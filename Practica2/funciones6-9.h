@@ -91,7 +91,13 @@ lista_t *pop(lista_t **inicio){
   
   return temp;
 }
- 
+
+//cuando se arregle esta funcion va a funcionar todo
+//root es la raiz del arbol
+//code es la letra buscada
+//nivel es el nivel dentro del arbol
+//codes es el arreglo bidiensional dinde se guardan los codigos generados
+//una vez arreglado eliminar este comentario
 void buscar(nodo_t *root, char *code, int nivel, char **codes) {
   if (root == NULL)
     return;
@@ -114,6 +120,13 @@ void buscar(nodo_t *root, char *code, int nivel, char **codes) {
   strcat(code, "1");
   buscar(root->der, code, nivel, codes);
 }
+//cuando se arregle esta funcion va a funcionar todo
+//root es la raiz del arbol
+//code es la letra buscada
+//nivel es el nivel dentro del arbol
+//codes es el arreglo bidiensional dinde se guardan los codigos generados
+//una vez arreglado eliminar este comentario
+
 
 void codificar(float *frec, char **codes) {
   // generar nuevos codigos
