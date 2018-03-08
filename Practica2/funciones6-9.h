@@ -6,7 +6,7 @@ void codigos_arbol(lista_t **inicio, nodo_t *raiz,char **codes,float *frec){
   char sim_men,sim_may;
   nodo_t *nodo1; 
   nodo_t *nodo2;
-
+  nodo_t *aux;
   temp=*inicio;
   temp2=*inicio;
 
@@ -28,7 +28,7 @@ void codigos_arbol(lista_t **inicio, nodo_t *raiz,char **codes,float *frec){
   }
 
   //crea el arbol
-  while((nodo1 = pop(inicio,nodo1)) != NULL && (nodo2 = pop(inicio,nodo2)) != NULL){
+   while((nodo1 = pop(inicio,nodo1)) != NULL && (nodo2 = pop(inicio,nodo2)) != NULL){
     nodo1->codigo=0;
     nodo2->codigo=1;
 
@@ -47,12 +47,12 @@ void codigos_arbol(lista_t **inicio, nodo_t *raiz,char **codes,float *frec){
     printf("\nizq: %p %c %f",nodo_padre->izq,nodo_padre->izq->simbolo,nodo_padre->izq->probabilidad);
     printf("\nnodo1: %p %c %f",nodo1,nodo1->simbolo,nodo1->probabilidad);
     printf("\nnodo2: %p %c %f\n",nodo2,nodo2->simbolo,nodo2->probabilidad);
-
+    nodo_padre=aux;
+    printf("\naux%p\n",aux);
     insertar_lista(inicio,0,suma_arbol);
-  }
-  raiz=nodo_padre;
+     }
   getchar();
-  buscar(raiz,NULL,0,codes);
+    buscar(raiz,NULL,0,codes);
 
   for (int i = 0; i < 255; i++)
     if (frec[i] != 0)
@@ -111,8 +111,8 @@ nodo_t *pop(lista_t **inicio,nodo_t *hoja){
 //arreglo bidimensional llamado desde el main
 void buscar(nodo_t *root, char *code, int nivel, char **codes) {
   if (root == NULL)
-    return;
-
+   
+     return;
   // aloca el espacio de memoria para el codigo
   if (code == NULL)
     code = (char *) calloc(64, sizeof(char));
@@ -130,6 +130,7 @@ void buscar(nodo_t *root, char *code, int nivel, char **codes) {
   code[nivel - 1] = 0;
   strcat(code, "1");
   buscar(root->der, code, nivel, codes);
+  // printf("fin de buscar\n");
 }
 
 void codificar(float *frec, char **codes) {
