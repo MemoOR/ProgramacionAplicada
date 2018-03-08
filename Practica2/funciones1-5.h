@@ -31,7 +31,15 @@ void creditos() {
     printf("Este programa fue desarrollado por:\n");
     printf("\tGuillermo Ortega\n");
     printf("\tSerio Sarabia\n");
-
+    printf("Este sistema se desarrollo con el objetivo de emplear los conocimientos\nobtenidos respecto al tema de arboles\n");
+    printf("En el podras codificar o decodificar mensajes como el algoritmo de Huffman lo hace\n");
+    printf("Para poder codificar o decodificar deberas:\n");
+    printf("\t1:Ingresar las probabilidades o leerlas desde un archivo\n");
+    printf("\t2:Codificar las probabilidades antes leidas\n");
+    printf("Si deseas codificar un mensaje:\n");
+    printf("\t 1:Debes de ingresar el nombre del archivo con el mensaje a codificar\n");
+    printf("Si deseas decodificar un mensaje:\n");
+    printf("\tDeberas ingresar el nombre del archivo a decodificar\n");
     printf("\n\nPresiona enter para entrar al sistema...");
 
     disable_canonical();
