@@ -5,7 +5,7 @@ void codigos_arbol(lista_t **inicio, nodo_t *raiz,char **codes,float *frec){
   float menor,mayor;
   char sim_men,sim_may;
   nodo_t *nodo1; 
-  nodo_t *nodo2; 
+  nodo_t *nodo2;
 
   temp=*inicio;
   temp2=*inicio;
@@ -38,10 +38,10 @@ void codigos_arbol(lista_t **inicio, nodo_t *raiz,char **codes,float *frec){
     suma_arbol=nodo1->probabilidad+nodo2->probabilidad;
     
     nodo_padre=crear_nodo(';',0,suma_arbol,nodo1,nodo2,NULL);
-    
+
     nodo1->padre=nodo_padre;
     nodo2->padre=nodo_padre;
-    
+     
     printf("\npadre: %p %c %f",nodo_padre,nodo_padre->simbolo,nodo_padre->probabilidad);
     printf("\nder: %p %c %f",nodo_padre->der,nodo_padre->der->simbolo,nodo_padre->der->probabilidad);
     printf("\nizq: %p %c %f",nodo_padre->izq,nodo_padre->izq->simbolo,nodo_padre->izq->probabilidad);
@@ -62,7 +62,7 @@ void codigos_arbol(lista_t **inicio, nodo_t *raiz,char **codes,float *frec){
 
 //crea un nuevo nodo padre para el arbol
 nodo_t *crear_nodo(char letra, char code, float prob,
-        nodo_t *izq, nodo_t *der, nodo_t *padre){
+		   nodo_t *izq, nodo_t *der, nodo_t *padre){
 
     nodo_t *nuevo = (nodo_t *) malloc(sizeof(nodo_t));
 
@@ -81,13 +81,18 @@ nodo_t *crear_nodo(char letra, char code, float prob,
 //insertarlos en el arbol
 nodo_t *pop(lista_t **inicio,nodo_t *hoja){
   lista_t *temp;
-  nodo_t *hoja_n=(nodo_t *) malloc(sizeof(nodo_t));;
+  nodo_t *hoja_n=(nodo_t *) malloc(sizeof(nodo_t));
 
   // checa que haya objetos
   if ((*inicio) == NULL)
     return NULL;
   
   // obtiene valor mas pequeño y lo regresa 
+  temp = *inicio;
+  while(temp!=NULL){
+    printf("%c  ",temp->sim);
+    temp=temp->sig;
+  }
   temp = *inicio;
   hoja_n->simbolo=temp->sim;
   hoja_n->probabilidad=temp->prob;
