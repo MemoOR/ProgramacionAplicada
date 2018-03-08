@@ -31,7 +31,10 @@ void codigos_arbol(lista_t **inicio, nodo_t *raiz,char **codes,float *frec){
   while((nodo1 = pop(inicio,nodo1)) != NULL && (nodo2 = pop(inicio,nodo2)) != NULL){
     nodo1->codigo=0;
     nodo2->codigo=1;
-     
+
+    printf("\nnodo1: %p %c %f",nodo1,nodo1->simbolo,nodo1->probabilidad);
+    printf("\nnodo2: %p %c %f\n",nodo2,nodo2->simbolo,nodo2->probabilidad);
+
     suma_arbol=nodo1->probabilidad+nodo2->probabilidad;
     
     nodo_padre=crear_nodo(';',0,suma_arbol,nodo1,nodo2,NULL);
@@ -39,11 +42,11 @@ void codigos_arbol(lista_t **inicio, nodo_t *raiz,char **codes,float *frec){
     nodo1->padre=nodo_padre;
     nodo2->padre=nodo_padre;
     
-    printf("\npadre: %p %c",nodo_padre,nodo_padre->simbolo);
-    printf("\nder: %p %c",nodo_padre->der,nodo_padre->izq->simbolo);
-    printf("\nizq: %p %c",nodo_padre->izq,nodo_padre->der->simbolo);
-    printf("\nnodo1: %p %c",nodo1,nodo1->simbolo);
-    printf("\nnodo2: %p %c\n",nodo2,nodo2->simbolo);
+    printf("\npadre: %p %c %f",nodo_padre,nodo_padre->simbolo,nodo_padre->probabilidad);
+    printf("\nder: %p %c %f",nodo_padre->der,nodo_padre->der->simbolo,nodo_padre->der->probabilidad);
+    printf("\nizq: %p %c %f",nodo_padre->izq,nodo_padre->izq->simbolo,nodo_padre->izq->probabilidad);
+    printf("\nnodo1: %p %c %f",nodo1,nodo1->simbolo,nodo1->probabilidad);
+    printf("\nnodo2: %p %c %f\n",nodo2,nodo2->simbolo,nodo2->probabilidad);
 
     insertar_lista(inicio,0,suma_arbol);
   }
@@ -101,12 +104,9 @@ nodo_t *pop(lista_t **inicio,nodo_t *hoja){
   return hoja_n;
 }
 
-//cuando se arregle esta funcion va a funcionar todo
-//root es la raiz del arbol
-//code es la letra buscada
-//nivel es el nivel dentro del arbol
-//codes es el arreglo bidiensional dinde se guardan los codigos generados
-//una vez arreglado eliminar este comentario
+//busca el simbolo en el arbol generado
+//y guarda el codigo de cada simbolo en un
+//arreglo bidimensional llamado desde el main
 void buscar(nodo_t *root, char *code, int nivel, char **codes) {
   if (root == NULL)
     return;
@@ -129,13 +129,6 @@ void buscar(nodo_t *root, char *code, int nivel, char **codes) {
   strcat(code, "1");
   buscar(root->der, code, nivel, codes);
 }
-//cuando se arregle esta funcion va a funcionar todo
-//root es la raiz del arbol
-//code es la letra buscada
-//nivel es el nivel dentro del arbol
-//codes es el arreglo bidiensional dinde se guardan los codigos generados
-//una vez arreglado eliminar este comentario
-
 
 void codificar(float *frec, char **codes) {
   // generar nuevos codigos
