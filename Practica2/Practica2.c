@@ -32,7 +32,6 @@ typedef struct lista_t{
 #include"funciones1-5.h"//fichero con primeras cinco opciones del menú
 #include"funciones6-9.h"//fichero con las funciones para generar el código
 
-
 void menu(int *opcion){
   printf("[1]Ingresar símbolo\n");
   printf("[2]Listar símbolos\n");
@@ -54,8 +53,12 @@ int main(){
   lista_t *primero_lista=NULL;
   nodo_t *raiz;
   int opcion;
-  char simbolo,eliminar;
-  float probabilidad;
+  char simbolo,eliminar,*codes[255];
+  float probabilidad,frec[255];
+
+  for(int i=0;i<255;i++){
+    frec[i]=0;
+  }
   
   do{
   menu(&opcion);
@@ -84,13 +87,13 @@ int main(){
     Leer_lista(&primero_lista);
     break;
   case 6:
-    codigos_arbol(&primero_lista,raiz);
+    codigos_arbol(&primero_lista,raiz,codes,frec);
     break;
   case 7:
-    codificar();
+    codificar(frec,codes);
     break;
   case 8:
-    decodificar();
+    decodificar(frec,codes);
     break;
   default:
     Borrar_lista(primero_lista);

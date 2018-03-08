@@ -10,12 +10,12 @@
         int Borrar_lista(lista_t *inicio);
         void Borrar_arbol(struct nodo_t *p);
         void Leer_lista(lista_t **inicio);
-        void codigos_arbol(lista_t **inicio, nodo_t *raiz);
+        void codigos_arbol(lista_t **inicio, nodo_t *raiz,char **codes, float *frec);
         void insertar_arbol(nodo_t *padre);
         lista_t *pop(lista_t **inicio);
         nodo_t *crear_nodo(char letra, char code, float prob,
                            nodo_t *izq, nodo_t *der, nodo_t *padre);
-void buscar(int nivel, int *encontrar, nodo_t *hoja,char *aux, char buscado);
+        void buscar(nodo_t *raiz, char *buscado,int nivel,char **codes);
         void guardar_codigo();
         void codificar();
         void decodificar();

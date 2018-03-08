@@ -1,11 +1,9 @@
-void codigos_arbol(lista_t **inicio, nodo_t *raiz){
+void codigos_arbol(lista_t **inicio, nodo_t *raiz,char **codes,float *frec){
   lista_t *temp,*temp2;
-  nodo_t *nodo1 = (nodo_t *) malloc(sizeof(nodo_t));
-  nodo_t *nodo2 = (nodo_t *) malloc(sizeof(nodo_t));
   nodo_t *nodo_padre=NULL;
-  int suma_prob=0, suma_arbol,n_elementos,x=0,encontrar=0;
+  int suma_prob=0, suma_arbol;
   float menor,mayor;
-  char sim_men,sim_may,aux[50];
+  char sim_men,sim_may;
 
   temp=*inicio;
   temp2=*inicio;
@@ -18,29 +16,19 @@ void codigos_arbol(lista_t **inicio, nodo_t *raiz){
   }
   while(temp!=NULL){
     suma_prob+=temp->prob;
-    n_elementos++;
+    frec[temp->sim]=temp->prob;
     temp=temp->sig;
   }
-  
-  char simbolos[n_elementos];
-  int codigos[n_elementos];
-  
-   while(temp2!=NULL){
-     simbolos[x]=temp2->sim;
-     x++;
-     temp2=temp2->sig;
-   }
-   for(int i=0;i<n_elementos-1;i++){
-     printf("%c ",simbolos[i]);
-   }
-   
-   if(suma_prob!=100){
-     printf("\nLa suma de probabilidades es diferente a 100%c\n\n",'%');
-     return;
-   }
+
+  if(suma_prob!=100){
+    printf("\nLa suma de probabilidades es diferente a 100%c\n\n",'%');
+    return;
+  }
 
   //crea el arbol
-  while((temp = pop(inicio)) != NULL && (temp = pop(inicio)) != NULL){  
+  while((temp = pop(inicio)) != NULL && (temp = pop(inicio)) != NULL){
+    nodo_t *nodo1 = (nodo_t *) malloc(sizeof(nodo_t));
+    nodo_t *nodo2 = (nodo_t *) malloc(sizeof(nodo_t));
     nodo1->codigo=0;
     nodo2->codigo=1;
      
@@ -50,14 +38,17 @@ void codigos_arbol(lista_t **inicio, nodo_t *raiz){
     
     nodo1->padre=nodo_padre;
     nodo2->padre=nodo_padre;
-
+    
     insertar_lista(inicio,0,suma_arbol);
   }
   raiz=nodo_padre;
+  getchar();
+  
+  buscar(raiz,NULL,0,codes);
 
-  for(int i=0;i<n_elementos;i++){
-    buscar(0,&encontrar,raiz,aux,simbolos[i]);
-  }
+  for (int i = 0; i < 255; i++)
+    if (frec[i] != 0)
+      printf("Simbolo %c: %s\n", i, codes[i]);
   return;
 }
 
@@ -101,30 +92,29 @@ lista_t *pop(lista_t **inicio){
   
   return temp;
 }
+ 
+void buscar(nodo_t *raiz, char *buscado,int nivel,char **codes){
+  if (raiz == NULL)
+      return;
 
-void buscar(int nivel, int *encontrar, nodo_t *hoja,char *aux, char buscado){
+  // aloca el espacio de memoria para el codigo
+  if (buscado == NULL)
+    buscado = (char *) calloc(64, sizeof(char));
 
-  if(hoja!=NULL && buscado==hoja->simbolo){
-    *encontrar=1;
+  // si es una hoja del arbol, guarda el codigo
+  if (raiz->der == NULL && raiz->izq == NULL){
+    codes[raiz->simbolo] = strdup(buscado);
   }
-  
-  if(*encontrar==0 && hoja!=NULL){
-    aux[nivel]='0';
-    buscar(nivel+1, encontrar, hoja->izq,aux, buscado);
-    if(*encontrar==0 && hoja!=NULL){
-      aux[nivel]='1';
-      aux[nivel+1]='\0';
-      buscar(nivel+1, encontrar, hoja->der,aux, buscado);
-    }
-  }
-  else if(hoja==NULL){
-    aux[nivel]='\0';
-  }
-  else if(*encontrar==1){
-    aux[nivel]='\0';
-  }
+
+  // agrega un 0 al codigo
+  nivel++;
+  strcat(buscado, "0");
+  buscar(raiz->izq, buscado, nivel, codes);
+  // borra "nivel-1" caracteres y agrega un 1 al codigo
+  buscado[nivel - 1] = 0;
+  strcat(buscado, "1");
+  buscar(raiz->der, buscado, nivel, codes);
 }
-
 void guardar_codigo(){
 }
 
