@@ -15,8 +15,8 @@
         lista_t *pop(lista_t **inicio);
         nodo_t *crear_nodo(char letra, char code, float prob,
                            nodo_t *izq, nodo_t *der, nodo_t *padre);
-        void buscar(nodo_t *raiz, char *buscado,int nivel,char **codes);
-        void guardar_codigo();
-        void codificar();
-        void decodificar();
+        void buscar(nodo_t *, char *,int ,char **);
+        void codificar(float *,char**);
+        void limpiar();
+        void decodificar(float *,char**);
 #endif

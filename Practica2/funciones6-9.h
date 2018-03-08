@@ -42,7 +42,6 @@ void codigos_arbol(lista_t **inicio, nodo_t *raiz,char **codes,float *frec){
     insertar_lista(inicio,0,suma_arbol);
   }
   raiz=nodo_padre;
-  getchar();
   
   buscar(raiz,NULL,0,codes);
 
@@ -93,35 +92,122 @@ lista_t *pop(lista_t **inicio){
   return temp;
 }
  
-void buscar(nodo_t *raiz, char *buscado,int nivel,char **codes){
-  if (raiz == NULL)
-      return;
+void buscar(nodo_t *root, char *code, int nivel, char **codes) {
+  if (root == NULL)
+    return;
 
   // aloca el espacio de memoria para el codigo
-  if (buscado == NULL)
-    buscado = (char *) calloc(64, sizeof(char));
+  if (code == NULL)
+    code = (char *) calloc(64, sizeof(char));
 
-  // si es una hoja del arbol, guarda el codigo
-  if (raiz->der == NULL && raiz->izq == NULL){
-    codes[raiz->simbolo] = strdup(buscado);
+  // es una hoja del arbol, guarda el codigo
+  if (root->der == NULL && root->izq == NULL)
+    codes[root->simbolo] = strdup(code);
+
+  // concatena un 0 al codigo
+  nivel++;
+  strcat(code, "0");
+  buscar(root->izq, code, nivel, codes);
+
+  // borra "level - 1" caracteres y concatena un 1 al codigo
+  code[nivel - 1] = 0;
+  strcat(code, "1");
+  buscar(root->der, code, nivel, codes);
+}
+
+void codificar(float *frec, char **codes) {
+  // generar nuevos codigos
+  char texto[1024];
+  int len, error = 0;
+
+  printf("Ingresa el mensaje a codificar:\n\n");
+  fgets(texto, 1023, stdin);
+
+  len = strlen(texto) - 1;
+  texto[len] = 0;
+
+  // verifica que todos los carcteres del mensaje tengan asociado una frecuencia
+  for (int i = 0; i < len; i++) {
+    if (frec[texto[i]] == 0) {
+      printf("El caracter %c no se encuentra guardado\n", texto[i]);
+      error = 1;
+    }
   }
 
-  // agrega un 0 al codigo
-  nivel++;
-  strcat(buscado, "0");
-  buscar(raiz->izq, buscado, nivel, codes);
-  // borra "nivel-1" caracteres y agrega un 1 al codigo
-  buscado[nivel - 1] = 0;
-  strcat(buscado, "1");
-  buscar(raiz->der, buscado, nivel, codes);
-}
-void guardar_codigo(){
+  limpiar();
+
+  if (error)
+    printf("Para generar los codigos, favor de corregir los errores\n");
+
+  else {
+    printf("Mensaje codificado:\n");
+    for (int i = 0; i < len; i++)
+      printf("%s", codes[texto[i]]);
+
+    printf("\n");
+  }
+
+  printf("\nPresiona enter para continuar\n");
+  getchar();
+
+  return;
 }
 
-void codificar(){
+void limpiar() {
+  char c;
+  while ((c = getchar()) != '\n' && c != EOF);
 }
 
-void decodificar(){
+void decodificar(float *freq, char **codes) {
+  // generar nuevos codigos
+  char texto[2048], actual, code[16];
+  int len, code_index = 0;
+
+  nodo_t *raiz, *temp;
+
+  temp = raiz;
+
+  printf("Ingresa los simbolos a decodificar:\n\n");
+  fgets(texto, 2047, stdin);
+
+  len = strlen(texto) - 1;
+  texto[len] = 0;
+
+  // para cada 1 o 0 en el mensaje introducido por el usuario
+  printf("\nMensaje decodificado:\n");
+  for (int i = 0; i <= len; i++) {
+    actual = texto[i];
+
+    // si el nodo actual no es nulo
+    if (temp != NULL) {
+      if (temp->izq == NULL && temp->der == NULL) {
+	// imprime el simbolo actual
+	printf ("%c", temp->simbolo);
+	temp = raiz;
+
+	code_index = 0;
+      }
+
+      // recorre a la derecha el arbol
+      if (actual == '1') {
+	temp = temp->der;
+	code[code_index++] = '1';
+      }
+
+      // recorre a la izquierda el arbol
+      else {
+	temp = temp->izq;
+	code[code_index++] = '0';
+      }
+    }
+    else {
+      code[code_index] = 0;
+
+      printf("Error, el codigo %s no se encuentra registrado\n", code);
+      code_index = 0;
+    }
+  }
+  printf("\n");
 }
 
 int Borrar_lista(lista_t *inicio){
