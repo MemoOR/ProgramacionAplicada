@@ -117,11 +117,22 @@ void buscar(nodo_t *root, char *code, int nivel, char **codes) {
 
 void codificar(float *frec, char **codes) {
   // generar nuevos codigos
-  char texto[1024];
+  char texto[1024],nombre[100];
   int len, error = 0;
+  FILE *archivo;
 
-  printf("Ingresa el mensaje a codificar:\n\n");
-  fgets(texto, 1023, stdin);
+  printf("Ingresa el nombre del archivo que quieres codificar:\n\n");
+  scanf("%s",nombre);
+  getchar();
+  archivo=fopen(nombre,"rt");
+
+  if(archivo==NULL){
+    printf("Ese archivo no existe\n\n");
+    return;
+  }else{
+    fgets(texto,1023,archivo);
+  }
+  fclose(archivo);
 
   len = strlen(texto) - 1;
   texto[len] = 0;
@@ -146,6 +157,11 @@ void codificar(float *frec, char **codes) {
 
     printf("\n");
   }
+  strcat(nombre,"_codificado");
+  archivo=fopen(nombre,"w");
+  for (int i = 0; i < len; i++)
+    fprintf(archivo,"%s", codes[texto[i]]);
+  fclose(archivo);
 
   printf("\nPresiona enter para continuar\n");
   getchar();
@@ -160,15 +176,27 @@ void limpiar() {
 
 void decodificar(float *freq, char **codes) {
   // generar nuevos codigos
-  char texto[2048], actual, code[16];
+  char texto[2048], actual, code[16],nombre[100];
   int len, code_index = 0;
 
   nodo_t *raiz, *temp;
 
   temp = raiz;
 
-  printf("Ingresa los simbolos a decodificar:\n\n");
-  fgets(texto, 2047, stdin);
+  FILE *archivo;
+
+  printf("Ingresa el nombre del archivo que quieres codificar:\n\n");
+  scanf("%s",nombre);
+  getchar();
+  archivo=fopen(nombre,"rt");
+
+  if(archivo==NULL){
+    printf("Ese archivo no existe\n\n");
+    return;
+  }else{
+    fgets(texto,1023,archivo);
+  }
+  fclose(archivo);
 
   len = strlen(texto) - 1;
   texto[len] = 0;
@@ -208,6 +236,14 @@ void decodificar(float *freq, char **codes) {
     }
   }
   printf("\n");
+  strcat(nombre,"_decodificado");
+  archivo=fopen(nombre,"w");
+  for (int i = 0; i < len; i++)
+    fprintf(archivo,"%s", codes[texto[i]]);
+  fclose(archivo);
+
+  printf("\nPresiona enter para continuar\n");
+  getchar();
 }
 
 int Borrar_lista(lista_t *inicio){
