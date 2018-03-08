@@ -4,6 +4,8 @@ void codigos_arbol(lista_t **inicio, nodo_t *raiz,char **codes,float *frec){
   int suma_prob=0, suma_arbol;
   float menor,mayor;
   char sim_men,sim_may;
+  nodo_t *nodo1; 
+  nodo_t *nodo2; 
 
   temp=*inicio;
   temp2=*inicio;
@@ -26,9 +28,7 @@ void codigos_arbol(lista_t **inicio, nodo_t *raiz,char **codes,float *frec){
   }
 
   //crea el arbol
-  while((temp = pop(inicio)) != NULL && (temp = pop(inicio)) != NULL){
-    nodo_t *nodo1 = (nodo_t *) malloc(sizeof(nodo_t));
-    nodo_t *nodo2 = (nodo_t *) malloc(sizeof(nodo_t));
+  while((nodo1 = pop(inicio,nodo1)) != NULL && (nodo2 = pop(inicio,nodo2)) != NULL){
     nodo1->codigo=0;
     nodo2->codigo=1;
      
@@ -39,10 +39,16 @@ void codigos_arbol(lista_t **inicio, nodo_t *raiz,char **codes,float *frec){
     nodo1->padre=nodo_padre;
     nodo2->padre=nodo_padre;
     
+    printf("\npadre: %p %c",nodo_padre,nodo_padre->simbolo);
+    printf("\nder: %p %c",nodo_padre->der,nodo_padre->izq->simbolo);
+    printf("\nizq: %p %c",nodo_padre->izq,nodo_padre->der->simbolo);
+    printf("\nnodo1: %p %c",nodo1,nodo1->simbolo);
+    printf("\nnodo2: %p %c\n",nodo2,nodo2->simbolo);
+
     insertar_lista(inicio,0,suma_arbol);
   }
   raiz=nodo_padre;
-  
+  getchar();
   buscar(raiz,NULL,0,codes);
 
   for (int i = 0; i < 255; i++)
@@ -70,8 +76,9 @@ nodo_t *crear_nodo(char letra, char code, float prob,
 
 //elimina los elementos ya leidos de la lista para
 //insertarlos en el arbol
-lista_t *pop(lista_t **inicio){
+nodo_t *pop(lista_t **inicio,nodo_t *hoja){
   lista_t *temp;
+  nodo_t *hoja_n=(nodo_t *) malloc(sizeof(nodo_t));;
 
   // checa que haya objetos
   if ((*inicio) == NULL)
@@ -79,17 +86,19 @@ lista_t *pop(lista_t **inicio){
   
   // obtiene valor mas pequeño y lo regresa 
   temp = *inicio;
+  hoja_n->simbolo=temp->sim;
+  hoja_n->probabilidad=temp->prob;
   if((*inicio)->sig==NULL){
     while(*inicio!=NULL){
       *inicio=(*inicio)->sig;
       free(temp);
-      return temp;
+      return hoja_n;
     }
   }
   *inicio=(*inicio)->sig;
   free(temp);
   
-  return temp;
+  return hoja_n;
 }
 
 //cuando se arregle esta funcion va a funcionar todo
