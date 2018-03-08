@@ -81,18 +81,15 @@ nodo_t *crear_nodo(char letra, char code, float prob,
 //insertarlos en el arbol
 nodo_t *pop(lista_t **inicio,nodo_t *hoja){
   lista_t *temp;
-  nodo_t *hoja_n=(nodo_t *) malloc(sizeof(nodo_t));
+  nodo_t *hoja_n;
 
-  // checa que haya objetos
+  hoja_n=(nodo_t *) malloc(sizeof(nodo_t));
+
+// checa que haya objetos
   if ((*inicio) == NULL)
     return NULL;
   
   // obtiene valor mas pequeño y lo regresa 
-  temp = *inicio;
-  while(temp!=NULL){
-    printf("%c  ",temp->sim);
-    temp=temp->sig;
-  }
   temp = *inicio;
   hoja_n->simbolo=temp->sim;
   hoja_n->probabilidad=temp->prob;
@@ -105,7 +102,7 @@ nodo_t *pop(lista_t **inicio,nodo_t *hoja){
   }
   *inicio=(*inicio)->sig;
   free(temp);
-  
+
   return hoja_n;
 }
 
