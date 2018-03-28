@@ -1,6 +1,58 @@
 //Este fichero tendrá las funciones para trabajar con la lista
 //y el archivo que almavenará los números bloqueados
 
+//Guarda en un archivo los datos de los usuarios
+void Guardar_usu(){
+  user_t *temp;
+  temp=inicio_u;
+
+  char nombre[] ={"Usuario.txt"};
+  a_user=fopen(nombre,"r");
+
+  if(a_user==NULL){
+    a_user=fopen(nombre,"wt");
+    while(temp!=NULL){
+      fprintf(a_user,"%s %s %s %s %s\n",temp->nombre,temp->contrasena,temp->cuenta,temp->money,temp->estado);
+      printf("%s %s %s %s %s\n",temp->nombre,temp->contrasena,temp->cuenta,temp->money,temp->estado);
+      temp=temp->sig;
+    }
+  }else{
+    fclose(a_user);
+    a_user=fopen(nombre,"wt");
+    while(temp!=NULL){
+      fprintf(a_user,"%s\n%s\n%s\n%s\n%s\n\n",temp->nombre,temp->contrasena,temp->cuenta,temp->money,temp->estado);
+      printf("%s %s %s %s %s\n",temp->nombre,temp->contrasena,temp->cuenta,temp->money,temp->estado);
+      temp=temp->sig;
+    }
+  }
+  fclose(a_user);
+}
+
+//funcion para guardar en archivo los datos de administradores
+void Guardar_admin(){
+  admin_t *temp;
+  temp=inicio_a;
+
+  char nombre[] ={"Administrador.txt"};
+  a_admin=fopen(nombre,"r");
+
+  if(a_admin==NULL){
+    a_admin=fopen(nombre,"wt");
+    while(temp!=NULL){
+      fprintf(a_admin,"%s %s\n",temp->nombre,temp->contrasena);
+      temp=temp->sig;
+    }
+  }else{
+    fclose(a_admin);
+    a_admin=fopen(nombre,"wt");
+    while(temp!=NULL){
+      fprintf(a_admin,"%s %s\n",temp->nombre,temp->contrasena);
+      temp=temp->sig;
+    }
+  }
+  fclose(a_admin);
+}
+
 //inserta el número a la lista de bloqueo
 void insertar_usuario(){
   user_t *temp,*ant,*pos;
@@ -11,7 +63,7 @@ void insertar_usuario(){
   strcpy(temp->contrasena,u_contra);
   strcpy(temp->cuenta,u_n);
   strcpy(temp->money,u_money);
-  strcpy(temp->estado,"Desbloqueado");
+  strcpy(temp->estado,u_estado);
   
   if(inicio_u==NULL){
     temp->sig=inicio_u;
@@ -127,7 +179,7 @@ void validar_bloqueo(char *op){
   }
 }
 
-
+//imprime el saldo actual del usuario
 void consultar(){
   user_t *temp;
   temp=inicio_u;
@@ -136,15 +188,16 @@ void consultar(){
   while(temp->sig!=NULL && strcmp(temp->cuenta,u_cuenta)!=0){
     temp=temp->sig;
   }
-  printf("%s\n",temp->money);
+  printf("\nTu saldo actual es: %s\n",temp->money);
   printf("\n");
 }
 
+//elimina aun usuariode la base de datos
 void borrar_usuario(){
   user_t *temp;
   temp=inicio_u;
 
-  while((temp!=NULL)&&(strcmp(temp->nombre,argumento)!=0))
+  while((temp!=NULL)&&(strcmp(temp->nombre,u_nombre)!=0))
     temp=temp->sig;
 
   if(temp!=NULL){
@@ -160,8 +213,10 @@ void borrar_usuario(){
       free(temp);
     }
   }
+  Guardar_usu();
 }
 
+//elimina un administrador de la base de datos
 void borrar_admin(){
   admin_t *temp;
   temp=inicio_a;
@@ -171,7 +226,7 @@ void borrar_admin(){
     return;
   }
   
-  while((temp!=NULL)&&(strcmp(temp->nombre,argumento)!=0))
+  while((temp!=NULL)&&(strcmp(temp->nombre,a_nombre)!=0))
     temp=temp->sig;
 
   if(temp!=NULL){
@@ -187,58 +242,7 @@ void borrar_admin(){
       free(temp);
     }
   }
-}
-
-//Guarda en un archivo los datos de los usuarios
-void Guardar_usu(){
-  user_t *temp;
-  temp=inicio_u;
-
-  char nombre[] ={"Usuario.txt"};
-  a_user=fopen(nombre,"r");
-
-  if(a_user==NULL){
-    a_user=fopen(nombre,"wt");
-    while(temp!=NULL){
-      fprintf(a_user,"%s %s %s %s %s\n",temp->nombre,temp->contrasena,temp->cuenta,temp->money,temp->estado);
-      printf("%s %s %s %s %s\n",temp->nombre,temp->contrasena,temp->cuenta,temp->money,temp->estado);
-      temp=temp->sig;
-    }
-  }else{
-    fclose(a_user);
-    a_user=fopen(nombre,"wt");
-    while(temp!=NULL){
-      fprintf(a_user,"%s\n%s\n%s\n%s\n%s\n\n",temp->nombre,temp->contrasena,temp->cuenta,temp->money,temp->estado);
-      printf("%s %s %s %s %s\n",temp->nombre,temp->contrasena,temp->cuenta,temp->money,temp->estado);
-      temp=temp->sig;
-    }
-  }
-  fclose(a_user);
-}
-
-//funcion para guardar en archivo los datos de administradores
-void Guardar_admin(){
-  admin_t *temp;
-  temp=inicio_a;
-
-  char nombre[] ={"Administrador.txt"};
-  a_admin=fopen(nombre,"r");
-
-  if(a_admin==NULL){
-    a_admin=fopen(nombre,"wt");
-    while(temp!=NULL){
-      fprintf(a_admin,"%s %s\n",temp->nombre,temp->contrasena);
-      temp=temp->sig;
-    }
-  }else{
-    fclose(a_admin);
-    a_admin=fopen(nombre,"wt");
-    while(temp!=NULL){
-      fprintf(a_admin,"%s %s\n",temp->nombre,temp->contrasena);
-      temp=temp->sig;
-    }
-  }
-  fclose(a_admin);
+  Guardar_admin();
 }
 
 //valida el deposito o retiro del usuario
@@ -270,7 +274,8 @@ void buscar_cuenta(int op){
 
   printf("\nTu saldo final es de: %.2f\n\n",resultado);
 
-  sprintf(temp->money,"%f",resultado);
+  //regresa el float al strig oara guardarlo en el archivo
+  sprintf(temp->money,"%.2f",resultado);
 
   Guardar_usu();
 }

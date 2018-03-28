@@ -29,7 +29,7 @@ char u_nombre[L_EVENT_ARGS];
 char u_contra[L_EVENT_ARGS];
 char u_n[L_EVENT_ARGS];
 char u_money[50];
-char u_blq[L_EVENT_ARGS];
+char u_estado[L_EVENT_ARGS];
 
 char a_nombre[L_EVENT_ARGS];
 char a_contra[L_EVENT_ARGS];
@@ -52,10 +52,13 @@ int intentos(void);
 int msg_ret(void);
 int msg_dep(void);
 int msg_cons(void);
+int msg_cambio(void);
 int msg_salida(void);
 int retiro_exi(void);
 int deposito_exi(void);
 int msg_saldo(void);
+int msg_mov(void);
+int cambio(void);
 
 int msg_nexist(void);
 int msg_contra(void);
@@ -116,8 +119,7 @@ void initialise(void){
     state = 0;
     char num[L_EVENT_ARGS];
     leer_admin();
-    leer_usu();
-    
+    leer_usu();    
 }
 
 void getevent(void){
@@ -163,6 +165,9 @@ void getevent(void){
     case 'C':
       event.etype=ENTRADA_C;
       break;
+    case 'W':
+      event.etype=ENTRADA_W;
+      break;
     case 'S':
       event.etype=ENTRADA_S;
       break;
@@ -187,9 +192,23 @@ void getevent(void){
 #ifdef DEBUG
       printf("---> %s \n",event.args);
 #endif      
-      break;
+      break; 
     case 'A':
       event.etype=ENTRADA_A;
+      break;
+    case 'M':
+      event.etype=ENTRADA_M;
+      break;
+    case 'X':
+      event.etype=ENTRADA_X;
+      strcpy(event.args,ptmp);   // Esta instruccion se debera hacer en caso de que ademas de la letra
+      // para indicar la entrada, se pase informacion adicional, por ejemplo
+      // C:info_adicional
+      strcpy(argumento,event.args);
+      strtok(argumento,"\n");
+#ifdef DEBUG
+      printf("---> %s \n",event.args);
+#endif      
       break;
     default:
       event.etype=AST;
@@ -221,7 +240,10 @@ int msg_dep(void){
   printf("\nPara depositar [G:cantidad]\n");
 }
 int msg_cons(void){
-  printf("\nConsulta de saldo [A]\n");
+  printf("\nConsulta de saldo o movimientos [A, M]\n");
+}
+int msg_cambio(void){
+  printf("\nCambio de contraseña [X]\n");
 }
 int msg_salida(void){
   Guardar_usu();
@@ -231,7 +253,6 @@ int msg_salida(void){
   CLS;
   printf("Bienvenido al cajero automático\n\n");
   printf("Ingresa tu número de cuenta [U:número]\n");
-    
 }
 int retiro_exi(void){
   int op=1;
@@ -242,7 +263,18 @@ int deposito_exi(void){
   buscar_cuenta(op);
 }
 int msg_saldo(void){
-  printf("\nTu saldo actual es de: ");
+  consultar();
+}
+int msg_mov(void){
+}
+int cambio(void){
+  user_t *temp;
+  temp=inicio_u;
+  while(temp->sig!=NULL && strcmp(temp->cuenta,u_cuenta)!=0)
+    temp=temp->sig;
+  strcpy(temp->contrasena,argumento);
+  printf("\nHas cambiado la contraseña con éxito\n");
+  Guardar_usu();
 }
 int msg_nexist(void){
   printf("\nEl número de cuenta ingresado no existe\n");
@@ -254,6 +286,8 @@ int msg_bloq(void){
   printf("\nHas ingresado demasiadas veces una contraseña incorrecta\n");
   printf("tu cuenta ha sido bloqueada por cuestiones de seguridad.\n");
   printf("Para desbloquearla contacta con un administrador\n");
+  inten=0;
+  bloquear_usu();
 }
 int val_contra(void){
   char op;
@@ -278,7 +312,7 @@ int msg_bloqueado(void){
   printf("\nEsta cuenta esta bloqueada\n");
 }
 int msg_acceso(void){
-  printf("\nAcceso correcto.[R,D,C,S]\n");
+  printf("\nAcceso correcto.[R,D,C,W,S]\n");
 }
 
 int nul(void){
@@ -292,7 +326,6 @@ void leer_admin(){
   //if(inicio!=NULL){
   while (!feof(a_admin)) {
     fscanf(a_admin,"%s %s\n",a_nombre,a_contra);
-    printf("%s %s\n",a_nombre,a_contra);
     insertar_admin();
   }
   fclose(a_admin);
@@ -306,8 +339,7 @@ void leer_usu(){
       
   //if(inicio!=NULL){
   while (!feof(a_user)) {
-    fscanf(a_user,"%s\n%s\n%s\n%s\n%s\n\n",u_nombre,u_contra,u_n,u_money,u_blq);
-    printf("%s %s %s %s %s\n",u_nombre,u_contra,u_n,u_money,u_blq);
+    fscanf(a_user,"%s\n%s\n%s\n%s\n%s\n\n",u_nombre,u_contra,u_n,u_money,u_estado);
     insertar_usuario();
   }
   fclose(a_user);

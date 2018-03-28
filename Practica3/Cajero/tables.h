@@ -23,10 +23,13 @@ extern int intentos(void);
 extern int msg_ret(void);
 extern int msg_dep(void);
 extern int msg_cons(void);
+extern int msg_cambio(void);
 extern int msg_salida(void);
 extern int retiro_exi(void);
 extern int deposito_exi(void);
 extern int msg_saldo(void);
+extern int msg_mov(void);
+extern int cambio(void);
 
 extern int msg_nexist(void);
 extern int msg_contra(void);
@@ -54,6 +57,7 @@ ACTION_TAB action_table[]={
     { ENTRADA_R,  msg_ret,  	  AST,    	RETIRO},
     { ENTRADA_D,  msg_dep,  	  AST,    	DEPOSITO},
     { ENTRADA_C,  msg_cons,  	  AST,    	CONSULTA},
+    { ENTRADA_W,  msg_cambio,  	  AST,    	CAMBIO},
     { ENTRADA_S,  msg_salida,  	  AST,    	INICIO},
     { AST,        nul,  	  AST,    	ESPERA_U},
     { ENTRADA_T,  retiro_exi,  	  AST,    	ESPERA_U},
@@ -61,7 +65,10 @@ ACTION_TAB action_table[]={
     { ENTRADA_G,  deposito_exi,   AST,    	ESPERA_U},
     { AST,        nul,  	  AST,    	ESPERA_U},
     { ENTRADA_A,  msg_saldo,  	  AST,    	ESPERA_U},
+    { ENTRADA_M,  msg_mov,        AST,    	ESPERA_U},
     { AST,        nul,  	  AST,    	ESPERA_U},
+    { ENTRADA_X,  cambio,  	  AST,    	ESPERA_U},
+    { AST,        msg_saldo,  	  AST,    	ESPERA_U},
 };
 
 /*************** TABLA AUXILIAR ***************/  
@@ -81,9 +88,10 @@ ACTION_TAB action_table[]={
 STATE_TAB state_table[]={
    /*estado      inicio   fin */
     {INICIO,       0,       1},
-    {CONTRASENA,  2,       3},
-    {ESPERA_U,     4,       8},
-    {RETIRO,       9,      10},
-    {DEPOSITO,     11,      12},
-    {CONSULTA,     13,      14},
+    {CONTRASENA,   2,       3},
+    {ESPERA_U,     4,       9},
+    {RETIRO,       10,      11},
+    {DEPOSITO,     12,      13},
+    {CONSULTA,     14,      16},
+    {CAMBIO,       17,      18},
 };

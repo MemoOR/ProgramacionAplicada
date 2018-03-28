@@ -95,10 +95,13 @@ FILE *a_admin,*a_user,*a_moves;
 #define ENTRADA_R   2
 #define ENTRADA_D   3
 #define ENTRADA_C   4
-#define ENTRADA_S   5
-#define ENTRADA_T   6
-#define ENTRADA_G   7
-#define ENTRADA_A   8
+#define ENTRADA_W   5
+#define ENTRADA_S   6
+#define ENTRADA_T   7
+#define ENTRADA_G   8
+#define ENTRADA_A   9
+#define ENTRADA_M   10
+#define ENTRADA_X   11
 #define AST  -1
 
 /********************* ESTADOS ******************
@@ -111,7 +114,7 @@ FILE *a_admin,*a_user,*a_moves;
 #define RETIRO      3
 #define DEPOSITO    4
 #define CONSULTA    5
-
+#define CAMBIO      6
 
 // Esta función deshabilita el modo canónico en la terminal,
 // con el fin de evitar que se tenga que presionar enter
