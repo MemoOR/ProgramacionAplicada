@@ -65,7 +65,7 @@ typedef struct user_t{
   char nombre[100];
   char contrasena[50];
   char cuenta[20];
-  float money;
+  char money[50];
   char movimiento[20];
   char estado[20];
 

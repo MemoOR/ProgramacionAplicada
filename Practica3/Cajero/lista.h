@@ -10,7 +10,7 @@ void insertar_usuario(){
   strcpy(temp->nombre,u_nombre);
   strcpy(temp->contrasena,u_contra);
   strcpy(temp->cuenta,u_n);
-  temp->money=0;
+  strcpy(temp->money,u_money);
   strcpy(temp->estado,"Desbloqueado");
   
   if(inicio_u==NULL){
@@ -127,6 +127,7 @@ void validar_bloqueo(char *op){
   }
 }
 
+
 void consultar(){
   user_t *temp;
   temp=inicio_u;
@@ -135,18 +136,13 @@ void consultar(){
   while(temp->sig!=NULL && strcmp(temp->cuenta,u_cuenta)!=0){
     temp=temp->sig;
   }
-  printf("%f\n",temp->money);
+  printf("%s\n",temp->money);
   printf("\n");
 }
 
 void borrar_usuario(){
   user_t *temp;
   temp=inicio_u;
-
-  if(temp==NULL){
-    printf("\nNo se han ingresado símbolos\n\n");
-    return;
-  }
 
   while((temp!=NULL)&&(strcmp(temp->nombre,argumento)!=0))
     temp=temp->sig;
@@ -171,10 +167,10 @@ void borrar_admin(){
   temp=inicio_a;
 
   if(temp==NULL){
-    printf("\nNo se han ingresado símbolos\n\n");
+    printf("\nNo hay datos que borrar\n");
     return;
   }
-
+  
   while((temp!=NULL)&&(strcmp(temp->nombre,argumento)!=0))
     temp=temp->sig;
 
@@ -204,16 +200,16 @@ void Guardar_usu(){
   if(a_user==NULL){
     a_user=fopen(nombre,"wt");
     while(temp!=NULL){
-      fprintf(a_user,"%s %s %s %.2f %s\n",temp->nombre,temp->contrasena,temp->cuenta,temp->money,temp->estado);
-      printf("%s %s %s %.2f %s\n",temp->nombre,temp->contrasena,temp->cuenta,temp->money,temp->estado);
+      fprintf(a_user,"%s %s %s %s %s\n",temp->nombre,temp->contrasena,temp->cuenta,temp->money,temp->estado);
+      printf("%s %s %s %s %s\n",temp->nombre,temp->contrasena,temp->cuenta,temp->money,temp->estado);
       temp=temp->sig;
     }
   }else{
     fclose(a_user);
     a_user=fopen(nombre,"wt");
     while(temp!=NULL){
-      fprintf(a_user,"%s\n%s\n%s\n%.2f\n%s\n\n",temp->nombre,temp->contrasena,temp->cuenta,temp->money,temp->estado);
-      printf("%s %s %s %.2f %s\n",temp->nombre,temp->contrasena,temp->cuenta,temp->money,temp->estado);
+      fprintf(a_user,"%s\n%s\n%s\n%s\n%s\n\n",temp->nombre,temp->contrasena,temp->cuenta,temp->money,temp->estado);
+      printf("%s %s %s %s %s\n",temp->nombre,temp->contrasena,temp->cuenta,temp->money,temp->estado);
       temp=temp->sig;
     }
   }
@@ -243,4 +239,38 @@ void Guardar_admin(){
     }
   }
   fclose(a_admin);
+}
+
+//valida el deposito o retiro del usuario
+void buscar_cuenta(int op){
+  user_t *temp;
+  temp=inicio_u;
+  //busca el usuario actual
+  while(temp->sig!=NULL && strcmp(temp->cuenta,u_cuenta)!=0){
+    temp=temp->sig;
+  }
+
+  //convierte strings a floats para poder
+  //utilizar operaciones
+  const char s[2] = "-";
+  char *token,*token1;
+  float arg,u_M,resultado;
+  token = strtok(argumento, s);
+  sscanf(token,"%f",&arg);
+  
+  token1 = strtok(temp->money, s);
+  sscanf(token1,"%f",&u_M);
+  
+  if(op==1 && arg>u_M)
+    printf("\nNo puedes retirar mas de lo que tienes en tu cuenta\n");
+  else if(op==1)
+    resultado=u_M-arg;  
+  if(op==2)
+    resultado=u_M+arg;
+
+  printf("\nTu saldo final es de: %.2f\n\n",resultado);
+
+  sprintf(temp->money,"%f",resultado);
+
+  Guardar_usu();
 }

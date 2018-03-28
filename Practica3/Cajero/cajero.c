@@ -15,7 +15,6 @@
 
 #include "tables.h"
 
-
 /*************** VARIABLES GLOBALES ***************/ 
 EVENT event;
 int state;
@@ -29,7 +28,7 @@ char u_cuenta[L_EVENT_ARGS];
 char u_nombre[L_EVENT_ARGS];
 char u_contra[L_EVENT_ARGS];
 char u_n[L_EVENT_ARGS];
-float u_money;
+char u_money[50];
 char u_blq[L_EVENT_ARGS];
 
 char a_nombre[L_EVENT_ARGS];
@@ -47,7 +46,7 @@ void getevent(void);
 void leer_admin();
 void leer_usu();
 void creditos();
-
+void buscar_cuenta(int);
 int exist_u(void);
 int intentos(void);
 int msg_ret(void);
@@ -235,12 +234,12 @@ int msg_salida(void){
     
 }
 int retiro_exi(void){
-  printf("\nHas retirado efectivo con éxito\n");
-  printf("\nTu saldo final es de: ");
+  int op=1;
+  buscar_cuenta(op);
 }
 int deposito_exi(void){
-  printf("\nHas depositado efectivo con éxito\n");
-  printf("\nTu saldo final es de: ");
+  int op=2;
+  buscar_cuenta(op);
 }
 int msg_saldo(void){
   printf("\nTu saldo actual es de: ");
@@ -307,8 +306,8 @@ void leer_usu(){
       
   //if(inicio!=NULL){
   while (!feof(a_user)) {
-    fscanf(a_user,"%s\n%s\n%s\n%f\n%s\n\n",u_nombre,u_contra,u_n,&u_money,u_blq);
-    printf("%s %s %s %.2f %s\n",u_nombre,u_contra,u_n,u_money,u_blq);
+    fscanf(a_user,"%s\n%s\n%s\n%s\n%s\n\n",u_nombre,u_contra,u_n,u_money,u_blq);
+    printf("%s %s %s %s %s\n",u_nombre,u_contra,u_n,u_money,u_blq);
     insertar_usuario();
   }
   fclose(a_user);
