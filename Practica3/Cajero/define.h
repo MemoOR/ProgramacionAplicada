@@ -12,7 +12,7 @@
  * las constantes que se necesiten en el programa *
  **************************************************/ 
 #define BUFFER        128
-#define L_EVENT_ARGS  21
+#define L_EVENT_ARGS  50
 #define CLS system("clear")
 
 /****************** ESTRUCTURAS *****************
@@ -79,6 +79,14 @@ typedef struct admin_t{
   
   struct admin_t *sig,*ant;
 }admin_t;
+
+typedef struct moves_t{
+  char accion[20];
+  char monto[50];
+  char fecha[128];
+
+  struct moves_t *sig,*ant;
+}moves_t;
 
 /********************* GLOBALES ***********************
  * En esta seccion se pueden declarar todas	      *

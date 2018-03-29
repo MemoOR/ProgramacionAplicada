@@ -31,20 +31,25 @@ int buscar_cad(){
 void bloquear_usu(){
   user_t *temp;
   temp=inicio_u;
+
   while(temp!=NULL && strcmp(temp->cuenta,u_cuenta)!=0)
     temp=temp->sig;
+  
   strcpy(temp->estado,"Bloqueado");
   Guardar_usu();
 }
 
+
 //desbloquea un usuario
 void desbloquear_usu(){
-    user_t *temp;
+  user_t *temp;
   temp=inicio_u;
+
   while(temp!=NULL && strcmp(temp->cuenta,u_cuenta)!=0)
     temp=temp->sig;
+  
   strcpy(temp->estado,"Desbloqueado");
-  Guardar_usu();
+  Guardar_usu();  
 }
 
 //funciones princicipales de administrador
@@ -81,6 +86,7 @@ void administrador(){
       if(validar!=0 && x<=3)
 	printf("\nContraseña incorrecta\n");
       if(x>3){
+	//si se ingresan muchas contraseñas incorrectas se cierra el programa
 	printf("\nHas ingresado tres veces la contraseña incorrectamente\n");
 	printf("El programa se cerrara por cuestiones de seguridad\n");
 	exit(0);
@@ -104,6 +110,8 @@ void administrador(){
       scanf("%d",&opcion);
       getchar();
     }while(opcion<0 || opcion>8);
+
+    //opciones de administrador
     switch(opcion){
     case 1:
       printf("\nEscribe el nombre de usuario:");
@@ -119,6 +127,7 @@ void administrador(){
       strtok(u_n,"\n");
 
       strcpy(u_money,"0.00");
+      strcpy(u_estado,"Desbloqueado");
       
       insertar_usuario();
       Guardar_usu();
@@ -134,14 +143,12 @@ void administrador(){
       fgets(u_cuenta,98,stdin);
       strtok(u_cuenta,"\n");
       bloquear_usu();
-      Guardar_usu();
       break;
     case 4:
       printf("\nEscribe el número de cuenta:");
       fgets(u_cuenta,98,stdin);
       strtok(u_cuenta,"\n");
       desbloquear_usu();
-      Guardar_usu();
       break;
     case 5:
       printf("\nEscribe el nombre de usuario:");

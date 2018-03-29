@@ -79,8 +79,8 @@ ACTION_TAB action_table[]={
     { msg_bloq,       AST,         INICIO},
     { val_contra,      0,          AST},
     { msg_c_incorr,   AST,         CONTRASENA},
-    { val_bloqueo,     0,          ESPERA_U},
-    { msg_bloqueado,  AST,         ESPERA_U},
+    { val_bloqueo,     0,          AST},
+    { msg_bloqueado,  AST,         INICIO},
     { msg_acceso,     AST,         ESPERA_U},
     };
 
