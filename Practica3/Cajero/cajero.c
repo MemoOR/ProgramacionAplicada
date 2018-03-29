@@ -37,6 +37,7 @@ char u_estado[L_EVENT_ARGS];
 char m_accion[20];
 char m_money[128];
 char m_date[200];
+char m_hora[128];
 
 char a_nombre[L_EVENT_ARGS];
 char a_contra[L_EVENT_ARGS];
@@ -307,7 +308,7 @@ int msg_mov(void){
     printf("\nNo existen movimientos\n");
   }
   while(temp!=NULL){
-    printf("%s: $%s %s\n",temp->accion,temp->monto,temp->fecha);
+    printf("%s %s %s %s\n",temp->accion,temp->monto,temp->fecha,temp->hora);
     temp=temp->sig;
   }
  
@@ -418,11 +419,12 @@ void leer_mov(){
   
   if(a_moves==NULL){
     a_moves=fopen(archivo,"wt");
+    fclose(a_moves);
     return;
   }
   
-  while (!feof(a_moves)){
-    fscanf(a_moves,"%s %s %s\n",m_accion,m_money,m_date);
+  while(!feof(a_moves)){
+    fscanf(a_moves,"%s %s %s %s\n",m_accion,m_money,m_date,m_hora);
     insertar_mov();
   }
   fclose(a_moves);

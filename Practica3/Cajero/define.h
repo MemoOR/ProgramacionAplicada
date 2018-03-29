@@ -80,10 +80,12 @@ typedef struct admin_t{
   struct admin_t *sig,*ant;
 }admin_t;
 
+//estructura de movimientos del usuario
 typedef struct moves_t{
   char accion[20];
   char monto[50];
   char fecha[128];
+  char hora[128];
 
   struct moves_t *sig,*ant;
 }moves_t;
@@ -157,6 +159,30 @@ void creditos() {
   printf("Este programa fue desarrollado por:\n");
   printf("\tGuillermo Ortega\n");
   printf("\tSerio Sarabia\n");
+
+  printf("\nEste programa simula un cajero automatico mediante");
+  printf("\nmáquinas de estados, hay 7 estados:\n");
+  printf("[1] INICIO");
+  printf("\n[2] CONTRASEÑA");
+  printf("\n[3] ESPERA DE USUARIO");
+  printf("\n[4] RETIRO");
+  printf("\n[5] DEPOSITO");
+  printf("\n[6] CONSULTAS");
+  printf("\n[7] CAMBIO DE CONTRASEÑA\n");
+  printf("\nTambien cuenta con un menu de administrador el cual permite:\n");
+  printf("[1] Añadir usuario");
+  printf("\n[2] Eliminar usuario");
+  printf("\n[3] Bloquear usuario");
+  printf("\n[4] Desbloquear usuario");
+  printf("\n[5] Añadir administrador");
+  printf("\n[6] Eliminar administrador");
+
+  printf("\nPara ingresar al sistema de administrador iniciar el programa\n");
+  printf("como ./cajero -c\n");
+  
+  printf("Cuenta de administrador: Jorge\n");
+  printf("Contraseña: Practica3\n");
+  
   printf("\n\nPresiona enter para entrar al sistema...");
 
   disable_canonical();

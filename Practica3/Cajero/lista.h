@@ -135,6 +135,7 @@ void insertar_mov(){
   strcpy(temp->accion,m_accion);
   strcpy(temp->monto,m_money);
   strcpy(temp->fecha,m_date);
+  strcpy(temp->hora,m_hora);
   
   if(inicio_m==NULL){
     temp->sig=inicio_m;
@@ -202,13 +203,13 @@ void validar_bloqueo(char *op){
   user_t *temp;
   temp=inicio_u;
   *op='n';
-  if(temp==NULL){
-    return;
-  }
+  
   while(temp!=NULL){
-    if(strcmp(temp->estado,"Bloqueado")==0){
-      *op='s';
-      return;
+    if(strcmp(temp->cuenta,u_cuenta)==0){
+      if(strcmp(temp->estado,"Bloqueado")==0){
+	*op='s';
+	return;
+      }
     }
     temp=temp->sig;
   }
@@ -315,30 +316,39 @@ void buscar_cuenta(int op){
   Guardar_usu();
 }
 
+//agrega nuevos movimientos del usuario la lista y los guarda
+//en un archivo con el numero de cuenta del usuario
 void agregar_mov(int op){ 
   char archivo[50];
+  //genera el nomnre del archivo donde se guardan
+  //los movimientos del usuario
   strcpy(archivo,"Movimientos_");
   strcat(archivo,u_cuenta);
   strcat(archivo,".txt");
 
   char accion[20];
-  
+
+  //accion del usuario
   if(op==1){
     strcpy(accion,"Retiro");
   }
   if(op==2){
     strcpy(accion,"Depósito");
   }
-  
+
+  //obtiene la fecha y hora actuales
   time_t tiempo = time(0);
   struct tm *tlocal = localtime(&tiempo);
-  char output[128];
-  strftime(output,128,"%d/%m/%y %H:%M:%S",tlocal);
+  char output[128],output1[128];
+  strftime(output,128,"%d/%m/%y",tlocal);
+  strftime(output1,128,"%H:%M:%S",tlocal);
 
   strcpy(m_money,argumento);
   strcpy(m_accion,accion);
   strcpy(m_date,output);
-  
+  strcpy(m_hora,output1);
+
+  //inserta los movimientos en la lista
   insertar_mov();
   
   moves_t *temp;
@@ -346,17 +356,18 @@ void agregar_mov(int op){
 
   a_moves=fopen(archivo,"r");
 
+  //guarda los movimientos en el archivo
   if(a_moves==NULL){
     a_moves=fopen(archivo,"wt");
     while(temp!=NULL){ 
-      fprintf(a_moves,"%s %s %s\n",temp->accion,temp->monto,temp->fecha);
+      fprintf(a_moves,"%s %s %s %s\n",temp->accion,temp->monto,temp->fecha,temp->hora);
       temp=temp->sig;
     }
   }else{
     fclose(a_moves);
     a_moves=fopen(archivo,"wt");
     while(temp!=NULL){
-      fprintf(a_moves,"%s %s %s\n",temp->accion,temp->monto,temp->fecha);
+      fprintf(a_moves,"%s %s %s %s\n",temp->accion,temp->monto,temp->fecha,temp->hora);
       temp=temp->sig;
     }
   }
