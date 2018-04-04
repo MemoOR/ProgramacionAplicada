@@ -286,7 +286,7 @@ void buscar_cuenta(int op){
   user_t *temp;
   temp=inicio_u;
   //busca el usuario actual
-  while(temp->sig!=NULL && strcmp(temp->cuenta,u_cuenta)!=0){
+  while(temp!=NULL && strcmp(temp->cuenta,u_cuenta)!=0){
     temp=temp->sig;
   }
 
@@ -373,3 +373,5 @@ void agregar_mov(int op){
   }
   fclose(a_moves);
 }
+
+
