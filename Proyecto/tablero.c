@@ -31,18 +31,18 @@ void command(char *label) {
 
 void callback(GtkWidget *widget, gpointer callback_data) {
   gchar *label;
-  int p_size=35;
-  
-  GtkImage *img_r = gtk_image_new_from_file ("red.png");
-  GtkImage *img_b = gtk_image_new_from_file ("blue.png");
+    
+  GtkWidget *img_r = gtk_image_new_from_file ("red.png");
+  GtkWidget *img_b = gtk_image_new_from_file ("blue.png");
 
-  gtk_image_set_pixel_size (img_r,p_size);
-  gtk_image_set_pixel_size (img_b,p_size);
+  GtkSettings *default_settings = gtk_settings_get_default();
+
+  g_object_set(default_settings, "gtk-button-images", TRUE, NULL);
   
   g_object_get(G_OBJECT(widget), "label", &label, NULL);
   
   if (*label == 0){
-    gtk_button_set_image (GTK_BUTTON (widget), img_r);
+    gtk_button_set_image (GTK_BUTTON (widget), img_b);
     command(label); 
   }
   else if (*label == 1){
