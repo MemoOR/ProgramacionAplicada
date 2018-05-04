@@ -44,7 +44,7 @@ gint main ( gint argc, gchar *argv[])
   Lista *Inicio;
   Jug One,Two;
 
-  Inicio=(Lista*)malloc(sizeof(Lista));
+  // Inicio=(Lista*)malloc(sizeof(Lista));
   
   Inicio->sig=NULL;
   Inicio->Jugador1=One;

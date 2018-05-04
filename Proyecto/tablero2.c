@@ -1,6 +1,7 @@
 #include <gtk/gtk.h>
 #include <string.h>
-
+#include <stdio.h>
+#include <stdlib.h>
 
 
 typedef struct _node{
@@ -121,8 +122,8 @@ GtkWidget *create_pad() {
 }
 
 int main(int argc, char **argv) {
-  GtkWidget *window;
-  GtkWidget *row, *button, *box1;
+  GtkWidget *window,*label;
+  GtkWidget *row, *button, *box1, *boxdial;
   
   gtk_init(&argc, &argv);
   
@@ -140,6 +141,20 @@ int main(int argc, char **argv) {
   gtk_container_add(GTK_CONTAINER(window), box1);
   
   gtk_widget_show_all(window);
+
+
+
+  GtkWidget *dialog = gtk_dialog_new();
+  
+  label = gtk_label_new ("Bienvenidos al juego de Penta, elaborado por....... El juego se trata de.....");
+  
+  boxdial = gtk_vbox_new(TRUE,5);
+  
+  gtk_box_pack_start(GTK_BOX(boxdial),label,FALSE,TRUE,0);
+  gtk_container_add(GTK_CONTAINER(dialog),boxdial);
+  
+  gtk_widget_show_all(dialog);
+  
   
   gtk_main();
   
