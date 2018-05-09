@@ -30,7 +30,7 @@ typedef struct _node2{
 
 
 
-GtkWidget *AddButton(GtkWidget *theBox, const gchar *buttonText, gpointer CallBackFunction, GtkWidget *EntryBox);
+GtkWidget *AddButton(GtkWidget *theBox, const gchar *buttonText, gpointer CallBackFunction, Lista *EntryBox);
 
 void StopTheApp(GtkWidget *window, gpointer data);
 void Nuevo(GtkWidget *window, gpointer data);
@@ -38,7 +38,7 @@ void Cargar(GtkWidget *window, gpointer data);
 void Tablero(GtkWidget *window, gpointer data);
 void NOMBRES(GtkWidget *window, gpointer data);
 void CARGAR(GtkWidget *window, gpointer data);
-
+void Cargarjugs(GtkWidget *window, gpointer data);
 
 
 gint main ( gint argc, gchar *argv[])
@@ -46,22 +46,24 @@ gint main ( gint argc, gchar *argv[])
 
   GtkWidget *window1;
   GtkWidget *button;
-  GtkWidget *box;
+  GtkWidget *box,*label,*verticalbox;
   Lista *Inicio;
-  Jug *Jugador1,*Jugador2;
+  Jug Jugador1,Jugador2;
 
   Inicio=(Lista*)malloc(sizeof(Lista));
-
+  
+  /*
   Jugador1=(Jug*)malloc(sizeof(Jug));
   Jugador2=(Jug*)malloc(sizeof(Jug));
+  */
   
-  strcpy(Jugador1->nombre, "\0");
-  strcpy(Jugador2->nombre, "\0");
+  strcpy(Jugador1.nombre, "\0");
+  strcpy(Jugador2.nombre, "\0");
   
   Inicio->sig=NULL;
   strcpy(Inicio->archivo, "\0");
-  Inicio->Jugador1=Jugador1;
-  Inicio->Jugador2=Jugador2;
+  Inicio->Jugador1=&Jugador1;
+  Inicio->Jugador2=&Jugador2;
 
   //Ventana de nuevo juego o cargar
 
@@ -70,32 +72,30 @@ gint main ( gint argc, gchar *argv[])
 
   window1 = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_default_size(GTK_WINDOW(window1),320,200);
-  gtk_container_border_width(GTK_CONTAINER(window1),5);
+  gtk_container_border_width(GTK_CONTAINER(window1),25);
 
+
+  verticalbox = gtk_vbox_new(TRUE,5);
 
   Inicio->ventana = window1;
 
-  
-  box = gtk_hbox_new(TRUE,5);
-  
-  /*
-    button = AddButton(box,"Juego Nuevo",Nuevo,&Inicio);
-    button = AddButton(box,"Cargar",Cargar,Inicio);
-  */
-  
-  button = gtk_button_new_with_label("Juego Nuevo");
-  gtk_box_pack_start(GTK_BOX(box),button,FALSE,TRUE,0);
-  gtk_signal_connect(GTK_OBJECT(button),"clicked",GTK_SIGNAL_FUNC(Nuevo),&Inicio);
-  gtk_widget_show(button);
+  label = gtk_label_new ("¡Bienvenidos al juego de Penta!");
+
+  gtk_box_pack_start(GTK_BOX(verticalbox),label,TRUE,TRUE,5);
   
   
-  button = gtk_button_new_with_label("Cargar");
-  gtk_box_pack_start(GTK_BOX(box),button,FALSE,TRUE,0);
-  gtk_signal_connect(GTK_OBJECT(button),"clicked",GTK_SIGNAL_FUNC(Cargar),&Inicio);
-  gtk_widget_show(button);
+  box = gtk_hbox_new(TRUE,30);
   
   
-  gtk_container_add(GTK_CONTAINER(window1),box);
+  button = AddButton(box,"Juego Nuevo",Nuevo,Inicio);
+  button = AddButton(box,"Cargar",Cargar,Inicio);
+
+  gtk_box_pack_start(GTK_BOX(verticalbox),box,TRUE,TRUE,5);
+  
+
+  
+  
+  gtk_container_add(GTK_CONTAINER(window1),verticalbox);
   
   /*
   verticalbox = gtk_vbox_new(TRUE,5);
@@ -120,7 +120,7 @@ GtkWidget *AddButton(GtkWidget *theBox, const gchar *buttonText, gpointer CallBa
 {
   GtkWidget *button;
   button = gtk_button_new_with_label(buttonText);
-  gtk_box_pack_start(GTK_BOX(theBox),button,FALSE,TRUE,0);
+  gtk_box_pack_start(GTK_BOX(theBox),button,FALSE,TRUE,10);
   gtk_signal_connect(GTK_OBJECT(button),"clicked",GTK_SIGNAL_FUNC(CallBackFunction),EntryBox);
   gtk_widget_show(button);
   return button;
@@ -176,10 +176,7 @@ void Nuevo(GtkWidget *window, gpointer data){
 
   
   
-  button = gtk_button_new_with_label("Continuar");
-  gtk_box_pack_start(GTK_BOX(verticalbox),button,FALSE,TRUE,0);
-  gtk_signal_connect(GTK_OBJECT(button),"clicked",GTK_SIGNAL_FUNC(NOMBRES),&Inicio);
-  gtk_widget_show(button);
+  button = AddButton(verticalbox,"Continuar",NOMBRES,Inicio);
   
   //Cuando se apriete el boton, que guarde entrybox y Entrybox en Lista->Jug1 y Lista->Jug2
   
@@ -225,15 +222,10 @@ void Cargar(GtkWidget *window, gpointer data){
   gtk_box_pack_start(GTK_BOX(verticalbox),entrybox,TRUE,TRUE,5);
   gtk_signal_connect(GTK_OBJECT(windownombres),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
 
-  /*
-  button = gtk_button_new_with_label("Continuar");
-  gtk_box_pack_start(GTK_BOX(verticalbox),button,FALSE,TRUE,0);
-  gtk_signal_connect(GTK_OBJECT(button),"clicked",GTK_SIGNAL_FUNC(CARGAR),&Inicio);
-  gtk_widget_show(button);
-  */
-  //Cuando se de click en continuar debe guardar lo que este en la entrybox
 
-  button = AddButton(verticalbox,"Continuar",CARGAR,&Inicio);
+  button = AddButton(verticalbox,"Continuar",CARGAR,Inicio);
+
+  //Cuando se de click en continuar debe guardar lo que este en la entrybox
 
   
   gtk_container_add(GTK_CONTAINER(windownombres),verticalbox);
@@ -256,7 +248,7 @@ void Tablero(GtkWidget *window, gpointer data){}
 void NOMBRES(GtkWidget *window, gpointer data){
 
   const gchar *text;
-  char text2[20];
+  char text2[20],text3[20];
 
   Lista *Inicio=(Lista *)data;
 
@@ -266,11 +258,14 @@ void NOMBRES(GtkWidget *window, gpointer data){
  
   text =gtk_entry_get_text(GTK_ENTRY(Inicio->Jugador1->entry));
   strcpy(text2, text);
-  strcpy(Inicio->Jugador1->nombre,text2);
+
   
   text =gtk_entry_get_text(GTK_ENTRY(Inicio->Jugador2->entry));
-  strcpy(text2,text);
-  strcpy(Inicio->Jugador2->nombre, text2);
+  strcpy(text3,text);
+  if((text2[0]!='\0')&&(text3[0]!='\0')){
+    strcpy(Inicio->Jugador1->nombre,text2);
+    strcpy(Inicio->Jugador2->nombre, text3);
+  }
 }
 
 
@@ -279,13 +274,38 @@ void CARGAR(GtkWidget *window, gpointer data){
   const gchar *text;
   char text2[20];
   Lista *Inicio=(Lista *)data;
-
+  Lista *temp,*temp2;
+  FILE *Archivo;
   
   
   //Guarda el nombre del archivo en la memoria
  
   text = gtk_entry_get_text(GTK_ENTRY(Inicio->entry));
   strcpy(text2, text);
-  strcpy(Inicio->archivo,text2);
+  if(text[0]!='\0'){
+    strcpy(Inicio->archivo,text2);
+    strcat(text2,"txt");
+    Archivo=fopen(text2,"rt");
+    if(Archivo==NULL){
+      //Mostrar una ventana que diga que ese archivo no existe
+    }
+
+    
+    else{
+      //Leer los nombres y luego jugada por jugada
+      
+      fgets(Inicio->Jugador1->nombre, 19, Archivo);
+      fgets(Inicio->Jugador2->nombre, 19, Archivo);
+      fscanf(Archivo,"%d",&Inicio->X);
+      fscanf(Archivo,"%d",&Inicio->Y);
+      temp=(Lista *)malloc(sizeof(Lista));
+      Inicio->sig=temp;
+
+
+      
+
+    
   
 }
+
+

@@ -1,6 +1,8 @@
 #include <gtk/gtk.h>
 #include <string.h>
+#include <stdlib.h>
 
+<<<<<<< HEAD
 
 
 typedef struct _node{
@@ -29,6 +31,9 @@ typedef struct _node2{
 
 
 static gboolean delete_event(GtkWidget *widget, GdkEvent *event, gpointer *data) {
+=======
+static gboolean delete_event(GtkWidget *widget, GdkEvent *event, gpointer *data){
+>>>>>>> bdc576372cf626744d664bbb5b2bec4486eab287
   return FALSE;
 }
 
@@ -36,13 +41,12 @@ static void destroy(GtkWidget *widget, gpointer data) {
   gtk_main_quit();
 }
 
-void command(char *label) {
+void command(int y) {
   
-  switch(*label){
+  switch(y){
   case 0:
     
     break;
-    
   case 1:
     
     break;
@@ -58,48 +62,44 @@ void command(char *label) {
 
 void callback(GtkWidget *widget, gpointer callback_data) {
   gchar *label;
-  int p_size=35;
-  
-  GtkImage *img_r = gtk_image_new_from_file ("red.png");
-  GtkImage *img_b = gtk_image_new_from_file ("blue.png");
+  GdkPixbuf *pix1, *pix2;
 
-  gtk_image_set_pixel_size (img_r,p_size);
-  gtk_image_set_pixel_size (img_b,p_size);
+  int x = rand()%100, y=0;
   
   g_object_get(G_OBJECT(widget), "label", &label, NULL);
-  
-  if (*label == 0){
-    gtk_button_set_image (GTK_BUTTON (widget), img_r);
-    command(label); 
-  }
-  else if (*label == 1){
 
+  pix1=gdk_pixbuf_new_from_file("red.png",NULL);
+  pix2=gdk_pixbuf_new_from_file("blue.png",NULL);
+  
+  pix1=gdk_pixbuf_scale_simple(pix1,25,25,GDK_INTERP_BILINEAR);
+  pix2=gdk_pixbuf_scale_simple(pix2,25,25,GDK_INTERP_BILINEAR);
+    
+  GtkWidget *img_r = gtk_image_new_from_pixbuf(pix1);
+  GtkWidget *img_b = gtk_image_new_from_pixbuf(pix2);
+
+  if (*label == 0 && x >= 50){
+    gtk_button_set_image (GTK_BUTTON (widget), img_b);
+    command(y);
+  }
+  else if (*label == 0 && x <= 51){
+    gtk_button_set_image (GTK_BUTTON (widget), img_r);
+    y=1;
+    command(y);
   }
   g_free(label);
 }
-
-/*
-  --GtkWidget *image = gtk_image_new_from_file ("red.png");
-  
-  --GtkWidget *button = gtk_button_new ();
-  
-  --gtk_button_set_image (GTK_BUTTON (button), image);
-*/
-
 
 GtkWidget *create_pad() {
   char *options[20][20];
 
   for(int i=0;i<20;i++)
     for(int j=0;j<20;j++)
-      options[i][j]="";
+      options[i][j]=0;
 
   GtkWidget *container;
   GtkWidget *row, *button;
 
   container = gtk_vbox_new(FALSE, 3);
-
-  
   
   for (int i = 0; i < 20; i++) {
     
@@ -128,7 +128,7 @@ int main(int argc, char **argv) {
   
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   
-  box1 = gtk_vbox_new(FALSE, 0);
+  box1 = gtk_vbox_new(TRUE, 0);
   
   row = gtk_hbox_new(TRUE, 5);
   
