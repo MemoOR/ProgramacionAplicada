@@ -2,9 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-<<<<<<< HEAD
-
-
 typedef struct _node{
 
   char nombre[20];
@@ -27,13 +24,7 @@ typedef struct _node2{
 }Lista;
 
 
-
-
-
-static gboolean delete_event(GtkWidget *widget, GdkEvent *event, gpointer *data) {
-=======
 static gboolean delete_event(GtkWidget *widget, GdkEvent *event, gpointer *data){
->>>>>>> bdc576372cf626744d664bbb5b2bec4486eab287
   return FALSE;
 }
 
@@ -77,11 +68,11 @@ void callback(GtkWidget *widget, gpointer callback_data) {
   GtkWidget *img_r = gtk_image_new_from_pixbuf(pix1);
   GtkWidget *img_b = gtk_image_new_from_pixbuf(pix2);
 
-  if (*label == 0 && x >= 50){
+  if (label == 0 && x >= 50){
     gtk_button_set_image (GTK_BUTTON (widget), img_b);
     command(y);
   }
-  else if (*label == 0 && x <= 51){
+  else if (label == 0 && x <= 51){
     gtk_button_set_image (GTK_BUTTON (widget), img_r);
     y=1;
     command(y);
