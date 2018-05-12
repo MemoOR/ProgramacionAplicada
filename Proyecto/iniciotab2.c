@@ -86,9 +86,7 @@ gint main ( gint argc, gchar *argv[]){
   
   Inicio->sig=NULL;
   Jugador1.comidas=0;
-  Jugador1.fila4=0;
   Jugador2.comidas=0;
-  Jugador2.fila4=0;
   
   strcpy(Inicio->archivo, "\0");
   Inicio->Jugador1=&Jugador1;
@@ -439,9 +437,6 @@ void callback(GtkWidget *widget, gpointer data) {
     y=1;
     command(y);
   }
-
-  ComeFichas(button,Inicio);
-  FilasDe4(button,Inicio);
   Inicio->turno++;
   
   g_free(label);
@@ -486,40 +481,31 @@ GtkWidget *create_pad(gpointer data) {
 
 //arreglar oculatar mensahes
 //arreglar cerrar aplicacion desde tablero
-
+/*
 
 void ComeFichas(GtkWidget *widget, gpointer data){
 
   Lista *Inicio=(Lista *)data;
-  if (Inicio->turno%2 = 1)
-    j = 1;
-  if (Inicio->turno%2 = 0)
-    j=2;
-  
+
   //Valida derecha
   
   if(x<=17)
     {	
-      if(Inicio->tablero[x][y]==j){
-	
-	if(Inicio->tablero[x+1][y]!=0 && Inicio->tablero[x+1][y]!=j)
+      if(casilla!="vacio" && casilla==j){
+	x++;
+	if(casilla!="vacio" && casilla!=j)
 	  {
-	    
-	    if(Inicio->tablero[x+2][y]!=0 && Inicio->tablero[x+2][y]!=j)
+	    x++;
+	    if(casilla!="vacio" && casilla!=j)
 	      {
-        
-		if(Inicio->tablero[x+3][y]==j)
+		x++;
+		if(casilla!="vacio" && casilla==j)
 		  {
-		  if (j=1)
-		    Inicio->Jugador1->comidas++;
-		  else
-		    Inicio->Jugador2->comidas++;
-		  
-        
-		  
-		    Inicio->tablero[x+1][y]=0;
-        
-		    Inicio->tablero[x+2][y]=0;
+		    j.comidas+2;
+		    x--;
+		    casilla=vacio;
+		    x--;
+		    casilla=vacio;
 		  }
 	      }
 	  }
@@ -529,56 +515,50 @@ void ComeFichas(GtkWidget *widget, gpointer data){
   //valida diagonal abajo derecha
   if(x<=17 && y<=17)
     {
-      if(Inicio->tablero[x][y]==j)
+      if(casilla!="vacio" && casilla==j)
 	{
-	 
-	  if(Inicio->tablero[x+1][y+1]!=0 && Inicio->tablero[x+1][y+1]=j)
+	  x++; 
+	  y++;
+	  if(casilla!="vacio" && casilla!=j)
 	    {
-
-	      if(Inicio->tablero[x+2][y+2]!=0 && Inicio->tablero[x+2][y+2]!=j)
+	      x++;
+	      y++;
+	      if(casilla!="vacio" && casilla!=j)
 		{
-	        
-		  if(Inicio->tablero[x+3][y+3]==j)
+		  x++;
+		  y++;
+		  if(casilla!="vacio" && casilla==j)
 		    {
-		      if (j=1)
-			Inicio->Jugador1->comidas++;
-		      else
-			Inicio->Jugador2->comidas++;
-			  
-		      
-		      
-		      Inicio->tablero[x+1][y+1]=0;
-		     
-		      Inicio->tablero[x+2][y+2]=0;
+		      j.comidas+2;
+		      x--;
+		      casilla=vacia;
+		      x--;
+		      casilla=vacia;
 		    }
 		}
 	    }
 	}
     }
   
-  //valida arriba
+  //valida abajo
   if(y<=17)
     {
-      if(Inicio->tablero[x][y]==j)
+      if(casilla!="vacio" && casilla==j)
 	{
-        
-	  if(Inicio->tablero[x][y+1]!=0  && Inicio->tablero[x][y+1]!=j)
+	  y++;
+	  if(casilla!="vacio" && casilla!=j)
 	    {
-	   
-	      if(Inicio->tablero[x][y+2]!=0 && Inicio->tablero[x][y+2]==j)
+	      y++;
+	      if(casilla!="vacio" && casilla==j)
 		{
-		 
-		  if(Inicio->tablero[x][y+3]==j)
+		  y++;
+		  if(casilla!="vacio" && casilla!=j)
 		    {
-		      if(j=1)
-			Inicio->Jugador1->comidas++;
-		      else
-			Inicio->Jugador2->comidas++;
 		      j.comidas+2;
-		      
-		      Inicio->tablero[x][y+1]=0;
-		      
-		      Inicio->tablero[x][y+2]=0;
+		      y--;
+		      casilla=vacia;
+		      y--;
+		      casilla=vacia;
 		    }
 		}
 	    }
@@ -588,27 +568,25 @@ void ComeFichas(GtkWidget *widget, gpointer data){
   //valida diagonal abajo izquierda
   if(x<=3 && y<=17)
     {
-      if(Inicio->tablero[x][y]==j)
+      if(casilla!="vacio" && casilla==j)
 	{
-	   
-	  
-	  if(Inicio->tablero[x-1][y+1]!=0 && Inicio->tablero[x-1][y+1]!=j)
+	  x--; 
+	  y++;
+	  if(casilla!="vacio" && casilla!=j)
 	    {
-	    
-	      if(Inicio->tablero[x-2][y+2]!=0 && Inicio->tablero[x-2][y+2]!=j)
+	      x--;
+	      y++;
+	      if(casilla!="vacio" && casilla!=j)
 		{
-        
-		  if(Inicio->tablero[x-3][y+3]==j)
+		  x--;
+		  y++;
+		  if(casilla!="vacio" && casilla==j)
 		    {
-		      if (j=1)
-			Inicio->Jugador1->comidas++;
-		      else
-			Inicio->Jugador2->comidas++;
-        
-		      
-		      Inicio->tablero[x-1][y+1]=0;
-		      
-		      Inicio->tablero[x-2][y+2]=0;
+		      j.comidas+2;
+		      x--;
+		      casilla=vacia;
+		      x--;
+		      casilla=vacia;
 		    }
 		}
 	    }
@@ -619,28 +597,20 @@ void ComeFichas(GtkWidget *widget, gpointer data){
 
 void FilasDe4(GtkWidget *widget, gpointer callback_data)
 {
-  int x, y, i=0,j=0; //variables del tablero
-   //j será el jugador en turno
-  int cont=1;
-  int auxx=x;
-  int auxy=y;
-
+  int x, y, i; //variables del tablero
+  var jugador=j; //j será el jugador en turno
   
-  for(j=1,j<3,j++){
-  
-  for(i=0, i<18, i++){
-    for(j=0, j<20, j++){
-      {
-	while(Inicio->tablero[i][j]==j)
+  //valida derecha
+  if(x<=17)
+    {
+      while(casilla!="vacio" && casilla==j && i<=3)
 	{
 	  i++;
-	  cont++;
+	  x++;
 	}
-      if(cont==5)
-	Ganador(&j);
-      if(cont==4)
+      if(i==3)
 	{
-	  Inicio->Jugador1->fila4++;
+	  j.filas=j.filas++;
 	}
     }
   
