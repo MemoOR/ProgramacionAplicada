@@ -21,7 +21,7 @@ typedef struct _node4{
 }Coordenadas;
 
 typedef struct _node2{
-  GtkWidget *entry;
+  GtkWidget *entry,*entry2;
   GtkWidget *ventana,*label1,*label2,*labelt;
   Jugadas *sig;
   int X1;
@@ -292,49 +292,53 @@ void NOMBRES(GtkWidget *window, gpointer data){
     row_t = gtk_hbox_new(TRUE, 5);
     
     gtk_box_pack_start(GTK_BOX(box_t), create_pad(Inicio), TRUE, FALSE, 0);
-<<<<<<< HEAD
+
     
     gtk_signal_connect(GTK_OBJECT(window_tab),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
 
     verticalbox=gtk_vbox_new(TRUE,2);
-    box = gtk_hbox_new(TRUE,10);
-    button = AddButton1(window_tab,box,"Guardar",GUARDAR,Inicio);
-    gtk_box_pack_start(GTK_BOX(verticalbox),box,TRUE,TRUE,5);
     
-    box2 = gtk_hbox_new(TRUE,10);
+    //box = gtk_hbox_new(TRUE,10);
+    
+    button = AddButton1(window_tab,verticalbox,"Guardar",GUARDAR,Inicio);
+    
+    
+    //box2 = gtk_hbox_new(TRUE,10);
     strcpy(text2,"Turno de: ");
     strcat(text2,Inicio->Jugador1->nombre);
       
-    label = Addlabel(box2,text2);
+    label = Addlabel(verticalbox,text2);
     Inicio->labelt = label;
-    gtk_box_pack_start(GTK_BOX(verticalbox),box2,TRUE,TRUE,5);
+    //gtk_box_pack_start(GTK_BOX(verticalbox),box2,TRUE,TRUE,5);
 
     
     
-    box3 = gtk_hbox_new(TRUE,10);
-    label1 = Addlabel(box3,"");
+    //box3 = gtk_hbox_new(TRUE,10);
+    
+    label1 = Addlabel(verticalbox,"hola");
     Inicio->label1 = label1;
-    gtk_box_pack_start(GTK_BOX(verticalbox),box3,TRUE,TRUE,5);
+    //gtk_box_pack_start(GTK_BOX(verticalbox),box3,TRUE,TRUE,5);
     
 
 
-    box4 = gtk_hbox_new(TRUE,10);
-    label2 = Addlabel(box3,"");
+    //box4 = gtk_hbox_new(TRUE,10);
+    label2 = Addlabel(box3,"ss");
     Inicio->label2 = label2;
-    gtk_box_pack_start(GTK_BOX(verticalbox),box4,TRUE,TRUE,5);
+    //gtk_box_pack_start(GTK_BOX(verticalbox),box4,TRUE,TRUE,5);
 
     
+    // gtk_box_pack_start(GTK_BOX(verticalbox),box,TRUE,TRUE,5);
+    gtk_box_pack_start(GTK_BOX(row_t),verticalbox,TRUE,TRUE,5);
+    gtk_box_pack_start(GTK_BOX(box_t),row_t,TRUE,TRUE,5);
     
 
-    
-=======
 
     g_signal_connect(window_tab, "delete-event", G_CALLBACK(delete_event), NULL);
     g_signal_connect(window_tab, "destroy", G_CALLBACK(StopTheApp), NULL);
 
->>>>>>> 9dd8e1984ec983b91f1ca1a154ceabc2c4be7aa8
+    //gtk_container_add(GTK_CONTAINER(windownombres),verticalbox);
     gtk_container_add(GTK_CONTAINER(window_tab), box_t);
-    gtk_container_add(GTK_CONTAINER(window_tab), verticalbox);
+
     
     gtk_widget_show_all(window_tab);
     
@@ -455,10 +459,9 @@ void callback(GtkWidget *widget, gpointer data) {
   gchar *label;
   GdkPixbuf *pix1, *pix2;
   Lista *Inicio=(Lista *)data;
-<<<<<<< HEAD
+
   GtkWidget *button;
-=======
->>>>>>> 9dd8e1984ec983b91f1ca1a154ceabc2c4be7aa8
+
 
   int  y=0;
   
@@ -534,11 +537,11 @@ GtkWidget *create_pad(gpointer data) {
 //arreglar cerrar aplicacion desde tablero
 
 
-/*
 void ComeFichas(GtkWidget *widget, gpointer data){
   GtkWidget *button;
   Lista *Inicio=(Lista *)data;
-  int j,x,y;
+  int x,y;
+  char j;
   if (Inicio->turno%2 == 1)
     j = 1;
   if (Inicio->turno%2 == 0)
@@ -558,7 +561,7 @@ void ComeFichas(GtkWidget *widget, gpointer data){
         
 		if(Inicio->tablero[x+3][y]==j)
 		  {
-		  if (j=1)
+		  if (j==1)
 		    Inicio->Jugador1->comidas++;
 		  else
 		    Inicio->Jugador2->comidas++;
@@ -588,7 +591,7 @@ void ComeFichas(GtkWidget *widget, gpointer data){
 	        
 		  if(Inicio->tablero[x+3][y+3]==j)
 		    {
-		      if (j=1)
+		      if (j==1)
 			Inicio->Jugador1->comidas++;
 		      else
 			Inicio->Jugador2->comidas++;
@@ -618,7 +621,7 @@ void ComeFichas(GtkWidget *widget, gpointer data){
 		 
 		  if(Inicio->tablero[x][y+3]==j)
 		    {
-		      if(j=1)
+		      if(j==1)
 			Inicio->Jugador1->comidas++;
 		      else
 			Inicio->Jugador2->comidas++;
@@ -648,7 +651,7 @@ void ComeFichas(GtkWidget *widget, gpointer data){
         
 		  if(Inicio->tablero[x-3][y+3]==j)
 		    {
-		      if (j=1)
+		      if (j==1)
 			Inicio->Jugador1->comidas++;
 		      else
 			Inicio->Jugador2->comidas++;
@@ -679,14 +682,18 @@ void FilasDe4(GtkWidget *widget, gpointer data)
   int cont=1;
   int com1;
   int com2;
-  int jug;
+  char jug;
   GtkWidget *button;
   Lista *Inicio=(Lista *)data;
   
   com1=0;
-  com2=0;
   
-  for(jug=1;jug<3;jug++){
+
+  if(Inicio->turno %2 == 1)
+    jug=1;
+  if (Inicio->turno %2 ==0)
+    jug=2;
+
   
     while(i<20){
       while(j<20){
@@ -697,14 +704,13 @@ void FilasDe4(GtkWidget *widget, gpointer data)
 	    cont++;
 	  }
 	if(cont==5){
-	  Inicio->ganador = jug;
+
 	  Ganador(button,Inicio);
 	}
 	if(cont==4){
-	  if(jug==1)
+
 	    com1++;
-	  else
-	    com2++;
+
 	}
 	j++;
       }
@@ -727,14 +733,13 @@ void FilasDe4(GtkWidget *widget, gpointer data)
 	    cont++;
 	  }
 	if(cont==5){
-	  Inicio->ganador=jug;
+	 
 	  Ganador(button,Inicio);
 	}
 	if(cont==4){
-	  if(jug==1)
+
 	    com1++;
-	  else
-	    com2++;
+
 	}
 	j=y+1;
       }
@@ -755,14 +760,13 @@ void FilasDe4(GtkWidget *widget, gpointer data)
 	    j++;
 	  }
 	if(cont==5){
-	  Inicio->ganador=jug;
+        
 	  Ganador(button, Inicio);
 	}
 	if(cont==4){
-	  if(jug==1)
+
 	    com1++;
-	  else
-	    com2++;
+
 	}
 	j++;
       }
@@ -785,50 +789,54 @@ void FilasDe4(GtkWidget *widget, gpointer data)
 	    j++;
 	  }
 	if(cont==5){
-	  Inicio->ganador=jug;
+
 	  Ganador(button, Inicio);
 	}
 	if(cont==4){
-	  if(jug==1)
+
 	    com1++;
-	  else
-	    com2++;
+
 	  }
 	j=y+1;
       }
       i=x+1;
     }
     
-  }
   
-  Inicio->Jugador1->comidas=com1;
-  Inicio->Jugador2->comidas=com2;
+    if(jug==1)
+      Inicio->Jugador1->comidas=com1;
+    if(jug==2)
+      Inicio->Jugador2->comidas=com1;
   
   if(com1>4)
-    Inicio->ganador=1;
-  if(com2>4)
-    Inicio->ganador=2;
-  
-  Ganador(button, Inicio);
+    Ganador(button, Inicio);
   
 }
  
  
 void Guardar(GtkWidget *window, gpointer data){
   Lista *Inicio = (Lista *) data;
-  Lista *temp, temp2;
+  Jugadas *temp, temp2;
   FILE *Archivo;
+  char text2[20];
+  const gchar *text;
 
-  Archivo = fopen (nombre);
+  text = gtk_entry_get_text(GTK_ENTRY(Inicio->entry2));
+  strcpy(text2, text);
+  strcat(text2,".txt");
+  Archivo = fopen (text2,"wt");
 
-  fputs(Inicio->Jugador1->nombre);
-  fputs(Inicio->Jugador2->nombre);
+  fputs(Inicio->Jugador1->nombre,Archivo);
+  fputs(Inicio->Jugador2->nombre,Archivo);
 
   temp=Inicio;
+  fprintf(Archivo,"%d", Inicio->X1);
+  fprintf(Archivo,"%d", Inicio->Y1);
+  temp= Inicio->sig;
   
-  while (temp->sig !=NULL){
-    fprintf("%d", temp->X);
-    fprintf("%d", temp->Y);
+  while (temp !=NULL){
+    fprintf(Archivo,"%d", temp->X);
+    fprintf(Archivo,"%d", temp->Y);
     temp=temp->sig;
   }
 
@@ -896,7 +904,7 @@ void GUARDAR(GtkWidget *window, gpointer data){
 
   gtk_signal_connect(GTK_OBJECT(windownombres),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
 
-  button = AddButton1(windownombres,verticalbox,"Continuar",CARGAR,Inicio);
+  button = AddButton1(windownombres,verticalbox,"Continuar",Guardar,Inicio);
 
   //Cuando se de click en continuar debe guardar lo que este en la entrybox
 
