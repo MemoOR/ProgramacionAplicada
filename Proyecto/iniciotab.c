@@ -28,10 +28,12 @@ typedef struct _node2{
   int Y1;
   Coordenadas posicion[20][20];
   int turno;
+  int i;
+  int j;
   Jug *Jugador1;
   Jug *Jugador2;
   char archivo[20];
-  char *tablero[20][20];
+  char tablero[20][20];
   int ganador;
 }Lista;
 
@@ -57,6 +59,10 @@ void quick_message (gchar *message, GtkWidget *parent);
 void close_window(GtkWidget *window, gpointer data);
 void Ganador(GtkWidget *window, gpointer data);
 void GUARDAR(GtkWidget *window, gpointer data);
+void Coorde(GtkWidget *button, gpointer data, int i, int j);
+void Coor(GtkWidget *button, gpointer data);
+
+
 
 #include "funcion.h"
 
@@ -478,14 +484,22 @@ GtkWidget *create_pad(gpointer data) {
     
     for(int j = 0; j < 20; j++){
 
-      Inicio->posicion[i][j].x=i+1; 
-      Inicio->posicion[i][j].y=j+1;
+      Inicio->posicion[i][j].x=i; 
+      Inicio->posicion[i][j].y=j;
 
-      printf(" %d %d\n",Inicio->posicion[i][j].x,Inicio->posicion[i][j].y);
+      //  printf(" %d %d\n",Inicio->posicion[i][j].x,Inicio->posicion[i][j].y);
    
       button = gtk_button_new_with_label(Inicio->tablero[i][j]);
       
       gtk_widget_set_size_request(button, 35, 35);
+
+
+
+
+
+
+
+      Coorde(button,Inicio, i, j);    
       g_signal_connect(button, "clicked", G_CALLBACK(callback), Inicio);
 
       
@@ -503,3 +517,32 @@ GtkWidget *create_pad(gpointer data) {
 
 
 
+void Coorde(GtkWidget *button, gpointer data, int i, int j){
+
+  Lista *Inicio=(Lista *)data;
+
+  
+  Inicio->i=i;
+  Inicio->j=j;
+
+  g_signal_connect(button, "clicked", G_CALLBACK(Coor), Inicio);
+}
+
+
+void Coor(GtkWidget *button, gpointer data){
+
+  Lista *Inicio=(Lista *)data;
+  int x,y;
+
+  x=Inicio->i;
+  y=Inicio->j;
+
+  if(Inicio->turno%2==1){
+
+    Inicio->tablero[x][y]=1;
+  }
+  if(Inicio->turno%2==0){
+
+    Inicio->tablero[x][y]=2;
+  }
+}
