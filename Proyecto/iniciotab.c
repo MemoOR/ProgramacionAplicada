@@ -55,8 +55,8 @@ void command(int y);
 void callback(GtkWidget *widget, gpointer data);
 GtkWidget *create_pad();
 
-//void ComeFichas(GtkWidget *widget, gpointer data);
-//void FilasDe4(GtkWidget *widget, gpointer data);
+void ComeFichas(GtkWidget *widget, gpointer data);
+void FilasDe4(GtkWidget *widget, gpointer data);
 void quick_message (gchar *message, GtkWidget *parent);
 void close_window(GtkWidget *window, gpointer data);
 void Ganador(GtkWidget *window, gpointer data);
@@ -72,6 +72,7 @@ gint main ( gint argc, gchar *argv[]){
   GtkWidget *box,*label,*verticalbox;
   Lista *Inicio;
   Jug Jugador1,Jugador2;
+
 
   
   Inicio=(Lista*)malloc(sizeof(Lista));
@@ -258,7 +259,9 @@ void NOMBRES(GtkWidget *window, gpointer data){
 
   Lista *Inicio=(Lista *)data;
   GtkWidget *window_tab,*verticalbox;
-  GtkWidget *row_t, *box_t,*button,*box2,*box3,*box,*box4,*label,*label1,*label2;
+  GtkWidget *row_t, *box_t,*button,*box2,*box3,*box,*box4,*label,*label1,*label2,*bigbox;
+  char turno[30], comid1[30], comid2[30];
+
   
   //Guarda los nombres en la memoria
  
@@ -269,7 +272,7 @@ void NOMBRES(GtkWidget *window, gpointer data){
   strcpy(text3,text);
   
   if(text2[0]=='\0' || text3[0]=='\0'){
-    quick_message("Escribe el nombre de ambos juagdores",Inicio->ventana);
+    quick_message("Escribe el nombre de ambos jugadores",Inicio->ventana);
     return;
   }
 
@@ -296,58 +299,63 @@ void NOMBRES(GtkWidget *window, gpointer data){
     
     gtk_signal_connect(GTK_OBJECT(window_tab),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
 
-    verticalbox=gtk_vbox_new(TRUE,2);
+    verticalbox=gtk_vbox_new(FALSE,60);
     
-    //box = gtk_hbox_new(TRUE,10);
+    box = gtk_hbox_new(TRUE,50);
     
-    button = AddButton1(window_tab,verticalbox,"Guardar",GUARDAR,Inicio);
+    button = AddButton1(window_tab,box,"Guardar",GUARDAR,Inicio);
+
+ 
+
     
     
-    //box2 = gtk_hbox_new(TRUE,10);
+    box2 = gtk_hbox_new(FALSE,50);
     strcpy(text2,"Turno de: ");
     strcat(text2,Inicio->Jugador1->nombre);
       
-    label = Addlabel(verticalbox,text2);
+    label = Addlabel(box2,text2);
     Inicio->labelt = label;
-    //gtk_box_pack_start(GTK_BOX(verticalbox),box2,TRUE,TRUE,5);
+    gtk_box_pack_start(GTK_BOX(verticalbox),box2,FALSE,TRUE,50);
 
+
+
+
+    strcpy(comid1,"Fichas comidas por ");
+    strcat(comid1,Inicio->Jugador1->nombre);
     
     
-    //box3 = gtk_hbox_new(TRUE,10);
+    box3 = gtk_hbox_new(FALSE,50);
     
-    label1 = Addlabel(verticalbox,"hola");
+    label1 = Addlabel(box3,comid1);
     Inicio->label1 = label1;
-    //gtk_box_pack_start(GTK_BOX(verticalbox),box3,TRUE,TRUE,5);
+    gtk_box_pack_start(GTK_BOX(verticalbox),box3,FALSE,TRUE,50);
     
+    strcpy(comid2,"Fichas comidas por ");
+    strcat(comid2,Inicio->Jugador2->nombre);
 
-
-    //box4 = gtk_hbox_new(TRUE,10);
-    label2 = Addlabel(box3,"ss");
+    box4 = gtk_hbox_new(TRUE,50);
+    label2 = Addlabel(box4,comid2);
     Inicio->label2 = label2;
-    //gtk_box_pack_start(GTK_BOX(verticalbox),box4,TRUE,TRUE,5);
+    gtk_box_pack_start(GTK_BOX(verticalbox),box4,FALSE,TRUE,50);
 
     
-    // gtk_box_pack_start(GTK_BOX(verticalbox),box,TRUE,TRUE,5);
-    gtk_box_pack_start(GTK_BOX(row_t),verticalbox,TRUE,TRUE,5);
-    gtk_box_pack_start(GTK_BOX(box_t),row_t,TRUE,TRUE,5);
-    
+    gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,TRUE,50);
+    //  gtk_box_pack_start(GTK_BOX(row_t),verticalbox,TRUE,TRUE,5);
+    gtk_box_pack_start(GTK_BOX(box_t),row_t,TRUE,TRUE,3);
 
-<<<<<<< HEAD
-=======
-    
+    bigbox=gtk_hbox_new(FALSE,10);
 
->>>>>>> 019e32fe6444c3bfa6adcba894d5e5fb7cdc28ba
+
 
     g_signal_connect(window_tab, "delete-event", G_CALLBACK(delete_event), NULL);
     g_signal_connect(window_tab, "destroy", G_CALLBACK(StopTheApp), NULL);
 
-<<<<<<< HEAD
+    
     //gtk_container_add(GTK_CONTAINER(windownombres),verticalbox);
-=======
 
->>>>>>> 019e32fe6444c3bfa6adcba894d5e5fb7cdc28ba
-    gtk_container_add(GTK_CONTAINER(window_tab), box_t);
-
+    gtk_container_add(GTK_CONTAINER(bigbox), box_t);
+    gtk_box_pack_start(GTK_BOX(bigbox),verticalbox,TRUE,TRUE,60);
+    gtk_container_add(GTK_CONTAINER(window_tab), bigbox);
     
     gtk_widget_show_all(window_tab);
     
@@ -380,13 +388,13 @@ void quick_message (gchar *message, GtkWidget *parent) {
 
 void CARGAR(GtkWidget *window, gpointer data){
   
-  const gchar *text;
+  char turn1[30],turn2[30];
   char text2[20];
   Lista *Inicio=(Lista *)data;
   Jugadas *temp,*temp2;
   FILE *Archivo;
   int a=1,b;
-  
+  const gchar *text;
   //Guarda el nombre del archivo en la memoria
  
   text = gtk_entry_get_text(GTK_ENTRY(Inicio->entry));
@@ -470,10 +478,24 @@ void callback(GtkWidget *widget, gpointer data) {
   Lista *Inicio=(Lista *)data;
 
   GtkWidget *button;
-<<<<<<< HEAD
+  char turn1[30],turn2[30];
 
-=======
->>>>>>> 019e32fe6444c3bfa6adcba894d5e5fb7cdc28ba
+
+  
+
+  
+  if(Inicio->turno%2==1){
+
+    strcpy(turn2,"Turno de: ");
+    strcat(turn2,Inicio->Jugador2->nombre);
+    gtk_label_set_text (GTK_LABEL(Inicio->labelt), turn2);
+  }
+  if(Inicio->turno%2==0){
+    strcpy(turn1,"Turno de: ");
+    strcat(turn1,Inicio->Jugador1->nombre);
+    gtk_label_set_text (GTK_LABEL(Inicio->labelt), turn1);
+  }
+  
 
   int  y=0;
   
@@ -490,19 +512,23 @@ void callback(GtkWidget *widget, gpointer data) {
 
   if (label == 0 && (Inicio->turno)%2 == 1){
     gtk_button_set_image (GTK_BUTTON (widget), img_b);
+    label=1;
     command(y);
   }
   else if (label == 0 && (Inicio->turno)%2 == 0){
     gtk_button_set_image (GTK_BUTTON (widget), img_r);
+    label=2;
     y=1;
     command(y);
   }
 
   //  ComeFichas(button,Inicio);
   //FilasDe4(button,Inicio);
+
+  
   Inicio->turno++;
   
-  g_free(label);
+  // g_free(label);
 }
 
 GtkWidget *create_pad(gpointer data) {
@@ -828,7 +854,7 @@ void FilasDe4(GtkWidget *widget, gpointer data)
  
 void Guardar(GtkWidget *window, gpointer data){
   Lista *Inicio = (Lista *) data;
-  Jugadas *temp, temp2;
+  Jugadas *temp;
   FILE *Archivo;
   char text2[20];
   const gchar *text;
@@ -841,7 +867,7 @@ void Guardar(GtkWidget *window, gpointer data){
   fputs(Inicio->Jugador1->nombre,Archivo);
   fputs(Inicio->Jugador2->nombre,Archivo);
 
-  temp=Inicio;
+
   fprintf(Archivo,"%d", Inicio->X1);
   fprintf(Archivo,"%d", Inicio->Y1);
   temp= Inicio->sig;
@@ -871,10 +897,10 @@ void Ganador(GtkWidget *window, gpointer data){
 
   strcpy(text,"Felicidades al ganador: ");
   
-  if(Inicio->ganador=1)
+  if(Inicio->ganador==1)
     strcat(text,Inicio->Jugador1->nombre);
 
-  if(Inicio->ganador=2)
+  if(Inicio->ganador==2)
     strcat(text,Inicio->Jugador2->nombre);
   
   
