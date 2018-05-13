@@ -12,28 +12,21 @@ typedef struct _node{
 
 typedef struct _node3{
   struct _node3 *sig;
-
   int X;
   int Y;
-
 }Jugadas;
 
 typedef struct _node4{
-
-  int X;
-  int Y;
-
+  int x,y;
 }Coordenadas;
-
-
 
 typedef struct _node2{
   GtkWidget *entry;
   GtkWidget *ventana,*label1,*label2,*labelt;
   Jugadas *sig;
-  int X;
-  int Y;
-  Coordenadas *Coor;
+  int X1;
+  int Y1;
+  Coordenadas posicion[20][20];
   int turno;
   Jug *Jugador1;
   Jug *Jugador2;
@@ -50,6 +43,7 @@ typedef struct _node2{
 GtkWidget *AddButton(GtkWidget *theBox, const gchar *buttonText,gpointer CallBackFunction, Lista *EntryBox);
 GtkWidget *AddButton1(GtkWidget *window,GtkWidget *theBox,const gchar *buttonText, gpointer CallBackFunction,Lista *EntryBox);
 GtkWidget *Addlabel(GtkWidget *theBox, const gchar *buttonText);
+static gboolean delete_event(GtkWidget *widget, GdkEvent *event, gpointer *data);
 void StopTheApp(GtkWidget *window, gpointer data);
 void Nuevo(GtkWidget *window, gpointer data);
 void Cargar(GtkWidget *window, gpointer data);
@@ -60,8 +54,9 @@ void Guardar(GtkWidget *window, gpointer data);
 void command(int y);
 void callback(GtkWidget *widget, gpointer data);
 GtkWidget *create_pad();
-void ComeFichas(GtkWidget *widget, gpointer data);
-void FilasDe4(GtkWidget *widget, gpointer data);
+
+//void ComeFichas(GtkWidget *widget, gpointer data);
+//void FilasDe4(GtkWidget *widget, gpointer data);
 void quick_message (gchar *message, GtkWidget *parent);
 void close_window(GtkWidget *window, gpointer data);
 void Ganador(GtkWidget *window, gpointer data);
@@ -77,8 +72,7 @@ gint main ( gint argc, gchar *argv[]){
   GtkWidget *box,*label,*verticalbox;
   Lista *Inicio;
   Jug Jugador1,Jugador2;
-  Coordenadas Lugares;
-  
+
   
   Inicio=(Lista*)malloc(sizeof(Lista));
   
@@ -100,9 +94,9 @@ gint main ( gint argc, gchar *argv[]){
   Inicio->Jugador1=&Jugador1;
   Inicio->Jugador2=&Jugador2;
   Inicio->turno=3;
-  Inicio->X=-1;
-  Inicio->Y=-1;
-  Inicio->Coor=&Lugares;
+  Inicio->X1=-1;
+  Inicio->Y1=-1;
+
  
 
   //Ventana de nuevo juego o cargar
@@ -137,6 +131,10 @@ gint main ( gint argc, gchar *argv[]){
   gtk_main();
   
   return 0;
+}
+
+static gboolean delete_event(GtkWidget *widget, GdkEvent *event, gpointer *data) {
+  return FALSE;
 }
 
 GtkWidget *AddButton(GtkWidget *theBox, const gchar *buttonText,
@@ -187,13 +185,13 @@ void Nuevo(GtkWidget *window, gpointer data){
   gtk_container_border_width(GTK_CONTAINER(windownombres),5);
 
   verticalbox = gtk_vbox_new(TRUE,5);
-  label1 = Addlabel(verticalbox,"Jugador 1:");
+  label1 = Addlabel(verticalbox,"Jugador 1 (Azul):");
   
   entrybox = gtk_entry_new();
   Inicio->Jugador1->entry = entrybox;
   gtk_box_pack_start(GTK_BOX(verticalbox),entrybox,TRUE,TRUE,5);
     
-  label2 = Addlabel(verticalbox,"Jugador 2:");
+  label2 = Addlabel(verticalbox,"Jugador 2 (Rojo):");
   
   Entrybox = gtk_entry_new();
   Inicio->Jugador2->entry = Entrybox;
@@ -289,13 +287,12 @@ void NOMBRES(GtkWidget *window, gpointer data){
     
     window_tab = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     
-    gtk_signal_connect(GTK_OBJECT(window_tab),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
-    
     box_t = gtk_vbox_new(TRUE, 0);
     
     row_t = gtk_hbox_new(TRUE, 5);
     
     gtk_box_pack_start(GTK_BOX(box_t), create_pad(Inicio), TRUE, FALSE, 0);
+<<<<<<< HEAD
     
     gtk_signal_connect(GTK_OBJECT(window_tab),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
 
@@ -330,6 +327,12 @@ void NOMBRES(GtkWidget *window, gpointer data){
     
 
     
+=======
+
+    g_signal_connect(window_tab, "delete-event", G_CALLBACK(delete_event), NULL);
+    g_signal_connect(window_tab, "destroy", G_CALLBACK(StopTheApp), NULL);
+
+>>>>>>> 9dd8e1984ec983b91f1ca1a154ceabc2c4be7aa8
     gtk_container_add(GTK_CONTAINER(window_tab), box_t);
     gtk_container_add(GTK_CONTAINER(window_tab), verticalbox);
     
@@ -352,12 +355,11 @@ void quick_message (gchar *message, GtkWidget *parent) {
   button = gtk_button_new_with_label(message);
   gtk_box_pack_start(GTK_BOX(box),button,FALSE,TRUE,10);
   
-  gtk_signal_connect(GTK_OBJECT(button),"clicked",GTK_SIGNAL_FUNC(gtk_widget_hide_all),window);
-  
+  g_signal_connect_swapped(GTK_OBJECT(button),"clicked",G_CALLBACK(gtk_widget_hide),GTK_OBJECT(window));
   g_signal_connect_swapped(GTK_OBJECT(button),"clicked",G_CALLBACK(gtk_widget_show),GTK_OBJECT(parent));
   gtk_widget_show(button);
 
-  gtk_signal_connect(GTK_OBJECT(window),"destroy",GTK_SIGNAL_FUNC(gtk_widget_show),parent);
+  gtk_signal_connect(GTK_OBJECT(window),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
   
   gtk_container_add (GTK_CONTAINER (window),box);
   gtk_widget_show_all (window);
@@ -396,8 +398,8 @@ void CARGAR(GtkWidget *window, gpointer data){
       fgets(Inicio->Jugador2->nombre, 19, Archivo);
       b=strlen(Inicio->Jugador2->nombre);
       Inicio->Jugador2->nombre[b-1]='\0';
-      fscanf(Archivo,"%d",&Inicio->X);
-      fscanf(Archivo,"%d",&Inicio->Y);
+      fscanf(Archivo,"%d",&Inicio->X1);
+      fscanf(Archivo,"%d",&Inicio->Y1);
       
       while(!feof(Archivo)){
 	
@@ -453,7 +455,10 @@ void callback(GtkWidget *widget, gpointer data) {
   gchar *label;
   GdkPixbuf *pix1, *pix2;
   Lista *Inicio=(Lista *)data;
+<<<<<<< HEAD
   GtkWidget *button;
+=======
+>>>>>>> 9dd8e1984ec983b91f1ca1a154ceabc2c4be7aa8
 
   int  y=0;
   
@@ -478,8 +483,8 @@ void callback(GtkWidget *widget, gpointer data) {
     command(y);
   }
 
-  ComeFichas(button,Inicio);
-  FilasDe4(button,Inicio);
+  //  ComeFichas(button,Inicio);
+  //FilasDe4(button,Inicio);
   Inicio->turno++;
   
   g_free(label);
@@ -487,7 +492,6 @@ void callback(GtkWidget *widget, gpointer data) {
 
 GtkWidget *create_pad(gpointer data) {
   Lista *Inicio=(Lista *)data;
-  int x=0,y=0;
   
 
   for(int i=0;i<20;i++)
@@ -505,11 +509,13 @@ GtkWidget *create_pad(gpointer data) {
     gtk_box_pack_start(GTK_BOX(container), row, FALSE, TRUE, 0);
     
     for(int j = 0; j < 20; j++){
+
+      Inicio->posicion[i][j].x=i+1; 
+      Inicio->posicion[i][j].y=j+1;
+
+      printf(" %d %d\n",Inicio->posicion[i][j].x,Inicio->posicion[i][j].y);
    
       button = gtk_button_new_with_label(Inicio->tablero[i][j]);
-
-      
-      
       
       gtk_widget_set_size_request(button, 35, 35);
       g_signal_connect(button, "clicked", G_CALLBACK(callback), Inicio);
@@ -528,6 +534,7 @@ GtkWidget *create_pad(gpointer data) {
 //arreglar cerrar aplicacion desde tablero
 
 
+/*
 void ComeFichas(GtkWidget *widget, gpointer data){
   GtkWidget *button;
   Lista *Inicio=(Lista *)data;
