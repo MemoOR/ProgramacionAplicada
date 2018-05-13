@@ -3,8 +3,6 @@
 #include<string.h>
 #include<gtk/gtk.h>
 
-#include "funcion.h"
-
 typedef struct _node{
   char nombre[20];
   GtkWidget *entry;
@@ -38,10 +36,6 @@ typedef struct _node2{
 }Lista;
 
 
-
-
-
-
 GtkWidget *AddButton(GtkWidget *theBox, const gchar *buttonText,gpointer CallBackFunction, Lista *EntryBox);
 GtkWidget *AddButton1(GtkWidget *window,GtkWidget *theBox,const gchar *buttonText, gpointer CallBackFunction,Lista *EntryBox);
 GtkWidget *Addlabel(GtkWidget *theBox, const gchar *buttonText);
@@ -64,8 +58,7 @@ void close_window(GtkWidget *window, gpointer data);
 void Ganador(GtkWidget *window, gpointer data);
 void GUARDAR(GtkWidget *window, gpointer data);
 
-
-
+#include "funcion.h"
 
 gint main ( gint argc, gchar *argv[]){
 
@@ -291,25 +284,20 @@ void NOMBRES(GtkWidget *window, gpointer data){
     }
     
     window_tab = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
+    gtk_signal_connect(GTK_OBJECT(window_tab),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
     
     box_t = gtk_vbox_new(TRUE, 0);
     
     row_t = gtk_hbox_new(TRUE, 5);
     
-    gtk_box_pack_start(GTK_BOX(box_t), create_pad(Inicio), TRUE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(box_t), create_pad(Inicio), FALSE, FALSE, 0);
 
-    
-    gtk_signal_connect(GTK_OBJECT(window_tab),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
-
-    verticalbox=gtk_vbox_new(FALSE,60);
+    verticalbox=gtk_vbox_new(TRUE,60);
     
     box = gtk_hbox_new(TRUE,50);
     
     button = AddButton1(window_tab,box,"Guardar",GUARDAR,Inicio);
-
- 
-
-    
     
     box2 = gtk_hbox_new(FALSE,50);
     strcpy(text2,"Turno de: ");
@@ -317,20 +305,17 @@ void NOMBRES(GtkWidget *window, gpointer data){
       
     label = Addlabel(box2,text2);
     Inicio->labelt = label;
-    gtk_box_pack_start(GTK_BOX(verticalbox),box2,FALSE,TRUE,50);
-
-
+    gtk_box_pack_start(GTK_BOX(verticalbox),box2,FALSE,FALSE,20);
 
 
     strcpy(comid1,"Fichas comidas por ");
     strcat(comid1,Inicio->Jugador1->nombre);
-    
-    
+        
     box3 = gtk_hbox_new(FALSE,50);
     
     label1 = Addlabel(box3,comid1);
     Inicio->label1 = label1;
-    gtk_box_pack_start(GTK_BOX(verticalbox),box3,FALSE,TRUE,50);
+    gtk_box_pack_start(GTK_BOX(verticalbox),box3,FALSE,FALSE,20);
     
     strcpy(comid2,"Fichas comidas por ");
     strcat(comid2,Inicio->Jugador2->nombre);
@@ -338,15 +323,14 @@ void NOMBRES(GtkWidget *window, gpointer data){
     box4 = gtk_hbox_new(TRUE,50);
     label2 = Addlabel(box4,comid2);
     Inicio->label2 = label2;
-    gtk_box_pack_start(GTK_BOX(verticalbox),box4,FALSE,TRUE,50);
+    gtk_box_pack_start(GTK_BOX(verticalbox),box4,FALSE,FALSE,20);
 
     
-    gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,TRUE,50);
+    gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,50);
     //  gtk_box_pack_start(GTK_BOX(row_t),verticalbox,TRUE,TRUE,5);
     gtk_box_pack_start(GTK_BOX(box_t),row_t,TRUE,TRUE,3);
 
     bigbox=gtk_hbox_new(FALSE,10);
-
 
 
     g_signal_connect(window_tab, "delete-event", G_CALLBACK(delete_event), NULL);
