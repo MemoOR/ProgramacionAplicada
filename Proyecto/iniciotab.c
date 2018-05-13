@@ -439,12 +439,12 @@ void callback(GtkWidget *widget, gpointer data) {
 
   if (label == 0 && (Inicio->turno)%2 == 1){
     gtk_button_set_image (GTK_BUTTON (widget), img_b);
-    label=1;
+
     command(y);
   }
   else if (label == 0 && (Inicio->turno)%2 == 0){
     gtk_button_set_image (GTK_BUTTON (widget), img_r);
-    label=2;
+
     y=1;
     command(y);
   }
@@ -455,7 +455,7 @@ void callback(GtkWidget *widget, gpointer data) {
   
   Inicio->turno++;
   
-  // g_free(label);
+   g_free(label);
 }
 
 GtkWidget *create_pad(gpointer data) {

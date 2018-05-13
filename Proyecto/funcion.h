@@ -63,7 +63,8 @@ void ComeFichas(GtkWidget *widget, gpointer data){
   GtkWidget *button;
   Lista *Inicio=(Lista *)data;
   int x,y;
-  char j;
+  char j,lab1[30],lab2[30];
+  char aux[5];
   if (Inicio->turno%2 == 1)
     j = 1;
   if (Inicio->turno%2 == 0)
@@ -83,12 +84,22 @@ void ComeFichas(GtkWidget *widget, gpointer data){
         
 		if(Inicio->tablero[x+3][y]==j)
 		  {
-		  if (j==1)
-		    Inicio->Jugador1->comidas++;
-		  else
-		    Inicio->Jugador2->comidas++;
-		  
-        
+		    if (j==1){
+		      Inicio->Jugador1->comidas=Inicio->Jugador1->comidas+2;
+		      strcpy(lab1,"Fichas comidas por ");
+		      strcat(lab1 ,Inicio->Jugador1->nombre);
+		      sprintf(aux,"%d",Inicio->Jugador1->comidas);
+		      strcat(lab1, aux);
+		      gtk_label_set_text (GTK_LABEL(Inicio->label1), lab1);
+		    }
+		    else{
+		      Inicio->Jugador2->comidas=Inicio->Jugador2->comidas+2;
+		      strcpy(lab2,"Fichas comidas por ");
+		      strcat(lab2 ,Inicio->Jugador2->nombre);
+		      sprintf(aux,"%d",Inicio->Jugador2->comidas);
+		      strcat(lab2, aux);
+		      gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);		  
+		    }
 		  
 		    Inicio->tablero[x+1][y]=0;
         
@@ -113,11 +124,22 @@ void ComeFichas(GtkWidget *widget, gpointer data){
 	        
 		  if(Inicio->tablero[x+3][y+3]==j)
 		    {
-		      if (j==1)
-			Inicio->Jugador1->comidas++;
-		      else
-			Inicio->Jugador2->comidas++;
-			  
+		      if (j==1){
+		      Inicio->Jugador1->comidas=Inicio->Jugador1->comidas+2;
+		      strcpy(lab1,"Fichas comidas por ");
+		      strcat(lab1 ,Inicio->Jugador1->nombre);
+		      sprintf(aux,"%d",Inicio->Jugador1->comidas);
+		      strcat(lab1, aux);
+		      gtk_label_set_text (GTK_LABEL(Inicio->label1), lab1);
+		      }
+		      else{
+		      Inicio->Jugador2->comidas=Inicio->Jugador2->comidas+2;
+		      strcpy(lab2,"Fichas comidas por ");
+		      strcat(lab2 ,Inicio->Jugador2->nombre);
+		      sprintf(aux,"%d",Inicio->Jugador2->comidas);
+		      strcat(lab2, aux);
+		      gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);
+		      }
 		      
 		      
 		      Inicio->tablero[x+1][y+1]=0;
@@ -143,10 +165,22 @@ void ComeFichas(GtkWidget *widget, gpointer data){
 		 
 		  if(Inicio->tablero[x][y+3]==j)
 		    {
-		      if(j==1)
-			Inicio->Jugador1->comidas++;
-		      else
-			Inicio->Jugador2->comidas++;
+		      if(j==1){
+			Inicio->Jugador1->comidas=Inicio->Jugador1->comidas+2;
+			strcpy(lab1,"Fichas comidas por ");
+			strcat(lab1 ,Inicio->Jugador1->nombre);
+			sprintf(aux,"%d",Inicio->Jugador1->comidas);
+			strcat(lab1, aux);
+			gtk_label_set_text (GTK_LABEL(Inicio->label1), lab1);
+		      }
+		      else{
+			Inicio->Jugador2->comidas=Inicio->Jugador2->comidas+2;
+			strcpy(lab2,"Fichas comidas por ");
+			strcat(lab2 ,Inicio->Jugador2->nombre);
+			sprintf(aux,"%d",Inicio->Jugador2->comidas);
+			strcat(lab2, aux);
+			gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);
+		      }
 	        
 		      
 		      Inicio->tablero[x][y+1]=0;
@@ -173,10 +207,22 @@ void ComeFichas(GtkWidget *widget, gpointer data){
         
 		  if(Inicio->tablero[x-3][y+3]==j)
 		    {
-		      if (j==1)
-			Inicio->Jugador1->comidas++;
-		      else
-			Inicio->Jugador2->comidas++;
+		      if (j==1){
+			Inicio->Jugador1->comidas=Inicio->Jugador1->comidas+2;
+			strcpy(lab1,"Fichas comidas por ");
+			strcat(lab1 ,Inicio->Jugador1->nombre);
+			sprintf(aux,"%d",Inicio->Jugador1->comidas);
+			strcat(lab1, aux);
+			gtk_label_set_text (GTK_LABEL(Inicio->label1), lab1);
+		      }
+		      else{
+			Inicio->Jugador2->comidas=Inicio->Jugador2->comidas+2;
+			strcpy(lab2,"Fichas comidas por ");
+			strcat(lab2 ,Inicio->Jugador2->nombre);
+			sprintf(aux,"%d",Inicio->Jugador2->comidas);
+			strcat(lab2, aux);
+			gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);
+		      }
         
 		      
 		      Inicio->tablero[x-1][y+1]=0;
