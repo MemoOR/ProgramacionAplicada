@@ -292,7 +292,7 @@ void NOMBRES(GtkWidget *window, gpointer data){
     row_t = gtk_hbox_new(TRUE, 5);
     
     gtk_box_pack_start(GTK_BOX(box_t), create_pad(Inicio), TRUE, FALSE, 0);
-<<<<<<< HEAD
+
     
     gtk_signal_connect(GTK_OBJECT(window_tab),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
 
@@ -327,12 +327,12 @@ void NOMBRES(GtkWidget *window, gpointer data){
     
 
     
-=======
+
 
     g_signal_connect(window_tab, "delete-event", G_CALLBACK(delete_event), NULL);
     g_signal_connect(window_tab, "destroy", G_CALLBACK(StopTheApp), NULL);
 
->>>>>>> 9dd8e1984ec983b91f1ca1a154ceabc2c4be7aa8
+
     gtk_container_add(GTK_CONTAINER(window_tab), box_t);
     gtk_container_add(GTK_CONTAINER(window_tab), verticalbox);
     
@@ -455,10 +455,8 @@ void callback(GtkWidget *widget, gpointer data) {
   gchar *label;
   GdkPixbuf *pix1, *pix2;
   Lista *Inicio=(Lista *)data;
-<<<<<<< HEAD
+
   GtkWidget *button;
-=======
->>>>>>> 9dd8e1984ec983b91f1ca1a154ceabc2c4be7aa8
 
   int  y=0;
   
