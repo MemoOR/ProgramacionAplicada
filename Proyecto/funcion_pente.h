@@ -72,7 +72,7 @@ void CARGAR(GtkWidget *window, gpointer data){
 	temp=(Jugadas *)malloc(sizeof(Jugadas));
 	temp->sig=NULL;
 	if(a==1){
-	  Inicio->sig=temp;
+	  Inicio->turnos_l=temp;
 	  a=2;
 	}
 	else{
@@ -181,16 +181,16 @@ void CARGAR(GtkWidget *window, gpointer data){
 *  @return 
 */
 
-void ComeFichas(GtkWidget *widget, gpointer data){
+void ComeFichas(int y,int x,gpointer data){
   GtkWidget *button;
   Lista *Inicio=(Lista *)data;
-  int x,y;
   char j,lab1[30],lab2[30];
   char aux[5];
+  
   if (Inicio->turno%2 == 1)
-    j = 1;
+    j = 2;
   if (Inicio->turno%2 == 0)
-    j=2;
+    j=1;
   
   //Valida derecha
   
@@ -545,7 +545,7 @@ void ComeFichas(GtkWidget *widget, gpointer data){
 *  para contar el numero de fichas de 4 de jugador que tiro. y lo guarda en 
 *  la memoria.
 *  @author Mateo Larralde y Mariana.
-*  @param widget GtkWidget
+*  @param 
 *  @param data   Inicio
 *  @return 
 */
@@ -553,27 +553,28 @@ void ComeFichas(GtkWidget *widget, gpointer data){
 
 
 
-void FilasDe4(GtkWidget *widget, gpointer data)
+void FilasDe4(int x,int y,gpointer data)
 {
-  int x, y, i=0,j=0; //variables del tablero
-  //j será el jugador en turno
-  int cont=1;
+  int i=0,j=0; //variables del tablero
+  //jug será el jugador en turno
+  int cont=0;
   int com1;
-  int com2;
+  int a,b;
   char jug;
   GtkWidget *button;
   Lista *Inicio=(Lista *)data;
   
   com1=0;
-  
+
 
   if(Inicio->turno %2 == 1)
-    jug=1;
-  if (Inicio->turno %2 ==0)
     jug=2;
+  if (Inicio->turno %2 ==0)
+    jug=1;
 
   
     while(i<20){
+      a=i;
       while(j<20){
 	
 	while(Inicio->tablero[i][j]==jug && i<20)
@@ -581,6 +582,7 @@ void FilasDe4(GtkWidget *widget, gpointer data)
 	    i++;
 	    cont++;
 	  }
+	
 	if(cont==5){
 
 	  Ganador(button,Inicio);
@@ -590,9 +592,10 @@ void FilasDe4(GtkWidget *widget, gpointer data)
 	    com1++;
 
 	}
+	cont=0;
 	j++;
       }
-      i++;
+      i=a+1;
     }
     
   
@@ -601,9 +604,9 @@ void FilasDe4(GtkWidget *widget, gpointer data)
     i=0;
     j=0;
     while(i<20){
-      x=i;
+      a=i;
       while(j<20){
-	y=j;
+	b=j;
 	while(Inicio->tablero[i][j]==jug && i<20 && j<20)
 	  {
 	    i++;
@@ -619,9 +622,10 @@ void FilasDe4(GtkWidget *widget, gpointer data)
 	    com1++;
 
 	}
-	j=y+1;
+	cont=0;
+	j=b+1;
       }
-      i=x+1;
+      i=a+1;
     }
   
     //valida abajo
@@ -630,7 +634,7 @@ void FilasDe4(GtkWidget *widget, gpointer data)
     j=0;
     while(i<20){
       while(j<20){
-	
+	b=j;
 
 	while(Inicio->tablero[i][j]==jug && i<20 && j<20)
 	  {
@@ -646,7 +650,8 @@ void FilasDe4(GtkWidget *widget, gpointer data)
 	    com1++;
 
 	}
-	j++;
+	cont=0;
+	j=b+1;
       }
       i++;
     }
@@ -657,9 +662,9 @@ void FilasDe4(GtkWidget *widget, gpointer data)
     j=0;
     
     while(i<20){
-      x=i;
+      a=i;
       while(j<20){
-	y=j;
+	b=j;
 	while(Inicio->tablero[i][j]==jug && i<20 && j<20 && i>-1)
 	  {
 	    cont++;
@@ -675,9 +680,10 @@ void FilasDe4(GtkWidget *widget, gpointer data)
 	    com1++;
 
 	  }
-	j=y+1;
+	cont=0;
+	j=b+1;
       }
-      i=x+1;
+      i=a+1;
     }
     
   
@@ -721,7 +727,7 @@ void Guardar(GtkWidget *window, gpointer data){
 
   fprintf(Archivo,"%d", Inicio->X1);
   fprintf(Archivo,"%d", Inicio->Y1);
-  temp= Inicio->sig;
+  temp= Inicio->turnos_l;
   
   while (temp !=NULL){
     fprintf(Archivo,"%d", temp->X);
@@ -756,10 +762,10 @@ void Ganador(GtkWidget *window, gpointer data){
 
   strcpy(text,"Felicidades al ganador: ");
   
-  if(Inicio->ganador==1)
+  if(Inicio->turno%2==0)
     strcat(text,Inicio->Jugador1->nombre);
 
-  if(Inicio->ganador==2)
+  if(Inicio->turno%2==1)
     strcat(text,Inicio->Jugador2->nombre);
   
   
