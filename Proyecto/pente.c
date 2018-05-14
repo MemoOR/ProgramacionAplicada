@@ -31,8 +31,8 @@ typedef struct _node2{
   GtkWidget *entry,*entry2;
   GtkWidget *ventana;
   GtkWidget *label1,*label2,*labelt;
-  GtkWidget buttons[20][20];
-  Jugadas *sig;
+  GtkWidget *buttons[20][20];
+  Jugadas *turnos_l;
   int X1;
   int Y1;
   int turno;
@@ -67,7 +67,8 @@ void ComeFichas(GtkWidget *widget, gpointer data);
 void FilasDe4(GtkWidget *widget, gpointer data);
 void Ganador(GtkWidget *window, gpointer data);
 void GUARDAR(GtkWidget *window, gpointer data);
-
+void obtener_coordenada(GtkWidget *button, gpointer data);
+void insertar_turno(Jugadas **inicio,int x,int y);
 //funciones de funcionamiento//
 
 
@@ -104,7 +105,7 @@ gint main ( gint argc, gchar *argv[]){
   strcpy(Jugador1.nombre, "\0");
   strcpy(Jugador2.nombre, "\0");
   
-  Inicio->sig=NULL;
+  Inicio->turnos_l=NULL;
   Jugador1.comidas=0;
   Jugador1.fila4=0;
   Jugador2.comidas=0;
@@ -624,13 +625,70 @@ GtkWidget *create_pad(gpointer data) {
    
       Inicio->buttons[i][j] = gtk_button_new_with_label(Inicio->tablero[i][j]);
       
-      gtk_widget_set_size_request(button, 35, 35);
+      gtk_widget_set_size_request(Inicio->buttons[i][j], 35, 35);
     
-      g_signal_connect(button, "clicked", G_CALLBACK(callback), Inicio);
+      g_signal_connect(Inicio->buttons[i][j], "clicked", G_CALLBACK(callback), Inicio);
+      g_signal_connect_swapped(GTK_OBJECT(Inicio->buttons[i][j]),"clicked",
+			   G_CALLBACK(obtener_coordenada),GTK_OBJECT(Inicio));
    
-      gtk_box_pack_start(GTK_BOX(row), button, FALSE, TRUE, 2);
-      gtk_widget_show(button);
+      gtk_box_pack_start(GTK_BOX(row), Inicio->buttons[i][j], FALSE, TRUE, 2);
+      gtk_widget_show(Inicio->buttons[i][j]);
     }
   }  
   return container;
 }
+
+/**
+*  Esta función recibe la estructura con los datos generales
+*  y genera el tablero de juego.
+*  @author Guillermo Ortega
+*  @param data    Inicio
+*  @return GtkWidget
+*/
+void obtener_coordenada(GtkWidget *button, gpointer data){
+  Lista *Inicio=(Lista *)data;
+
+  for(int i=0;i<20;i++){
+    for(int j=0;j<20;j++){
+      if(Inicio->buttons[i][j]==button){
+	if(Inicio->turno==3){
+	  Inicio->X1=i;
+	  Inicio->Y1=j;
+	}
+	else{
+	  insertar_turno(&Inicio->turnos_l,i,j);
+	}
+	return;
+      }
+    }
+  }
+}
+
+
+/**
+*  Esta función recibe la estructura con los datos generales
+*  y genera el tablero de juego.
+*  @author Guillermo Ortega
+*  @param data    Inicio
+*  @return GtkWidget
+*/
+void insertar_turno(Jugadas **inicio,int x,int y){
+  Jugadas *temp,*temp2;
+  
+  temp=( Jugadas* ) malloc(sizeof(Jugadas));
+  temp->X=x;
+  temp->Y=y;
+  
+  temp->sig=NULL;
+  
+  if(*inicio != NULL){
+    temp2 = *inicio;
+    while(temp2->sig != NULL){
+      temp2 = temp2->sig;
+    }
+    temp2->sig=temp;
+  }
+  else{
+    *inicio = temp;
+  }
+}	
