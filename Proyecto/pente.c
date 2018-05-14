@@ -33,12 +33,12 @@ typedef struct _node2{
   GtkWidget *label1,*label2,*labelt;
   GtkWidget *buttons[20][20];
   Jugadas *turnos_l;
-  int X1;
-  int Y1;
+  int X1,Y1;
+  int ax,ay;
   int turno;
   Jug *Jugador1;
   Jug *Jugador2;
-  char archivo[20];
+  char archivo[50];
   char tablero[20][20];
   int ganador;
 }Lista;
@@ -55,6 +55,7 @@ void NOMBRES(GtkWidget *window, gpointer data);
 void quick_message (gchar *message, GtkWidget *parent);
 void close_window(GtkWidget *window, gpointer data);
 GtkWidget *create_pad();
+void set_image(int x,int y,gpointer data,GtkWidget *widget);
 //funciones de graficos//
 
 //funciones de funcionamiento//
@@ -513,12 +514,11 @@ void quick_message (gchar *message, GtkWidget *parent) {
 */
 void callback(GtkWidget *widget, gpointer data) {
   gchar *label;
-  GdkPixbuf *pix1, *pix2;
+  
   Lista *Inicio=(Lista *)data;
   char turn1[30],turn2[30];
   
   if(Inicio->turno%2==1){
-
     strcpy(turn2,"Turno de: ");
     strcat(turn2,Inicio->Jugador2->nombre);
     gtk_label_set_text (GTK_LABEL(Inicio->labelt), turn2);
@@ -528,32 +528,6 @@ void callback(GtkWidget *widget, gpointer data) {
     strcat(turn1,Inicio->Jugador1->nombre);
     gtk_label_set_text (GTK_LABEL(Inicio->labelt), turn1);
   }
-  
-  int  y=0;
-  
-  g_object_get(G_OBJECT(widget), "label", &label, NULL);
-
-  pix1=gdk_pixbuf_new_from_file("red.png",NULL);
-  pix2=gdk_pixbuf_new_from_file("blue.png",NULL);
-  
-  pix1=gdk_pixbuf_scale_simple(pix1,25,25,GDK_INTERP_BILINEAR);
-  pix2=gdk_pixbuf_scale_simple(pix2,25,25,GDK_INTERP_BILINEAR);
-    
-  GtkWidget *img_r = gtk_image_new_from_pixbuf(pix1);
-  GtkWidget *img_b = gtk_image_new_from_pixbuf(pix2);
-
-  if (label == 0 && (Inicio->turno)%2 == 1){
-    gtk_button_set_image (GTK_BUTTON (widget), img_b);
-  }
-  else if (label == 0 && (Inicio->turno)%2 == 0){
-    gtk_button_set_image (GTK_BUTTON (widget), img_r);
-
-    y=1;
-  }
-
-  Inicio->turno++;
-  
-  g_free(label);
 }
 
 /**
@@ -566,14 +540,12 @@ void callback(GtkWidget *widget, gpointer data) {
 GtkWidget *create_pad(gpointer data) {
   Lista *Inicio=(Lista *)data;
   GtkWidget *container;
-  GtkWidget *row,*img;
-  GdkPixbuf *pix;
+  GtkWidget *row;//*img;
+  //GdkPixbuf *pix;
 
   for(int i=0;i<20;i++)
     for(int j=0;j<20;j++)
       Inicio->tablero[i][j]=0;
-
- 
 
   container = gtk_vbox_new(FALSE, 3);
   
@@ -584,16 +556,16 @@ GtkWidget *create_pad(gpointer data) {
     
     for(int i = 0; i < 20; i++){
       
-      pix=gdk_pixbuf_new_from_file("arena.jpeg",NULL);
-      pix=gdk_pixbuf_scale_simple(pix,25,25,GDK_INTERP_BILINEAR);
-      img = gtk_image_new_from_pixbuf(pix);
+      //pix=gdk_pixbuf_new_from_file("arena.jpeg",NULL);
+      //pix=gdk_pixbuf_scale_simple(pix,25,25,GDK_INTERP_BILINEAR);
+      // img = gtk_image_new_from_pixbuf(pix);
        
       Inicio->buttons[i][j] = gtk_button_new_with_label(Inicio->tablero[i][j]);
       
       gtk_widget_set_size_request(Inicio->buttons[i][j], 35, 35);
       
-      gtk_button_set_image (GTK_BUTTON (Inicio->buttons[i][j]), img);
- 
+      //gtk_button_set_image (GTK_BUTTON (Inicio->buttons[i][j]), img);
+      
       g_signal_connect(Inicio->buttons[i][j], "clicked", G_CALLBACK(callback), Inicio);
       g_signal_connect(Inicio->buttons[i][j], "clicked", G_CALLBACK(obtener_coordenada), Inicio);
       
@@ -619,6 +591,8 @@ void obtener_coordenada(GtkWidget *button, gpointer data){
   for(j=0;j<20;j++){
     for(i=0;i<20;i++){
       if(Inicio->buttons[i][j]==button){
+	set_image(i,j,Inicio,button);
+	
 	if(Inicio->turno==3){
 	  Inicio->X1=i;
 	  Inicio->Y1=j;
@@ -627,7 +601,8 @@ void obtener_coordenada(GtkWidget *button, gpointer data){
 	  FilasDe4(j,i,Inicio);
 	}
 	else{
-	  insertar_turno(&Inicio->turnos_l,j,i);
+	  insertar_turno(&Inicio->turnos_l,i,j);
+
 	  if(Inicio->turno%2==0)
 	    Inicio->tablero[i][j]=1;
 	  else
@@ -670,4 +645,37 @@ void insertar_turno(Jugadas **inicio,int x,int y){
   else{
     *inicio = temp;
   }
-}	
+}
+
+/**
+*  Esta función recibe la estructura con los datos generales
+*  y genera el tablero de juego.
+*  @author Guillermo Ortega
+*  @param x      Coordenada
+*  @param y      Coordenada
+*  @param data   estructura con datos
+*  @param *widget 
+*  @return void
+*/
+void set_image(int x,int y,gpointer data,GtkWidget *widget){
+  GdkPixbuf *pix1, *pix2;
+  Lista *Inicio=(Lista *)data;
+  
+  pix1=gdk_pixbuf_new_from_file("red.png",NULL);
+  pix2=gdk_pixbuf_new_from_file("blue.png",NULL);
+  
+  pix1=gdk_pixbuf_scale_simple(pix1,25,25,GDK_INTERP_BILINEAR);
+  pix2=gdk_pixbuf_scale_simple(pix2,25,25,GDK_INTERP_BILINEAR);
+    
+  GtkWidget *img_r = gtk_image_new_from_pixbuf(pix1);
+  GtkWidget *img_b = gtk_image_new_from_pixbuf(pix2);
+    
+  if (Inicio->tablero[x][y] == 0 && (Inicio->turno)%2 == 1){
+    gtk_button_set_image (GTK_BUTTON (widget), img_b);
+    Inicio->turno++;
+  }
+  else if (Inicio->tablero[x][y] == 0 && (Inicio->turno)%2 == 0){
+    gtk_button_set_image (GTK_BUTTON (widget), img_r);
+    Inicio->turno++;
+  }
+}

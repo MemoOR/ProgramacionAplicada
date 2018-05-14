@@ -181,11 +181,11 @@ void CARGAR(GtkWidget *window, gpointer data){
 *  @return 
 */
 
-<<<<<<< HEAD
+
 void ComeFichas(int y,int x,gpointer data){
-=======
-void ComeFichas(int x,int y,gpointer data){
->>>>>>> 37124640f59987677350c230680d691cf3aa1878
+
+
+
   GtkWidget *button;
   Lista *Inicio=(Lista *)data;
   char j,lab1[30],lab2[30];
@@ -214,6 +214,7 @@ void ComeFichas(int x,int y,gpointer data){
 		      Inicio->Jugador1->comidas=Inicio->Jugador1->comidas+2;
 		      strcpy(lab1,"Fichas comidas por ");
 		      strcat(lab1 ,Inicio->Jugador1->nombre);
+		      strcat(lab1,": ");
 		      sprintf(aux,"%d",Inicio->Jugador1->comidas);
 		      strcat(lab1, aux);
 		      gtk_label_set_text (GTK_LABEL(Inicio->label1), lab1);
@@ -222,6 +223,7 @@ void ComeFichas(int x,int y,gpointer data){
 		      Inicio->Jugador2->comidas=Inicio->Jugador2->comidas+2;
 		      strcpy(lab2,"Fichas comidas por ");
 		      strcat(lab2 ,Inicio->Jugador2->nombre);
+		      strcat(lab2,": ");
 		      sprintf(aux,"%d",Inicio->Jugador2->comidas);
 		      strcat(lab2, aux);
 		      gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);		  
@@ -254,6 +256,7 @@ void ComeFichas(int x,int y,gpointer data){
 		      Inicio->Jugador1->comidas=Inicio->Jugador1->comidas+2;
 		      strcpy(lab1,"Fichas comidas por ");
 		      strcat(lab1 ,Inicio->Jugador1->nombre);
+		      strcat(lab1,": ");
 		      sprintf(aux,"%d",Inicio->Jugador1->comidas);
 		      strcat(lab1, aux);
 		      gtk_label_set_text (GTK_LABEL(Inicio->label1), lab1);
@@ -262,6 +265,7 @@ void ComeFichas(int x,int y,gpointer data){
 		      Inicio->Jugador2->comidas=Inicio->Jugador2->comidas+2;
 		      strcpy(lab2,"Fichas comidas por ");
 		      strcat(lab2 ,Inicio->Jugador2->nombre);
+		      strcat(lab2,": ");
 		      sprintf(aux,"%d",Inicio->Jugador2->comidas);
 		      strcat(lab2, aux);
 		      gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);		  
@@ -282,7 +286,7 @@ void ComeFichas(int x,int y,gpointer data){
       if(Inicio->tablero[x][y]==j)
 	{
 	 
-	  if(Inicio->tablero[x+1][y+1]!=0 && Inicio->tablero[x+1][y+1]==j)
+	  if(Inicio->tablero[x+1][y+1]!=0 && Inicio->tablero[x+1][y+1]!=j)
 	    {
 
 	      if(Inicio->tablero[x+2][y+2]!=0 && Inicio->tablero[x+2][y+2]!=j)
@@ -294,6 +298,7 @@ void ComeFichas(int x,int y,gpointer data){
 		      Inicio->Jugador1->comidas=Inicio->Jugador1->comidas+2;
 		      strcpy(lab1,"Fichas comidas por ");
 		      strcat(lab1 ,Inicio->Jugador1->nombre);
+		      strcat(lab1,": ");
 		      sprintf(aux,"%d",Inicio->Jugador1->comidas);
 		      strcat(lab1, aux);
 		      gtk_label_set_text (GTK_LABEL(Inicio->label1), lab1);
@@ -302,6 +307,7 @@ void ComeFichas(int x,int y,gpointer data){
 		      Inicio->Jugador2->comidas=Inicio->Jugador2->comidas+2;
 		      strcpy(lab2,"Fichas comidas por ");
 		      strcat(lab2 ,Inicio->Jugador2->nombre);
+		      strcat(lab2,": ");
 		      sprintf(aux,"%d",Inicio->Jugador2->comidas);
 		      strcat(lab2, aux);
 		      gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);
@@ -325,7 +331,7 @@ void ComeFichas(int x,int y,gpointer data){
       if(Inicio->tablero[x][y]==j)
 	{
 	 
-	  if(Inicio->tablero[x+1][y-1]!=0 && Inicio->tablero[x+1][y-1]==j)
+	  if(Inicio->tablero[x+1][y-1]!=0 && Inicio->tablero[x+1][y-1]!=j)
 	    {
 
 	      if(Inicio->tablero[x+2][y-2]!=0 && Inicio->tablero[x+2][y-2]!=j)
@@ -337,6 +343,7 @@ void ComeFichas(int x,int y,gpointer data){
 		      Inicio->Jugador1->comidas=Inicio->Jugador1->comidas+2;
 		      strcpy(lab1,"Fichas comidas por ");
 		      strcat(lab1 ,Inicio->Jugador1->nombre);
+		      strcat(lab1,": ");
 		      sprintf(aux,"%d",Inicio->Jugador1->comidas);
 		      strcat(lab1, aux);
 		      gtk_label_set_text (GTK_LABEL(Inicio->label1), lab1);
@@ -345,6 +352,7 @@ void ComeFichas(int x,int y,gpointer data){
 		      Inicio->Jugador2->comidas=Inicio->Jugador2->comidas+2;
 		      strcpy(lab2,"Fichas comidas por ");
 		      strcat(lab2 ,Inicio->Jugador2->nombre);
+		      strcat(lab2,": ");
 		      sprintf(aux,"%d",Inicio->Jugador2->comidas);
 		      strcat(lab2, aux);
 		      gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);
@@ -368,7 +376,7 @@ void ComeFichas(int x,int y,gpointer data){
 	  if(Inicio->tablero[x][y+1]!=0  && Inicio->tablero[x][y+1]!=j)
 	    {
 	   
-	      if(Inicio->tablero[x][y+2]!=0 && Inicio->tablero[x][y+2]==j)
+	      if(Inicio->tablero[x][y+2]!=0 && Inicio->tablero[x][y+2]!=j)
 		{
 		 
 		  if(Inicio->tablero[x][y+3]==j)
@@ -377,6 +385,7 @@ void ComeFichas(int x,int y,gpointer data){
 			Inicio->Jugador1->comidas=Inicio->Jugador1->comidas+2;
 			strcpy(lab1,"Fichas comidas por ");
 			strcat(lab1 ,Inicio->Jugador1->nombre);
+			strcat(lab1,": ");
 			sprintf(aux,"%d",Inicio->Jugador1->comidas);
 			strcat(lab1, aux);
 			gtk_label_set_text (GTK_LABEL(Inicio->label1), lab1);
@@ -385,6 +394,7 @@ void ComeFichas(int x,int y,gpointer data){
 			Inicio->Jugador2->comidas=Inicio->Jugador2->comidas+2;
 			strcpy(lab2,"Fichas comidas por ");
 			strcat(lab2 ,Inicio->Jugador2->nombre);
+			strcat(lab2,": ");
 			sprintf(aux,"%d",Inicio->Jugador2->comidas);
 			strcat(lab2, aux);
 			gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);
@@ -411,7 +421,7 @@ void ComeFichas(int x,int y,gpointer data){
 	  if(Inicio->tablero[x][y-1]!=0  && Inicio->tablero[x][y-1]!=j)
 	    {
 	   
-	      if(Inicio->tablero[x][y-2]!=0 && Inicio->tablero[x][y-2]==j)
+	      if(Inicio->tablero[x][y-2]!=0 && Inicio->tablero[x][y-2]!=j)
 		{
 		 
 		  if(Inicio->tablero[x][y-3]==j)
@@ -420,6 +430,7 @@ void ComeFichas(int x,int y,gpointer data){
 			Inicio->Jugador1->comidas=Inicio->Jugador1->comidas+2;
 			strcpy(lab1,"Fichas comidas por ");
 			strcat(lab1 ,Inicio->Jugador1->nombre);
+			strcat(lab1,": ");
 			sprintf(aux,"%d",Inicio->Jugador1->comidas);
 			strcat(lab1, aux);
 			gtk_label_set_text (GTK_LABEL(Inicio->label1), lab1);
@@ -428,6 +439,7 @@ void ComeFichas(int x,int y,gpointer data){
 			Inicio->Jugador2->comidas=Inicio->Jugador2->comidas+2;
 			strcpy(lab2,"Fichas comidas por ");
 			strcat(lab2 ,Inicio->Jugador2->nombre);
+			strcat(lab2,": ");
 			sprintf(aux,"%d",Inicio->Jugador2->comidas);
 			strcat(lab2, aux);
 			gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);
@@ -462,6 +474,7 @@ void ComeFichas(int x,int y,gpointer data){
 			Inicio->Jugador1->comidas=Inicio->Jugador1->comidas+2;
 			strcpy(lab1,"Fichas comidas por ");
 			strcat(lab1 ,Inicio->Jugador1->nombre);
+			strcat(lab1,": ");
 			sprintf(aux,"%d",Inicio->Jugador1->comidas);
 			strcat(lab1, aux);
 			gtk_label_set_text (GTK_LABEL(Inicio->label1), lab1);
@@ -470,6 +483,7 @@ void ComeFichas(int x,int y,gpointer data){
 			Inicio->Jugador2->comidas=Inicio->Jugador2->comidas+2;
 			strcpy(lab2,"Fichas comidas por ");
 			strcat(lab2 ,Inicio->Jugador2->nombre);
+			strcat(lab2,": ");
 			sprintf(aux,"%d",Inicio->Jugador2->comidas);
 			strcat(lab2, aux);
 			gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);
@@ -506,6 +520,7 @@ void ComeFichas(int x,int y,gpointer data){
 			Inicio->Jugador1->comidas=Inicio->Jugador1->comidas+2;
 			strcpy(lab1,"Fichas comidas por ");
 			strcat(lab1 ,Inicio->Jugador1->nombre);
+			strcat(lab1,": ");
 			sprintf(aux,"%d",Inicio->Jugador1->comidas);
 			strcat(lab1, aux);
 			gtk_label_set_text (GTK_LABEL(Inicio->label1), lab1);
@@ -514,6 +529,7 @@ void ComeFichas(int x,int y,gpointer data){
 			Inicio->Jugador2->comidas=Inicio->Jugador2->comidas+2;
 			strcpy(lab2,"Fichas comidas por ");
 			strcat(lab2 ,Inicio->Jugador2->nombre);
+			strcat(lab2,": ");
 			sprintf(aux,"%d",Inicio->Jugador2->comidas);
 			strcat(lab2, aux);
 			gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);
@@ -531,11 +547,11 @@ void ComeFichas(int x,int y,gpointer data){
 
 
   
-  if (Inicio->Jugador1->comidas>4){
+  if (Inicio->Jugador1->comidas>=10){
     Inicio->ganador=1;
     Ganador(button,Inicio);
   }
-  if(Inicio->Jugador2->comidas>4){
+  if(Inicio->Jugador2->comidas>=10){
     Inicio->ganador=2;
     Ganador(button, Inicio);
   }
@@ -560,13 +576,11 @@ void ComeFichas(int x,int y,gpointer data){
 void FilasDe4(int x,int y,gpointer data)
 {
   int i=0,j=0; //variables del tablero
-<<<<<<< HEAD
+
   //jug será el jugador en turno
   int cont=0;
-=======
-  //j será el jugador en turno
-  int cont=1;
->>>>>>> 37124640f59987677350c230680d691cf3aa1878
+
+
   int com1;
   int a,b;
   char jug;
@@ -586,7 +600,7 @@ void FilasDe4(int x,int y,gpointer data)
       a=i;
       while(j<20){
 	
-	while(Inicio->tablero[i][j]==jug && i<20)
+	while(i<20 && Inicio->tablero[i][j]==jug)
 	  {
 	    i++;
 	    cont++;
@@ -604,6 +618,7 @@ void FilasDe4(int x,int y,gpointer data)
 	cont=0;
 	j++;
       }
+      j=0;
       i=a+1;
     }
     
@@ -616,7 +631,7 @@ void FilasDe4(int x,int y,gpointer data)
       a=i;
       while(j<20){
 	b=j;
-	while(Inicio->tablero[i][j]==jug && i<20 && j<20)
+	while (i<20 && j<20 &&  Inicio->tablero[i][j]==jug)
 	  {
 	    i++;
 	    j++;
@@ -632,12 +647,11 @@ void FilasDe4(int x,int y,gpointer data)
 
 	}
 	cont=0;
-<<<<<<< HEAD
+
 	j=b+1;
-=======
-	j=y+1;
->>>>>>> 37124640f59987677350c230680d691cf3aa1878
+
       }
+      j=0;
       i=a+1;
     }
   
@@ -649,7 +663,7 @@ void FilasDe4(int x,int y,gpointer data)
       while(j<20){
 	b=j;
 
-	while(Inicio->tablero[i][j]==jug && i<20 && j<20)
+	while(i<20 && j<20 && Inicio->tablero[i][j]==jug )
 	  {
 	    cont++;
 	    j++;
@@ -664,12 +678,11 @@ void FilasDe4(int x,int y,gpointer data)
 
 	}
 	cont=0;
-<<<<<<< HEAD
+
 	j=b+1;
-=======
-	j++;
->>>>>>> 37124640f59987677350c230680d691cf3aa1878
+
       }
+      j=0;
       i++;
     }
   
@@ -682,7 +695,7 @@ void FilasDe4(int x,int y,gpointer data)
       a=i;
       while(j<20){
 	b=j;
-	while(Inicio->tablero[i][j]==jug && i<20 && j<20 && i>-1)
+	while(i<20 && j<20 && i>-1 && Inicio->tablero[i][j]==jug )
 	  {
 	    cont++;
 	    i--;
@@ -698,12 +711,11 @@ void FilasDe4(int x,int y,gpointer data)
 
 	  }
 	cont=0;
-<<<<<<< HEAD
+
 	j=b+1;
-=======
-	j=y+1;
->>>>>>> 37124640f59987677350c230680d691cf3aa1878
+
       }
+      j=0;
       i=a+1;
     }
     
@@ -713,7 +725,7 @@ void FilasDe4(int x,int y,gpointer data)
     if(jug==2)
       Inicio->Jugador2->fila4=com1;
   
-  if(com1>4)
+  if(com1>=5)
     Ganador(button, Inicio);
   
 }
