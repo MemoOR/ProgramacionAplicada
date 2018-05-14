@@ -1,22 +1,3 @@
-/* @file funcion.h
-*  @brief Separamos el programa para trabajar mas facilmenta al 
-*  mismo tiempo, aqui estan el resto de las funciones, especialmente
-*  las validaciones y lo que no usa tanto Gtk
-*  @author Guillermo Ortega, Mateo Larralde y Mariana
-*  @date 14/05/2018
-*/
-
-/**
-*  Esta funcion valida que el archivo a cargar sea valido. Si si lo es, 
-*  lo abre y carga el nombre de los jugadores y tambien va cargando
-*  en una lista dinamica las coordenadas de cada tiro. Ya que se cargaron,
-*  se inicializa el tablero-
-*  @author Mateo Larralde
-*  @param window      GtkWindow
-*  @param data        Inicio
-*  @return 
-*/
-
 void CARGAR(GtkWidget *window, gpointer data){
   
   char turn1[30],turn2[30];
@@ -26,34 +7,20 @@ void CARGAR(GtkWidget *window, gpointer data){
   FILE *Archivo;
   int a=1,b;
   const gchar *text;
-  GtkWidget *window_tab,*verticalbox;
-  GtkWidget *row_t, *box_t,*button,*box2,*box3,*box;
-  GtkWidget *box4,*label,*label1,*label2,*bigbox;
-  char turno[30], comid1[30], comid2[30];
-
-
-  
   //Guarda el nombre del archivo en la memoria
  
   text = gtk_entry_get_text(GTK_ENTRY(Inicio->entry));
   strcpy(text2, text);
-
-  if(text[0]=='\0'){
-    quick_message("Introduzca el nombre del archivo",Inicio->ventana);
-    return;
-  }
-
-  else{
   
-
+  if(text[0]!='\0'){
     strcpy(Inicio->archivo,text2);
     strcat(text2,".txt");
     
     Archivo=fopen(text2,"rt");
     
     if(Archivo==NULL){
-      quick_message("No existe ese archivo",Inicio->ventana);
-      return;
+      quick_message("No existe ese archivo",NULL);
+      gtk_main_quit();
     }
     else{
       //Leer los nombres y luego jugada por jugada
@@ -88,98 +55,9 @@ void CARGAR(GtkWidget *window, gpointer data){
       }
       
       fclose(Archivo);
-      
-      //Aqui se crea la ventana del tablero
-      
-      
-    
-      window_tab = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  
-      gtk_signal_connect(GTK_OBJECT(window_tab),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
-  
-      box_t = gtk_vbox_new(TRUE, 0);
-  
-      row_t = gtk_hbox_new(TRUE, 5);
-    
-      gtk_box_pack_start(GTK_BOX(box_t), create_pad(Inicio), FALSE, FALSE, 0);
-
-      verticalbox=gtk_vbox_new(TRUE,30);
-  
-      box2 = gtk_hbox_new(FALSE,50);
-      strcpy(text2,"Turno de: ");
-      strcat(text2,Inicio->Jugador1->nombre);
-      
-      label = Addlabel(box2,text2);
-      Inicio->labelt = label;
-      gtk_box_pack_start(GTK_BOX(verticalbox),box2,FALSE,FALSE,20);
-  
-
-      strcpy(comid1,"Fichas comidas por ");
-      strcat(comid1,Inicio->Jugador1->nombre);
-      strcat(comid1," :");
-        
-      box3 = gtk_hbox_new(FALSE,50);
-      
-      label1 = Addlabel(box3,comid1);
-      Inicio->label1 = label1;
-      gtk_box_pack_start(GTK_BOX(verticalbox),box3,FALSE,FALSE,20);
-    
-      strcpy(comid2,"Fichas comidas por ");
-      strcat(comid2,Inicio->Jugador2->nombre);
-      strcat(comid2," :");
-        
-      box4 = gtk_hbox_new(FALSE,50);
-      label2 = Addlabel(box4,comid2);
-      Inicio->label2 = label2;
-      gtk_box_pack_start(GTK_BOX(verticalbox),box4,FALSE,FALSE,20);
-      
-      box = gtk_hbox_new(TRUE,10);
-      button = AddButton1(window_tab,box," Guardar ",GUARDAR,Inicio);
-      gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,50);
-      
-      box = gtk_hbox_new(TRUE,10);
-      button = AddButton1(window_tab,box,"<<<",NULL,Inicio);
-      button = AddButton1(window_tab,box,">>>",NULL,Inicio);
-      gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,5);
-      
-      //gtk_box_pack_start(GTK_BOX(row_t),verticalbox,TRUE,TRUE,5);
-      
-      bigbox=gtk_hbox_new(FALSE,10);
-      
-  
-      g_signal_connect(window_tab, "delete-event", G_CALLBACK(delete_event), NULL);
-      g_signal_connect(window_tab, "destroy", G_CALLBACK(StopTheApp), NULL);
-      
-      
-      //gtk_container_add(GTK_CONTAINER(windownombres),verticalbox);
-      
-      gtk_container_add(GTK_CONTAINER(bigbox), box_t);
-      gtk_box_pack_start(GTK_BOX(bigbox),verticalbox,TRUE,TRUE,60);
-      gtk_container_add(GTK_CONTAINER(window_tab), bigbox);
-      
-      gtk_widget_show_all(window_tab);
-      
-      gtk_main(); 
     }
-    
-    
-  }
-  
-
-
+  }  
 }
-  
-
-
-
-/**
-*  Esta función valida si se comieron fichas en la ultima tirada. Valida
-*  desde el punto donde se tiro hacia todas las direcciones.
-*  @author Mateo Larralde y Mariana.
-*  @param widget GtkWidget
-*  @param data   Inicio
-*  @return 
-*/
 
 void ComeFichas(GtkWidget *widget, gpointer data){
   GtkWidget *button;
@@ -365,11 +243,6 @@ void ComeFichas(GtkWidget *widget, gpointer data){
   }
 }
 
-
-
-
-
-
 void FilasDe4(GtkWidget *widget, gpointer data)
 {
   int x, y, i=0,j=0; //variables del tablero
@@ -499,9 +372,9 @@ void FilasDe4(GtkWidget *widget, gpointer data)
     
   
     if(jug==1)
-      Inicio->Jugador1->fila4=com1;
+      Inicio->Jugador1->comidas=com1;
     if(jug==2)
-      Inicio->Jugador2->fila4=com1;
+      Inicio->Jugador2->comidas=com1;
   
   if(com1>4)
     Ganador(button, Inicio);
