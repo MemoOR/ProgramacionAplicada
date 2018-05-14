@@ -181,7 +181,11 @@ void CARGAR(GtkWidget *window, gpointer data){
 *  @return 
 */
 
+<<<<<<< HEAD
 void ComeFichas(int y,int x,gpointer data){
+=======
+void ComeFichas(int x,int y,gpointer data){
+>>>>>>> 37124640f59987677350c230680d691cf3aa1878
   GtkWidget *button;
   Lista *Inicio=(Lista *)data;
   char j,lab1[30],lab2[30];
@@ -556,8 +560,13 @@ void ComeFichas(int y,int x,gpointer data){
 void FilasDe4(int x,int y,gpointer data)
 {
   int i=0,j=0; //variables del tablero
+<<<<<<< HEAD
   //jug será el jugador en turno
   int cont=0;
+=======
+  //j será el jugador en turno
+  int cont=1;
+>>>>>>> 37124640f59987677350c230680d691cf3aa1878
   int com1;
   int a,b;
   char jug;
@@ -623,7 +632,11 @@ void FilasDe4(int x,int y,gpointer data)
 
 	}
 	cont=0;
+<<<<<<< HEAD
 	j=b+1;
+=======
+	j=y+1;
+>>>>>>> 37124640f59987677350c230680d691cf3aa1878
       }
       i=a+1;
     }
@@ -651,7 +664,11 @@ void FilasDe4(int x,int y,gpointer data)
 
 	}
 	cont=0;
+<<<<<<< HEAD
 	j=b+1;
+=======
+	j++;
+>>>>>>> 37124640f59987677350c230680d691cf3aa1878
       }
       i++;
     }
@@ -681,7 +698,11 @@ void FilasDe4(int x,int y,gpointer data)
 
 	  }
 	cont=0;
+<<<<<<< HEAD
 	j=b+1;
+=======
+	j=y+1;
+>>>>>>> 37124640f59987677350c230680d691cf3aa1878
       }
       i=a+1;
     }
