@@ -231,6 +231,46 @@ void ComeFichas(GtkWidget *widget, gpointer data){
 	  }
       }
     }
+
+    //Valida izquierda
+  
+  if(x>2)
+    {	
+      if(Inicio->tablero[x][y]==j){
+	
+	if(Inicio->tablero[x-1][y]!=0 && Inicio->tablero[x-1][y]!=j)
+	  {
+	    
+	    if(Inicio->tablero[x-2][y]!=0 && Inicio->tablero[x-2][y]!=j)
+	      {
+        
+		if(Inicio->tablero[x-3][y]==j)
+		  {
+		    if (j==1){
+		      Inicio->Jugador1->comidas=Inicio->Jugador1->comidas+2;
+		      strcpy(lab1,"Fichas comidas por ");
+		      strcat(lab1 ,Inicio->Jugador1->nombre);
+		      sprintf(aux,"%d",Inicio->Jugador1->comidas);
+		      strcat(lab1, aux);
+		      gtk_label_set_text (GTK_LABEL(Inicio->label1), lab1);
+		    }
+		    else{
+		      Inicio->Jugador2->comidas=Inicio->Jugador2->comidas+2;
+		      strcpy(lab2,"Fichas comidas por ");
+		      strcat(lab2 ,Inicio->Jugador2->nombre);
+		      sprintf(aux,"%d",Inicio->Jugador2->comidas);
+		      strcat(lab2, aux);
+		      gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);		  
+		    }
+		  
+		    Inicio->tablero[x-1][y]=0;
+        
+		    Inicio->tablero[x-2][y]=0;
+		  }
+	      }
+	  }
+      }
+    }
   
   //valida diagonal abajo derecha
   if(x<=17 && y<=17)
@@ -272,7 +312,49 @@ void ComeFichas(GtkWidget *widget, gpointer data){
 	    }
 	}
     }
-  
+
+
+
+    //valida diagonal arriba derecha
+  if(x<=17 && y>2)
+    {
+      if(Inicio->tablero[x][y]==j)
+	{
+	 
+	  if(Inicio->tablero[x+1][y-1]!=0 && Inicio->tablero[x+1][y-1]==j)
+	    {
+
+	      if(Inicio->tablero[x+2][y-2]!=0 && Inicio->tablero[x+2][y-2]!=j)
+		{
+	        
+		  if(Inicio->tablero[x+3][y-3]==j)
+		    {
+		      if (j==1){
+		      Inicio->Jugador1->comidas=Inicio->Jugador1->comidas+2;
+		      strcpy(lab1,"Fichas comidas por ");
+		      strcat(lab1 ,Inicio->Jugador1->nombre);
+		      sprintf(aux,"%d",Inicio->Jugador1->comidas);
+		      strcat(lab1, aux);
+		      gtk_label_set_text (GTK_LABEL(Inicio->label1), lab1);
+		      }
+		      else{
+		      Inicio->Jugador2->comidas=Inicio->Jugador2->comidas+2;
+		      strcpy(lab2,"Fichas comidas por ");
+		      strcat(lab2 ,Inicio->Jugador2->nombre);
+		      sprintf(aux,"%d",Inicio->Jugador2->comidas);
+		      strcat(lab2, aux);
+		      gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);
+		      }
+		      
+		      
+		      Inicio->tablero[x+1][y-1]=0;
+		     
+		      Inicio->tablero[x+2][y-2]=0;
+		    }
+		}
+	    }
+	}
+    }
   //valida arriba
   if(y<=17)
     {
@@ -313,9 +395,52 @@ void ComeFichas(GtkWidget *widget, gpointer data){
 	    }
 	}
     }
+
+
+
+    //valida abajo
+  if(y>2)
+    {
+      if(Inicio->tablero[x][y]==j)
+	{
+        
+	  if(Inicio->tablero[x][y-1]!=0  && Inicio->tablero[x][y-1]!=j)
+	    {
+	   
+	      if(Inicio->tablero[x][y-2]!=0 && Inicio->tablero[x][y-2]==j)
+		{
+		 
+		  if(Inicio->tablero[x][y-3]==j)
+		    {
+		      if(j==1){
+			Inicio->Jugador1->comidas=Inicio->Jugador1->comidas+2;
+			strcpy(lab1,"Fichas comidas por ");
+			strcat(lab1 ,Inicio->Jugador1->nombre);
+			sprintf(aux,"%d",Inicio->Jugador1->comidas);
+			strcat(lab1, aux);
+			gtk_label_set_text (GTK_LABEL(Inicio->label1), lab1);
+		      }
+		      else{
+			Inicio->Jugador2->comidas=Inicio->Jugador2->comidas+2;
+			strcpy(lab2,"Fichas comidas por ");
+			strcat(lab2 ,Inicio->Jugador2->nombre);
+			sprintf(aux,"%d",Inicio->Jugador2->comidas);
+			strcat(lab2, aux);
+			gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);
+		      }
+	        
+		      
+		      Inicio->tablero[x][y-1]=0;
+		      
+		      Inicio->tablero[x][y-2]=0;
+		    }
+		}
+	    }
+	}
+    }
   
   //valida diagonal abajo izquierda
-  if(x<=3 && y<=17)
+  if(x>2 && y<=17)
     {
       if(Inicio->tablero[x][y]==j)
 	{
@@ -355,6 +480,53 @@ void ComeFichas(GtkWidget *widget, gpointer data){
 	    }
 	}
     }
+
+
+
+  //valida diagonal arriba izquierda
+  if(x>2 && y>2)
+    {
+      if(Inicio->tablero[x][y]==j)
+	{
+	   
+	  
+	  if(Inicio->tablero[x-1][y-1]!=0 && Inicio->tablero[x-1][y-1]!=j)
+	    {
+	    
+	      if(Inicio->tablero[x-2][y-2]!=0 && Inicio->tablero[x-2][y-2]!=j)
+		{
+        
+		  if(Inicio->tablero[x-3][y-3]==j)
+		    {
+		      if (j==1){
+			Inicio->Jugador1->comidas=Inicio->Jugador1->comidas+2;
+			strcpy(lab1,"Fichas comidas por ");
+			strcat(lab1 ,Inicio->Jugador1->nombre);
+			sprintf(aux,"%d",Inicio->Jugador1->comidas);
+			strcat(lab1, aux);
+			gtk_label_set_text (GTK_LABEL(Inicio->label1), lab1);
+		      }
+		      else{
+			Inicio->Jugador2->comidas=Inicio->Jugador2->comidas+2;
+			strcpy(lab2,"Fichas comidas por ");
+			strcat(lab2 ,Inicio->Jugador2->nombre);
+			sprintf(aux,"%d",Inicio->Jugador2->comidas);
+			strcat(lab2, aux);
+			gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);
+		      }
+        
+		      
+		      Inicio->tablero[x-1][y-1]=0;
+		      
+		      Inicio->tablero[x-2][y-2]=0;
+		    }
+		}
+	    }
+	}
+    }
+
+
+  
   if (Inicio->Jugador1->comidas>4){
     Inicio->ganador=1;
     Ganador(button,Inicio);
@@ -366,6 +538,17 @@ void ComeFichas(GtkWidget *widget, gpointer data){
 }
 
 
+
+/**
+*  Esta función valida si hubo filas de 5. Si si, llama a la funcion de
+*  Ganador. Tambien, cada vez que se tira una ficha, recorre todo el tablero 
+*  para contar el numero de fichas de 4 de jugador que tiro. y lo guarda en 
+*  la memoria.
+*  @author Mateo Larralde y Mariana.
+*  @param widget GtkWidget
+*  @param data   Inicio
+*  @return 
+*/
 
 
 
@@ -507,7 +690,18 @@ void FilasDe4(GtkWidget *widget, gpointer data)
     Ganador(button, Inicio);
   
 }
- 
+
+
+
+/**
+*  Esta función recibe el nombre del archivo donde se va a guardar el
+*  juego y crea un archivo de texto en donde se imprimen los nombres
+*  de los jugadores, y luego las coordenadas de cada tiro en orden.
+*  @author Mateo Larralde 
+*  @param widget GtkWidget
+*  @param data   Inicio
+*  @return 
+*/
  
 void Guardar(GtkWidget *window, gpointer data){
   Lista *Inicio = (Lista *) data;
@@ -538,7 +732,15 @@ void Guardar(GtkWidget *window, gpointer data){
   fclose(Archivo);
 }
 
-
+/**
+*  Al cumplirse alguna de las condiciones para ganar el juego, se
+*  llama a esta funcion que crea una ventana donde se anuncia al
+*  ganador. Aquí termina el juego
+*  @author Mateo Larralde
+*  @param widget GtkWidget
+*  @param data   Inicio
+*  @return 
+*/
 
 void Ganador(GtkWidget *window, gpointer data){
   GtkWidget *ganador;
@@ -575,7 +777,15 @@ void Ganador(GtkWidget *window, gpointer data){
 
 }
 
-
+/**
+*  Esta función se llama al apretar el boton de guardar, y despliega una
+*  ventana que pregunta el nombre del archivo donde se va a guardar 
+*  el juego.
+*  @author Mateo Larralde
+*  @param widget GtkWidget
+*  @param data   Inicio
+*  @return 
+*/
 
 
 void GUARDAR(GtkWidget *window, gpointer data){
