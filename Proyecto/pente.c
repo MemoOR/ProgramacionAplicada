@@ -63,8 +63,8 @@ void Cargarjugs(GtkWidget *window, gpointer data);
 void Guardar(GtkWidget *window, gpointer data);
 void command(int y);
 void callback(GtkWidget *widget, gpointer data);
-void ComeFichas(GtkWidget *widget, gpointer data);
-void FilasDe4(GtkWidget *widget, gpointer data);
+void ComeFichas(int x,int y, gpointer data);
+void FilasDe4(int x,int y, gpointer data);
 void Ganador(GtkWidget *window, gpointer data);
 void GUARDAR(GtkWidget *window, gpointer data);
 void obtener_coordenada(GtkWidget *button, gpointer data);
@@ -72,7 +72,7 @@ void insertar_turno(Jugadas **inicio,int x,int y);
 //funciones de funcionamiento//
 
 
-#include "funcion.h"
+#include "funcion_pente.h"
 
 /**
 *  Esta función recibe un caracter en el primer argumento y si
@@ -589,13 +589,9 @@ void callback(GtkWidget *widget, gpointer data) {
     command(y);
   }
 
-  //  ComeFichas(button,Inicio);
-  //FilasDe4(button,Inicio);
-
-  
   Inicio->turno++;
   
-   g_free(label);
+  g_free(label);
 }
 
 /**
@@ -616,21 +612,22 @@ GtkWidget *create_pad(gpointer data) {
 
   container = gtk_vbox_new(FALSE, 3);
   
-  for (int i = 0; i < 20; i++) {
+  for (int j = 0; j < 20; j++) {
     
     row = gtk_hbox_new(TRUE, 0);
     gtk_box_pack_start(GTK_BOX(container), row, FALSE, TRUE, 0);
     
-    for(int j = 0; j < 20; j++){
-   
+    for(int i = 0; i < 20; i++){
+      
       Inicio->buttons[i][j] = gtk_button_new_with_label(Inicio->tablero[i][j]);
       
       gtk_widget_set_size_request(Inicio->buttons[i][j], 35, 35);
-    
+      
       g_signal_connect(Inicio->buttons[i][j], "clicked", G_CALLBACK(callback), Inicio);
-      g_signal_connect_swapped(GTK_OBJECT(Inicio->buttons[i][j]),"clicked",
-			   G_CALLBACK(obtener_coordenada),GTK_OBJECT(Inicio));
-   
+      g_signal_connect(Inicio->buttons[i][j], "clicked", G_CALLBACK(obtener_coordenada), Inicio);
+      
+      printf("%d,%d\n",i,j);
+      
       gtk_box_pack_start(GTK_BOX(row), Inicio->buttons[i][j], FALSE, TRUE, 2);
       gtk_widget_show(Inicio->buttons[i][j]);
     }
@@ -647,22 +644,37 @@ GtkWidget *create_pad(gpointer data) {
 */
 void obtener_coordenada(GtkWidget *button, gpointer data){
   Lista *Inicio=(Lista *)data;
-
-  for(int i=0;i<20;i++){
-    for(int j=0;j<20;j++){
+  int i,j;
+  
+  for(j=0;j<20;j++){
+    for(i=0;i<20;i++){
       if(Inicio->buttons[i][j]==button){
 	if(Inicio->turno==3){
 	  Inicio->X1=i;
 	  Inicio->Y1=j;
+	  Inicio->tablero[i][j]=1;
+	  ComeFichas(j,i,Inicio);
+	  FilasDe4(j,i,Inicio);
 	}
 	else{
-	  insertar_turno(&Inicio->turnos_l,i,j);
+	  insertar_turno(&Inicio->turnos_l,j,i);
+	  if(Inicio->turno%2==0)
+	    Inicio->tablero[i][j]=1;
+	  else
+	    Inicio->tablero[i][j]=2;
+	  
+	  ComeFichas(j,i,Inicio);
+	  FilasDe4(j,i,Inicio);
+	  
+	  printf("%d,%d\n",i,j);
+	  printf("%d\n",Inicio->tablero[i][j]);
 	}
 	return;
       }
     }
   }
 }
+
 
 
 /**
