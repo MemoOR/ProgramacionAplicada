@@ -94,8 +94,6 @@ gint main ( gint argc, gchar *argv[]){
   Jug Jugador1,Jugador2;
   
   Inicio=(Lista*)malloc(sizeof(Lista));
- 
-
 
   /*
   Jugador1=(Jug*)malloc(sizeof(Jug));
@@ -362,7 +360,7 @@ void NOMBRES(GtkWidget *window, gpointer data){
   GtkWidget *window_tab,*verticalbox;
   GtkWidget *row_t, *box_t,*button,*box2,*box3;
   GtkWidget *box,*box4,*label,*label1,*label2,*bigbox;
-  char turno[30], comid1[30], comid2[30];
+  char comid1[30], comid2[30];
   
 
 
@@ -504,36 +502,6 @@ void quick_message (gchar *message, GtkWidget *parent) {
 //---------------------------------------------------//***********************************************************//
 
 /**
-*  Esta función recibe un caracter en el primer argumento y si
-*  este es una letra minuscula lo convierte a mayuscula y regresa 
-*  elnuevo valor en el segundo argumento.
-*  Regresa un 1 si pudo convertir a mayuscula el caracter
-*  y 0 si no pudo hacerlo.
-*  @author Iggy Pop
-*  @param chrData     El caracter a convertir (minuscula a mayuscula)
-*  @param *may        El caracter convertido en mayuscula
-*  @return int
-*/
-void command(int y) {
-  
-  switch(y){
-  case 0:
-    
-    break;
-  case 1:
-    
-    break;
-    
-  case 2:
-    
-    break;
-
-  default:
-    break;
-  }
-}
-
-/**
 *  Esta funcion cambia el color de los botones al ser apretados. Dependiendo
 *  del turno, lo cambia a azul (Jugador1) o rojo (2). También llama a las 
 *  funciones de validacion para revisar si se hizo una linea de 4 o de 5,
@@ -547,8 +515,6 @@ void callback(GtkWidget *widget, gpointer data) {
   gchar *label;
   GdkPixbuf *pix1, *pix2;
   Lista *Inicio=(Lista *)data;
-
-  GtkWidget *button;
   char turn1[30],turn2[30];
   
   if(Inicio->turno%2==1){
@@ -563,7 +529,6 @@ void callback(GtkWidget *widget, gpointer data) {
     gtk_label_set_text (GTK_LABEL(Inicio->labelt), turn1);
   }
   
-
   int  y=0;
   
   g_object_get(G_OBJECT(widget), "label", &label, NULL);
@@ -579,14 +544,11 @@ void callback(GtkWidget *widget, gpointer data) {
 
   if (label == 0 && (Inicio->turno)%2 == 1){
     gtk_button_set_image (GTK_BUTTON (widget), img_b);
-
-    command(y);
   }
   else if (label == 0 && (Inicio->turno)%2 == 0){
     gtk_button_set_image (GTK_BUTTON (widget), img_r);
 
     y=1;
-    command(y);
   }
 
   Inicio->turno++;
@@ -604,11 +566,14 @@ void callback(GtkWidget *widget, gpointer data) {
 GtkWidget *create_pad(gpointer data) {
   Lista *Inicio=(Lista *)data;
   GtkWidget *container;
-  GtkWidget *row;
+  GtkWidget *row,*img;
+  GdkPixbuf *pix;
 
   for(int i=0;i<20;i++)
     for(int j=0;j<20;j++)
       Inicio->tablero[i][j]=0;
+
+ 
 
   container = gtk_vbox_new(FALSE, 3);
   
@@ -619,19 +584,24 @@ GtkWidget *create_pad(gpointer data) {
     
     for(int i = 0; i < 20; i++){
       
+      pix=gdk_pixbuf_new_from_file("arena.jpeg",NULL);
+      pix=gdk_pixbuf_scale_simple(pix,25,25,GDK_INTERP_BILINEAR);
+      img = gtk_image_new_from_pixbuf(pix);
+       
       Inicio->buttons[i][j] = gtk_button_new_with_label(Inicio->tablero[i][j]);
       
       gtk_widget_set_size_request(Inicio->buttons[i][j], 35, 35);
       
+      gtk_button_set_image (GTK_BUTTON (Inicio->buttons[i][j]), img);
+ 
       g_signal_connect(Inicio->buttons[i][j], "clicked", G_CALLBACK(callback), Inicio);
       g_signal_connect(Inicio->buttons[i][j], "clicked", G_CALLBACK(obtener_coordenada), Inicio);
-      
-      printf("%d,%d\n",i,j);
       
       gtk_box_pack_start(GTK_BOX(row), Inicio->buttons[i][j], FALSE, TRUE, 2);
       gtk_widget_show(Inicio->buttons[i][j]);
     }
-  }  
+  }
+  
   return container;
 }
 
@@ -665,9 +635,6 @@ void obtener_coordenada(GtkWidget *button, gpointer data){
 	  
 	  ComeFichas(j,i,Inicio);
 	  FilasDe4(j,i,Inicio);
-	  
-	  printf("%d,%d\n",i,j);
-	  printf("%d\n",Inicio->tablero[i][j]);
 	}
 	return;
       }
