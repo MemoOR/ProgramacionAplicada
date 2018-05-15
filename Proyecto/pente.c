@@ -78,6 +78,8 @@ void GUARDAR(GtkWidget *window, gpointer data);
 void obtener_coordenada(GtkWidget *button, gpointer data);
 void insertar_turno(Jugadas **inicio,int x,int y);
 void JugXJug(GtkWidget *widget, gpointer data);
+void borrar_lista(GtkWidget *widget, gpointer data);
+void Reanudar(GtkWidget *widget, gpointer data);
 void nul();
 //funciones de funcionamiento//
 
@@ -92,7 +94,7 @@ void nul();
 *  @param *argv[]  El texto de los parametros recibidos
 *  @return gint
 */
-gint main ( gint argc, gchar *argv[]){
+gint main (gint argc, gchar *argv[]){
 
   GtkWidget *window1;
   GtkWidget *button;
@@ -247,6 +249,7 @@ void close_window(GtkWidget *window, gpointer data){
 */
 void StopTheApp(GtkWidget *window, gpointer data){
   gtk_main_quit();
+  borrar_lista(window,data);
 }
 
 /**
@@ -438,7 +441,8 @@ void NOMBRES(GtkWidget *window, gpointer data){
 
     box = gtk_hbox_new(TRUE,10);
 
-    button = AddButton1(window_tab,box,">>>",nul,NULL);
+    button = AddButton(box,"Reanudar",nul,NULL);
+    button = AddButton(box,">>>",nul,NULL);
     gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,5);
     
     bigbox=gtk_hbox_new(FALSE,10);
@@ -716,4 +720,7 @@ void borrar_imagen(gpointer data){
       }
     }
   }
+}
+
+void Reanudar(GtkWidget *widget, gpointer data){
 }

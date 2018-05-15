@@ -133,7 +133,7 @@ void CARGAR(GtkWidget *window, gpointer data){
       gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,50);
       
       box = gtk_hbox_new(TRUE,10);
-      button = AddButton(box,"Reanudar",nul,Inicio);
+      button = AddButton(box,"Reanudar",Reanudar,Inicio);
 
 
       button = AddButton(box,">>>",JugXJug,Inicio);
@@ -801,15 +801,16 @@ void GUARDAR(GtkWidget *window, gpointer data){
   windownombres = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_default_size(GTK_WINDOW(windownombres),320,200);
   gtk_container_border_width(GTK_CONTAINER(windownombres),5);
+
+  gtk_signal_connect(GTK_OBJECT(windownombres),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
   
   verticalbox = gtk_vbox_new(TRUE,5);
+  
   label1 = Addlabel(verticalbox,"Escriba el nombre del archivo donde lo quiere guardar:");
   
   entrybox = gtk_entry_new();
   Inicio->entry2 = entrybox;
   gtk_box_pack_start(GTK_BOX(verticalbox),entrybox,TRUE,TRUE,5);
-
-  gtk_signal_connect(GTK_OBJECT(windownombres),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
 
   button = AddButton1(windownombres,verticalbox,"Continuar",Guardar,Inicio);
 
@@ -819,7 +820,13 @@ void GUARDAR(GtkWidget *window, gpointer data){
   gtk_widget_show_all(windownombres);
 }
 
-
+/**
+*  Esta función se llama al apretar el boton de siguiente o reanudar
+*  cuando se esta jugando para evitar la interaccion del usuario
+*  @author Guillermo Ortega
+*  @param
+*  @return void  
+*/
 void nul(){
 }
 
@@ -850,8 +857,27 @@ void JugXJug(GtkWidget *widget,gpointer data){
   if(Inicio->turno%2==0)
     Inicio->tablero[temp->X][temp->Y]=2;
 
+  ComeFichas(temp->X,temp->Y,Inicio);
   borrar_imagen(Inicio);
   
   Inicio->turno++;
-  
+}
+
+/**
+*  Esta función elimina la lista de movimientos
+*  cuando se cierra la aplicacion
+*  @author Guillermo Ortega
+*  @param widget GtkWidget
+*  @param data  estructura de datos
+*  @return void
+*/
+void borrar_lista(GtkWidget *widget, gpointer data){
+  Jugadas *temp;
+  Lista *Inicio=(Lista *)data;
+  temp=Inicio->turnos_l;
+  while(temp!=NULL){
+    Inicio->turnos_l=temp->sig;
+    free(temp);
+    temp=Inicio->turnos_l;
+  }
 }
