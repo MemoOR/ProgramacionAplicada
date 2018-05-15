@@ -58,7 +58,7 @@ void StopTheApp(GtkWidget *window, gpointer data);
 void Nuevo(GtkWidget *window, gpointer data);
 void Cargar(GtkWidget *window, gpointer data);
 void NOMBRES(GtkWidget *window, gpointer data);
-void quick_message (gchar *message, GtkWidget *parent);
+void quick_message (gchar *message, GtkWidget *parent, gpointer data);
 void close_window(GtkWidget *window, gpointer data);
 GtkWidget *create_pad();
 void set_image(int x,int y,gpointer data,GtkWidget *widget);
@@ -104,11 +104,6 @@ gint main (gint argc, gchar *argv[]){
   
   Inicio=(Lista*)malloc(sizeof(Lista));
 
-  /*
-  Jugador1=(Jug*)malloc(sizeof(Jug));
-  Jugador2=(Jug*)malloc(sizeof(Jug));
-  */
-  
   strcpy(Jugador1.nombre, "\0");
   strcpy(Jugador2.nombre, "\0");
   
@@ -146,7 +141,7 @@ gint main (gint argc, gchar *argv[]){
   gtk_container_add(GTK_CONTAINER(window1),verticalbox);
   
   gtk_signal_connect(GTK_OBJECT(window1),"destroy",
-		     GTK_SIGNAL_FUNC(StopTheApp),NULL);
+		     GTK_SIGNAL_FUNC(StopTheApp),Inicio);
   gtk_widget_show_all(window1);
   gtk_main();
   
@@ -248,8 +243,9 @@ void close_window(GtkWidget *window, gpointer data){
 *  @return void
 */
 void StopTheApp(GtkWidget *window, gpointer data){
-  gtk_main_quit();
   borrar_lista(window,data);
+  gtk_main_quit();
+  exit(0);
 }
 
 /**
@@ -286,7 +282,7 @@ void Nuevo(GtkWidget *window, gpointer data){
   gtk_box_pack_start(GTK_BOX(verticalbox),Entrybox,TRUE,TRUE,5);
 
   gtk_signal_connect(GTK_OBJECT(windownombres),
-		     "destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
+		     "destroy",GTK_SIGNAL_FUNC(StopTheApp),Inicio);
 
   
   button = gtk_button_new_with_label("Continuar");
@@ -332,11 +328,18 @@ void Cargar(GtkWidget *window, gpointer data){
   entrybox = gtk_entry_new();
   Inicio->entry = entrybox;
   gtk_box_pack_start(GTK_BOX(verticalbox),entrybox,TRUE,TRUE,5);
-
+  
   gtk_signal_connect(GTK_OBJECT(windownombres),"destroy",
-		     GTK_SIGNAL_FUNC(StopTheApp),NULL);
+		     GTK_SIGNAL_FUNC(StopTheApp),Inicio);
 
-  button = AddButton1(windownombres,verticalbox,"Continuar",CARGAR,Inicio);
+  button = gtk_button_new_with_label("Continuar");
+  gtk_box_pack_start(GTK_BOX(verticalbox),button,FALSE,TRUE,10);
+  g_signal_connect_swapped (G_OBJECT (button),
+			    "clicked",G_CALLBACK (gtk_widget_hide),
+			    G_OBJECT (windownombres));
+  gtk_signal_connect(GTK_OBJECT(button),"clicked",GTK_SIGNAL_FUNC(CARGAR),
+		     Inicio);
+  gtk_widget_show(button);
 
   //Cuando se de click en continuar debe guardar lo que este en la entrybox
 
@@ -365,102 +368,108 @@ void NOMBRES(GtkWidget *window, gpointer data){
   GtkWidget *box,*box4,*label,*label1,*label2,*bigbox;
   char comid1[30], comid2[30];
 
-  //Guarda los nombres en la memoria
-  text = gtk_entry_get_text(GTK_ENTRY(Inicio->Jugador1->entry));
-  strcpy(text2, text);
-  
-  text = gtk_entry_get_text(GTK_ENTRY(Inicio->Jugador2->entry));
-  strcpy(text3,text);
-  
-  if(text2[0]=='\0' || text3[0]=='\0'){
-    quick_message("Escribe el nombre de ambos jugadores",Inicio->ventana);
-    return;
-  }
+  if(Inicio->bandera==0){
+
+    //Guarda los nombres en la memoria
+    text = gtk_entry_get_text(GTK_ENTRY(Inicio->Jugador1->entry));
+    strcpy(text2, text);
     
-  if(text2[0]!='\0' && text3[0]!='\0'){ 
-    strcpy(Inicio->Jugador1->nombre, text2);
-    strcpy(Inicio->Jugador2->nombre, text3);
-  }
-  
-  if(Inicio->Jugador1->nombre[0]!='\0' && Inicio->Jugador2->nombre[0]!='\0'){
+    text = gtk_entry_get_text(GTK_ENTRY(Inicio->Jugador2->entry));
+    strcpy(text3,text);
     
-    if(strcmp(Inicio->Jugador1->nombre,Inicio->Jugador2->nombre)==0){
-      quick_message("Los nombres de los jugadores no pueden ser iguales",
-		    Inicio->ventana);
+    if(text2[0]=='\0' || text3[0]=='\0'){
+      quick_message("Escribe el nombre de ambos jugadores",Inicio->ventana,Inicio);
       return;
     }
     
-    //Aqui termina la validacion y se empieza a crear el tablero
+    if(text2[0]!='\0' && text3[0]!='\0'){ 
+      strcpy(Inicio->Jugador1->nombre, text2);
+      strcpy(Inicio->Jugador2->nombre, text3);
+    }
     
-    window_tab = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    
-    g_signal_connect(window_tab, "destroy", G_CALLBACK(StopTheApp), NULL);
-
-    gtk_signal_connect(GTK_OBJECT(window_tab),"destroy",
-		       GTK_SIGNAL_FUNC(StopTheApp),NULL);
-    
-    box_t = gtk_vbox_new(TRUE, 0);
-    
-    row_t = gtk_hbox_new(TRUE, 5);
-    
-    gtk_box_pack_start(GTK_BOX(box_t), create_pad(Inicio), FALSE, FALSE, 0);
-
-    verticalbox=gtk_vbox_new(TRUE,30);
-  
-    box2 = gtk_hbox_new(FALSE,50);
-    strcpy(text2,"Turno de: ");
-    strcat(text2,Inicio->Jugador1->nombre);
+    if(Inicio->Jugador1->nombre[0]!='\0' && Inicio->Jugador2->nombre[0]!='\0'){
       
-    label = Addlabel(box2,text2);
-    Inicio->labelt = label;
-    gtk_box_pack_start(GTK_BOX(verticalbox),box2,FALSE,FALSE,20);
-
-
-    strcpy(comid1,"Fichas comidas por ");
-    strcat(comid1,Inicio->Jugador1->nombre);
-    strcat(comid1," :");
-        
-    box3 = gtk_hbox_new(FALSE,50);
-    
-    label1 = Addlabel(box3,comid1);
-    Inicio->label1 = label1;
-    gtk_box_pack_start(GTK_BOX(verticalbox),box3,FALSE,FALSE,20);
-    
-    strcpy(comid2,"Fichas comidas por ");
-    strcat(comid2,Inicio->Jugador2->nombre);
-    strcat(comid2," :");
-        
-    box4 = gtk_hbox_new(FALSE,50);
-    label2 = Addlabel(box4,comid2);
-    Inicio->label2 = label2;
-    gtk_box_pack_start(GTK_BOX(verticalbox),box4,FALSE,FALSE,20);
-
-    box = gtk_hbox_new(TRUE,10);
-    button = AddButton1(window_tab,box," Guardar ",GUARDAR,Inicio);
-    gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,50);
-
-    box = gtk_hbox_new(TRUE,10);
-
-    button = AddButton(box,"Reanudar",nul,NULL);
-    button = AddButton(box,">>>",nul,NULL);
-    gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,5);
-    
-    bigbox=gtk_hbox_new(FALSE,10);
-    
-    g_signal_connect(window_tab, "delete-event", G_CALLBACK(delete_event),
-		     NULL);
-    g_signal_connect(window_tab, "destroy", G_CALLBACK(StopTheApp), NULL);
-
-
-    gtk_container_add(GTK_CONTAINER(bigbox), box_t);
-    gtk_box_pack_start(GTK_BOX(bigbox),verticalbox,TRUE,TRUE,60);
-    gtk_container_add(GTK_CONTAINER(window_tab), bigbox);
-    
-    gtk_widget_show_all(window_tab);
-    
-    gtk_main(); 
+      if(strcmp(Inicio->Jugador1->nombre,Inicio->Jugador2->nombre)==0){
+	quick_message("Los nombres de los jugadores no pueden ser iguales",
+		      Inicio->ventana,Inicio);
+	return;
+      }
+    }
   }
+  if(Inicio->bandera==1){
+    Inicio->bandera=0;
+  }
+  //Aqui termina la validacion y se empieza a crear el tablero
+  
+  window_tab = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  
+  g_signal_connect(window_tab, "destroy", G_CALLBACK(StopTheApp), Inicio);
+  
+  gtk_signal_connect(GTK_OBJECT(window_tab),"destroy",
+		     GTK_SIGNAL_FUNC(StopTheApp),Inicio);
+  
+  box_t = gtk_vbox_new(TRUE, 0);
+  
+  row_t = gtk_hbox_new(TRUE, 5);
+  
+  gtk_box_pack_start(GTK_BOX(box_t), create_pad(Inicio), FALSE, FALSE, 0);
+  
+  verticalbox=gtk_vbox_new(TRUE,30);
+  
+  box2 = gtk_hbox_new(FALSE,50);
+  strcpy(text2,"Turno de: ");
+  strcat(text2,Inicio->Jugador1->nombre);
+  
+  label = Addlabel(box2,text2);
+  Inicio->labelt = label;
+  gtk_box_pack_start(GTK_BOX(verticalbox),box2,FALSE,FALSE,20);
+  
+  
+  strcpy(comid1,"Fichas comidas por ");
+  strcat(comid1,Inicio->Jugador1->nombre);
+  strcat(comid1," :");
+  
+  box3 = gtk_hbox_new(FALSE,50);
+  
+  label1 = Addlabel(box3,comid1);
+  Inicio->label1 = label1;
+  gtk_box_pack_start(GTK_BOX(verticalbox),box3,FALSE,FALSE,20);
+  
+  strcpy(comid2,"Fichas comidas por ");
+  strcat(comid2,Inicio->Jugador2->nombre);
+  strcat(comid2," :");
+  
+  box4 = gtk_hbox_new(FALSE,50);
+  label2 = Addlabel(box4,comid2);
+  Inicio->label2 = label2;
+  gtk_box_pack_start(GTK_BOX(verticalbox),box4,FALSE,FALSE,20);
+  
+  box = gtk_hbox_new(TRUE,10);
+  button = AddButton1(window_tab,box," Guardar ",GUARDAR,Inicio);
+  gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,50);
+  
+  box = gtk_hbox_new(TRUE,10);
+  
+  button = AddButton(box,"Reanudar",nul,NULL);
+  button = AddButton(box,">>>",nul,NULL);
+  gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,5);
+  
+  bigbox=gtk_hbox_new(FALSE,10);
+  
+  g_signal_connect(window_tab, "delete-event", G_CALLBACK(delete_event),
+		   Inicio);
+  g_signal_connect(window_tab, "destroy", G_CALLBACK(StopTheApp), Inicio);
+  
+  
+  gtk_container_add(GTK_CONTAINER(bigbox), box_t);
+  gtk_box_pack_start(GTK_BOX(bigbox),verticalbox,TRUE,TRUE,60);
+  gtk_container_add(GTK_CONTAINER(window_tab), bigbox);
+  
+  gtk_widget_show_all(window_tab);
+  
+  gtk_main(); 
 }
+
 
 /**
 *  Esta funcion es la que despliega los mensajes de error, ya sea cuando
@@ -471,9 +480,10 @@ void NOMBRES(GtkWidget *window, gpointer data){
 *  @param parent     La ventana desde la que ocurre el error       
 *  @return void
 */
-void quick_message (gchar *message, GtkWidget *parent) {
+void quick_message (gchar *message, GtkWidget *parent, gpointer data) {
   GtkWidget *window, *button, *box;
-
+  Lista *Inicio=(Lista *)data;
+  
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_default_size(GTK_WINDOW(window),300,50);
   gtk_container_border_width(GTK_CONTAINER(window),5);
@@ -490,7 +500,7 @@ void quick_message (gchar *message, GtkWidget *parent) {
   gtk_widget_show(button);
 
   gtk_signal_connect(GTK_OBJECT(window),"destroy",GTK_SIGNAL_FUNC(StopTheApp),
-		     NULL);
+		     Inicio);
   
   gtk_container_add (GTK_CONTAINER (window),box);
   gtk_widget_show_all (window);
@@ -572,81 +582,7 @@ GtkWidget *create_pad(gpointer data) {
   return container;
 }
 
-/**
-*  Esta función obtiene las corrdenadas del boton que 
-*  se clickeo para posicionar una ficha
-*  @author Guillermo Ortega
-*  @param  *button  boton que recibe la señal
-*  @param  data     estructura de datos
-*  @return GtkWidget
-*/
-void obtener_coordenada(GtkWidget *button, gpointer data){
-  Lista *Inicio=(Lista *)data;
-  int i,j;
-  
-  for(j=0;j<20;j++){
-    for(i=0;i<20;i++){
-      if(Inicio->buttons[i][j]==button){
-	if(Inicio->tablero[i][j]==0)
-	  Inicio->turno++;
-	
-	if(Inicio->turno==3){
-	  Inicio->X1=i;
-	  Inicio->Y1=j;
-	  Inicio->tablero[i][j]=1;
-	  ComeFichas(j,i,Inicio);
-	  FilasDe4(j,i,Inicio);
-	}
-	else{
-	  insertar_turno(&Inicio->turnos_l,i,j);
-	  
-	  if(Inicio->turno%2==0)
-	    Inicio->tablero[i][j]=1;
-	  else
-	    Inicio->tablero[i][j]=2;
-	  
-	  ComeFichas(j,i,Inicio);
-	  FilasDe4(j,i,Inicio);
-	}
-	
-	set_image(i,j,Inicio,button);
-	return;
-      }
-    }
-  }
-}
 
-
-
-/**
-*  Esta función inserta las coordenadas de la ultima ficha 
-*  posicionada en una lista
-*  @author Guillermo Ortega
-*  @param **inicio  doble apumtador a una estructura de lista
-*  @param x         coordenada
-*  @param y         coordenada
-*  @return void
-*/
-void insertar_turno(Jugadas **inicio,int x,int y){
-  Jugadas *temp,*temp2;
-  
-  temp=( Jugadas* ) malloc(sizeof(Jugadas));
-  temp->X=x;
-  temp->Y=y;
-  
-  temp->sig=NULL;
-  
-  if(*inicio != NULL){
-    temp2 = *inicio;
-    while(temp2->sig != NULL){
-      temp2 = temp2->sig;
-    }
-    temp2->sig=temp;
-  }
-  else{
-    *inicio = temp;
-  }
-}
 
 /**
 *  Esta función pone la imagen de la ficha en el boton seleccionado
@@ -722,5 +658,5 @@ void borrar_imagen(gpointer data){
   }
 }
 
-void Reanudar(GtkWidget *widget, gpointer data){
-}
+
+
