@@ -1,4 +1,4 @@
-/* @file funcion.h
+/* @file funcion_pente.h
 *  @brief Separamos el programa para trabajar mas facilmenta al 
 *  mismo tiempo, aqui estan el resto de las funciones, especialmente
 *  las validaciones y lo que no usa tanto Gtk
@@ -16,12 +16,6 @@
 *  @param data        Inicio
 *  @return 
 */
-
-
-
-
-
-
 void CARGAR(GtkWidget *window, gpointer data){
   
   char turn1[30],turn2[30];
@@ -36,10 +30,7 @@ void CARGAR(GtkWidget *window, gpointer data){
   GtkWidget *box4,*label,*label1,*label2,*bigbox;
   char turno[30], comid1[30], comid2[30];
 
-
-  
   //Guarda el nombre del archivo en la memoria
- 
   text = gtk_entry_get_text(GTK_ENTRY(Inicio->entry));
   strcpy(text2, text);
 
@@ -96,11 +87,10 @@ void CARGAR(GtkWidget *window, gpointer data){
       
       //Aqui se crea la ventana del tablero
       
-      
-    
       window_tab = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   
-      gtk_signal_connect(GTK_OBJECT(window_tab),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
+      gtk_signal_connect(GTK_OBJECT(window_tab),"destroy",
+			 GTK_SIGNAL_FUNC(StopTheApp),NULL);
   
       box_t = gtk_vbox_new(TRUE, 0);
   
@@ -149,16 +139,13 @@ void CARGAR(GtkWidget *window, gpointer data){
       button = AddButton(box,">>>",JugXJug,Inicio);
       gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,5);
       
-      //gtk_box_pack_start(GTK_BOX(row_t),verticalbox,TRUE,TRUE,5);
-      
       bigbox=gtk_hbox_new(FALSE,10);
       
   
-      g_signal_connect(window_tab, "delete-event", G_CALLBACK(delete_event), NULL);
-      g_signal_connect(window_tab, "destroy", G_CALLBACK(StopTheApp), NULL);
-      
-      
-      //gtk_container_add(GTK_CONTAINER(windownombres),verticalbox);
+      g_signal_connect(window_tab, "delete-event",
+		       G_CALLBACK(delete_event), NULL);
+      g_signal_connect(window_tab, "destroy",
+		       G_CALLBACK(StopTheApp), NULL);
       
       gtk_container_add(GTK_CONTAINER(bigbox), box_t);
       gtk_box_pack_start(GTK_BOX(bigbox),verticalbox,TRUE,TRUE,60);
@@ -167,22 +154,10 @@ void CARGAR(GtkWidget *window, gpointer data){
       gtk_widget_show_all(window_tab);
       
       gtk_main();
-
-
-      
-      
     }
-    
-    
   }
-  
-
-
 }
   
-
-
-
 /**
 *  Esta función valida si se comieron fichas en la ultima tirada. Valida
 *  desde el punto donde se tiro hacia todas las direcciones.
@@ -191,12 +166,7 @@ void CARGAR(GtkWidget *window, gpointer data){
 *  @param data   Inicio
 *  @return 
 */
-
-
 void ComeFichas(int y,int x,gpointer data){
-
-
-
   GtkWidget *button;
   Lista *Inicio=(Lista *)data;
   char j,lab1[30],lab2[30];
@@ -218,7 +188,7 @@ void ComeFichas(int y,int x,gpointer data){
 	    
 	    if(Inicio->tablero[x+2][y]!=0 && Inicio->tablero[x+2][y]!=j)
 	      {
-        
+		
 		if(Inicio->tablero[x+3][y]==j)
 		  {
 		    if (j==1){
@@ -237,19 +207,19 @@ void ComeFichas(int y,int x,gpointer data){
 		      strcat(lab2,": ");
 		      sprintf(aux,"%d",Inicio->Jugador2->comidas);
 		      strcat(lab2, aux);
-		      gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);		  
+		      gtk_label_set_text (GTK_LABEL(Inicio->label2), lab2);
 		    }
-		  
+		    
 		    Inicio->tablero[x+1][y]=0;
-        
+		    
 		    Inicio->tablero[x+2][y]=0;
 		  }
 	      }
 	  }
       }
     }
-
-    //Valida izquierda
+  
+  //Valida izquierda
   
   if(x>2)
     {	
@@ -580,12 +550,7 @@ void ComeFichas(int y,int x,gpointer data){
 *  @param data   Inicio
 *  @return 
 */
-
-
-
-
-void FilasDe4(int x,int y,gpointer data)
-{
+void FilasDe4(int x,int y,gpointer data){
   int i=0,j=0; //variables del tablero
 
   //jug será el jugador en turno
@@ -738,10 +703,7 @@ void FilasDe4(int x,int y,gpointer data)
   
   if(com1>=5)
     Ganador(button, Inicio);
-  
 }
-
-
 
 /**
 *  Esta función recibe el nombre del archivo donde se va a guardar el
@@ -752,7 +714,6 @@ void FilasDe4(int x,int y,gpointer data)
 *  @param data   Inicio
 *  @return 
 */
- 
 void Guardar(GtkWidget *window, gpointer data){
   Lista *Inicio = (Lista *) data;
   Jugadas *temp;
@@ -770,9 +731,6 @@ void Guardar(GtkWidget *window, gpointer data){
   fputs(Inicio->Jugador2->nombre,Archivo);
   fprintf(Archivo,"\n");
 
-
-  // fprintf(Archivo,"%d", Inicio->X1);
-  // fprintf(Archivo,"%d", Inicio->Y1);
   temp= Inicio->turnos_l;
   
   while (temp !=NULL){
@@ -793,7 +751,6 @@ void Guardar(GtkWidget *window, gpointer data){
 *  @param data   Inicio
 *  @return 
 */
-
 void Ganador(GtkWidget *window, gpointer data){
   GtkWidget *ganador;
   GtkWidget *label;
@@ -814,8 +771,6 @@ void Ganador(GtkWidget *window, gpointer data){
   if(Inicio->turno%2==1)
     strcat(text,Inicio->Jugador2->nombre);
   
-  
-  
   label = gtk_label_new (text);
 
 
@@ -823,10 +778,9 @@ void Ganador(GtkWidget *window, gpointer data){
   gtk_box_pack_start(GTK_BOX(verticalbox),label,TRUE,TRUE,5);
   gtk_container_add(GTK_CONTAINER(ganador),verticalbox);
 
-  gtk_signal_connect(GTK_OBJECT(ganador),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
+  gtk_signal_connect(GTK_OBJECT(ganador),"destroy",
+		     GTK_SIGNAL_FUNC(StopTheApp),NULL);
   gtk_widget_show_all(ganador);
-
-
 }
 
 /**
@@ -838,16 +792,12 @@ void Ganador(GtkWidget *window, gpointer data){
 *  @param data   Inicio
 *  @return 
 */
-
-
 void GUARDAR(GtkWidget *window, gpointer data){
   Lista *Inicio = (Lista *) data;
   GtkWidget *windownombres;
   GtkWidget *verticalbox,*button;
   GtkWidget *entrybox,*label1;
 
-
-  
   windownombres = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_default_size(GTK_WINDOW(windownombres),320,200);
   gtk_container_border_width(GTK_CONTAINER(windownombres),5);
@@ -867,47 +817,41 @@ void GUARDAR(GtkWidget *window, gpointer data){
 
   gtk_container_add(GTK_CONTAINER(windownombres),verticalbox);
   gtk_widget_show_all(windownombres);
-
-
-
 }
 
-void nul(){}
+
+void nul(){
+}
 
 
 void JugXJug(GtkWidget *widget,gpointer data){
   Lista *Inicio = (Lista *) data;
   Jugadas *temp;
   int x;
-
   
-
-  
-
   temp=Inicio->turnos_l;
 
   if(temp==NULL)
     return;
 
-  
   x=Inicio->turno-3;
   while(x>0){
     temp=temp->sig;
     x--;
   }
-
-  if(temp==NULL)
+   
+  if(temp==NULL){
+    Inicio->bandera=0;
     return;
+  }
   
   if(Inicio->turno%2==1)
     Inicio->tablero[temp->X][temp->Y]=1;
   if(Inicio->turno%2==0)
     Inicio->tablero[temp->X][temp->Y]=2;
 
-
   borrar_imagen(Inicio);
   
   Inicio->turno++;
   
 }
-
