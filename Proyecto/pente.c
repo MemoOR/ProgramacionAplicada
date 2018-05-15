@@ -37,7 +37,6 @@ typedef struct _node2{
   int X1,Y1;
   int ax,ay;
   int turno;
-  int bandera;
   Jug *Jugador1;
   Jug *Jugador2;
   char archivo[50];
@@ -262,8 +261,8 @@ void Nuevo(GtkWidget *window, gpointer data){
   GtkWidget *verticalbox,*button;
   GtkWidget *entrybox,*label1,*label2;
   Lista *Inicio = (Lista *)data;
-  Inicio->bandera=0;
-
+ 
+  
   windownombres = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_default_size(GTK_WINDOW(windownombres),320,200);
   gtk_container_border_width(GTK_CONTAINER(windownombres),5);
@@ -314,7 +313,6 @@ void Cargar(GtkWidget *window, gpointer data){
   GtkWidget *verticalbox,*button;
   GtkWidget *entrybox,*label1;
   Lista *Inicio= (Lista *)data;
-  Inicio->bandera=1;
   
   //Armar ventana y Pedir nombre de archivo
   
@@ -368,37 +366,33 @@ void NOMBRES(GtkWidget *window, gpointer data){
   GtkWidget *box,*box4,*label,*label1,*label2,*bigbox;
   char comid1[30], comid2[30];
 
-  if(Inicio->bandera==0){
 
-    //Guarda los nombres en la memoria
-    text = gtk_entry_get_text(GTK_ENTRY(Inicio->Jugador1->entry));
-    strcpy(text2, text);
+  //Guarda los nombres en la memoria
+  text = gtk_entry_get_text(GTK_ENTRY(Inicio->Jugador1->entry));
+  strcpy(text2, text);
+  
+  text = gtk_entry_get_text(GTK_ENTRY(Inicio->Jugador2->entry));
+  strcpy(text3,text);
+  
+  if(text2[0]=='\0' || text3[0]=='\0'){
+    quick_message("Escribe el nombre de ambos jugadores",Inicio->ventana,Inicio);
+    return;
+  }
+  
+  if(text2[0]!='\0' && text3[0]!='\0'){ 
+    strcpy(Inicio->Jugador1->nombre, text2);
+    strcpy(Inicio->Jugador2->nombre, text3);
+  }
+  
+  if(Inicio->Jugador1->nombre[0]!='\0' && Inicio->Jugador2->nombre[0]!='\0'){
     
-    text = gtk_entry_get_text(GTK_ENTRY(Inicio->Jugador2->entry));
-    strcpy(text3,text);
-    
-    if(text2[0]=='\0' || text3[0]=='\0'){
-      quick_message("Escribe el nombre de ambos jugadores",Inicio->ventana,Inicio);
+    if(strcmp(Inicio->Jugador1->nombre,Inicio->Jugador2->nombre)==0){
+      quick_message("Los nombres de los jugadores no pueden ser iguales",
+		    Inicio->ventana,Inicio);
       return;
     }
-    
-    if(text2[0]!='\0' && text3[0]!='\0'){ 
-      strcpy(Inicio->Jugador1->nombre, text2);
-      strcpy(Inicio->Jugador2->nombre, text3);
-    }
-    
-    if(Inicio->Jugador1->nombre[0]!='\0' && Inicio->Jugador2->nombre[0]!='\0'){
-      
-      if(strcmp(Inicio->Jugador1->nombre,Inicio->Jugador2->nombre)==0){
-	quick_message("Los nombres de los jugadores no pueden ser iguales",
-		      Inicio->ventana,Inicio);
-	return;
-      }
-    }
   }
-  if(Inicio->bandera==1){
-    Inicio->bandera=0;
-  }
+  
   //Aqui termina la validacion y se empieza a crear el tablero
   
   window_tab = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -445,7 +439,7 @@ void NOMBRES(GtkWidget *window, gpointer data){
   gtk_box_pack_start(GTK_BOX(verticalbox),box4,FALSE,FALSE,20);
   
   box = gtk_hbox_new(TRUE,10);
-  button = AddButton1(window_tab,box," Guardar ",GUARDAR,Inicio);
+  button = AddButton1(window_tab,box,"Guardar",GUARDAR,Inicio);
   gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,50);
   
   box = gtk_hbox_new(TRUE,10);
@@ -540,14 +534,26 @@ void callback(GtkWidget *widget, gpointer data) {
 GtkWidget *create_pad(gpointer data) {
   Lista *Inicio=(Lista *)data;
   GtkWidget *container;
-  GtkWidget *row,*img;
-  GdkPixbuf *pix;
+  GtkWidget *row;
+  GdkPixbuf *pix1, *pix2, *pix3;
+
+  pix1=gdk_pixbuf_new_from_file("red.png",NULL);
+  pix2=gdk_pixbuf_new_from_file("blue.png",NULL);
+  pix3=gdk_pixbuf_new_from_file("empty.png",NULL);
+  
+  pix1=gdk_pixbuf_scale_simple(pix1,25,25,GDK_INTERP_BILINEAR);
+  pix2=gdk_pixbuf_scale_simple(pix2,25,25,GDK_INTERP_BILINEAR);
+  pix3=gdk_pixbuf_scale_simple(pix3,25,25,GDK_INTERP_BILINEAR);
+  
+  GtkWidget *img_r;
+  GtkWidget *img_b;
+  GtkWidget *img;
 
   for(int i=0;i<20;i++)
     for(int j=0;j<20;j++)
       Inicio->tablero[i][j]=0;
-
-
+  
+  
   container = gtk_vbox_new(FALSE, 3);
   
   for (int j = 0; j < 20; j++) {
@@ -556,23 +562,29 @@ GtkWidget *create_pad(gpointer data) {
     gtk_box_pack_start(GTK_BOX(container), row, FALSE, TRUE, 0);
     
     for(int i = 0; i < 20; i++){
-      
-      pix=gdk_pixbuf_new_from_file("empty.png",NULL);
-      pix=gdk_pixbuf_scale_simple(pix,25,25,GDK_INTERP_BILINEAR);
-      img = gtk_image_new_from_pixbuf(pix);
-        
       Inicio->buttons[i][j] = gtk_button_new_with_label(Inicio->tablero[i][j]);
       
       gtk_widget_set_size_request(Inicio->buttons[i][j], 35, 35);
 
-      gtk_button_set_image (GTK_BUTTON (Inicio->buttons[i][j]), img);
-      
-      if(Inicio->bandera==0){
-	g_signal_connect(Inicio->buttons[i][j], "clicked", G_CALLBACK(callback),
-			 Inicio);
-	g_signal_connect(Inicio->buttons[i][j], "clicked",
-			 G_CALLBACK(obtener_coordenada), Inicio);
+      if(Inicio->tablero[i][j]==1){
+	img_b = gtk_image_new_from_pixbuf(pix2);
+	gtk_button_set_image (GTK_BUTTON (Inicio->buttons[i][j]), img_b);
       }
+      if(Inicio->tablero[i][j]==2){
+	img_r = gtk_image_new_from_pixbuf(pix1);
+	gtk_button_set_image (GTK_BUTTON (Inicio->buttons[i][j]), img_r);
+      }
+      if(Inicio->tablero[i][j]==0){
+	img = gtk_image_new_from_pixbuf(pix3);
+	gtk_button_set_image (GTK_BUTTON (Inicio->buttons[i][j]), img);
+      }
+      
+     
+      g_signal_connect(Inicio->buttons[i][j], "clicked", G_CALLBACK(callback),
+		       Inicio);
+      g_signal_connect(Inicio->buttons[i][j], "clicked",
+		       G_CALLBACK(obtener_coordenada), Inicio);
+      
       
       gtk_box_pack_start(GTK_BOX(row), Inicio->buttons[i][j], FALSE, TRUE, 2);
       gtk_widget_show(Inicio->buttons[i][j]);
@@ -582,11 +594,9 @@ GtkWidget *create_pad(gpointer data) {
   return container;
 }
 
-
-
 /**
 *  Esta función pone la imagen de la ficha en el boton seleccionado
-*  por el juagor
+*  por el jugador
 *  y genera el tablero de juego.
 *  @author Guillermo Ortega
 *  @param x      Coordenada

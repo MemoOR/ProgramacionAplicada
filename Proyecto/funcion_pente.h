@@ -140,7 +140,7 @@ void CARGAR(GtkWidget *window, gpointer data){
 				G_CALLBACK (gtk_widget_hide),
 				G_OBJECT (window_tab));
       gtk_signal_connect(GTK_OBJECT(button),"clicked",
-			 GTK_SIGNAL_FUNC(Reanudar),Inicio);
+			 GTK_SIGNAL_FUNC(nul),Inicio);
      
       gtk_widget_show(button);
       
@@ -838,7 +838,14 @@ void GUARDAR(GtkWidget *window, gpointer data){
 
   gtk_signal_connect(GTK_OBJECT(windownombres),"destroy",GTK_SIGNAL_FUNC(StopTheApp),Inicio);
 
-  button = AddButton1(windownombres,verticalbox,"Continuar",Guardar,Inicio);
+  button = gtk_button_new_with_label("Continuar");
+  gtk_box_pack_start(GTK_BOX(verticalbox),button,FALSE,TRUE,10);
+  gtk_signal_connect(GTK_OBJECT(button),"clicked",GTK_SIGNAL_FUNC(Guardar),
+		     Inicio);
+  gtk_signal_connect(GTK_OBJECT(button),"clicked",
+		     GTK_SIGNAL_FUNC(StopTheApp),Inicio);
+  
+  gtk_widget_show(button);
 
   //Cuando se de click en continuar debe guardar lo que este en la entrybox
 
@@ -923,6 +930,11 @@ void insertar_turno(Jugadas **inicio,int x,int y){
   }
 }
 
+/**
+*  Esta función invalida el botn de reanudar
+*  @author Mateo Larralde
+*  @return 
+*/
 void nul(){
 }
 
@@ -990,7 +1002,6 @@ void JugXJug(GtkWidget *widget,gpointer data){
 */
 void Reanudar(GtkWidget *widget, gpointer data){
   Lista *Inicio=(Lista *)data;
-  borrar_imagen(Inicio);
   NOMBRES(widget,Inicio);
 }
 
