@@ -2,7 +2,7 @@
 *  @brief Separamos el programa para trabajar mas facilmenta al 
 *  mismo tiempo, aqui estan el resto de las funciones, especialmente
 *  las validaciones y lo que no usa tanto Gtk
-*  @author Guillermo Ortega, Mateo Larralde y Mariana
+*  @author Guillermo Ortega, Mateo Larralde y Mariana Lezama
 *  @date 14/05/2018
 */
 
@@ -16,6 +16,11 @@
 *  @param data        Inicio
 *  @return 
 */
+
+
+
+
+
 
 void CARGAR(GtkWidget *window, gpointer data){
   
@@ -64,8 +69,8 @@ void CARGAR(GtkWidget *window, gpointer data){
       fgets(Inicio->Jugador2->nombre, 19, Archivo);
       b=strlen(Inicio->Jugador2->nombre);
       Inicio->Jugador2->nombre[b-1]='\0';
-      fscanf(Archivo,"%d",&Inicio->X1);
-      fscanf(Archivo,"%d",&Inicio->Y1);
+      // fscanf(Archivo,"%d,",&Inicio->X1);
+      // fscanf(Archivo,"%d\n",&Inicio->Y1);
       
       while(!feof(Archivo)){
 	
@@ -79,8 +84,8 @@ void CARGAR(GtkWidget *window, gpointer data){
 	  temp2->sig=temp;
 	}
 	
-	fscanf(Archivo,"%d",&temp->X);
-	fscanf(Archivo,"%d",&temp->Y);
+	fscanf(Archivo,"%d,",&temp->X);
+	fscanf(Archivo,"%d\n",&temp->Y);
 	Inicio->turno++;
 	temp2=temp;
 	a++;
@@ -138,8 +143,8 @@ void CARGAR(GtkWidget *window, gpointer data){
       gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,50);
       
       box = gtk_hbox_new(TRUE,10);
-      button = AddButton1(window_tab,box,"<<<",NULL,Inicio);
-      button = AddButton1(window_tab,box,">>>",NULL,Inicio);
+      button = AddButton1(window_tab,box,"Reanudar",nul,Inicio);
+      button = AddButton1(window_tab,box,">>>",JugXJug,Inicio);
       gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,5);
       
       //gtk_box_pack_start(GTK_BOX(row_t),verticalbox,TRUE,TRUE,5);
@@ -159,7 +164,11 @@ void CARGAR(GtkWidget *window, gpointer data){
       
       gtk_widget_show_all(window_tab);
       
-      gtk_main(); 
+      gtk_main();
+
+
+      
+      
     }
     
     
@@ -175,7 +184,7 @@ void CARGAR(GtkWidget *window, gpointer data){
 /**
 *  Esta función valida si se comieron fichas en la ultima tirada. Valida
 *  desde el punto donde se tiro hacia todas las direcciones.
-*  @author Mateo Larralde y Mariana.
+*  @author Mateo Larralde y Mariana Lezama.
 *  @param widget GtkWidget
 *  @param data   Inicio
 *  @return 
@@ -545,7 +554,7 @@ void ComeFichas(int y,int x,gpointer data){
 	}
     }
 
-
+  borrar_imagen(Inicio);
   
   if (Inicio->Jugador1->comidas>=10){
     Inicio->ganador=1;
@@ -755,16 +764,18 @@ void Guardar(GtkWidget *window, gpointer data){
   Archivo = fopen (text2,"wt");
 
   fputs(Inicio->Jugador1->nombre,Archivo);
+  fprintf(Archivo,"\n");
   fputs(Inicio->Jugador2->nombre,Archivo);
+  fprintf(Archivo,"\n");
 
 
-  fprintf(Archivo,"%d", Inicio->X1);
-  fprintf(Archivo,"%d", Inicio->Y1);
+  // fprintf(Archivo,"%d", Inicio->X1);
+  // fprintf(Archivo,"%d", Inicio->Y1);
   temp= Inicio->turnos_l;
   
   while (temp !=NULL){
-    fprintf(Archivo,"%d", temp->X);
-    fprintf(Archivo,"%d", temp->Y);
+    fprintf(Archivo,"%d,", temp->X);
+    fprintf(Archivo,"%d\n", temp->Y);
     temp=temp->sig;
   }
 
@@ -858,3 +869,39 @@ void GUARDAR(GtkWidget *window, gpointer data){
 
 
 }
+
+void nul(){}
+
+
+void JugXJug(gpointer data){
+  Lista *Inicio = (Lista *) data;
+  Jugadas *temp;
+  int x;
+
+  temp=Inicio->turnos_l;
+
+  if(temp==NULL)
+    return;
+
+  
+  x=Inicio->turno-3;
+  while(x>0){
+    temp=temp->sig;
+    x--;
+  }
+
+  if(temp==NULL)
+    return;
+  
+  if(Inicio->turno%2==1)
+    Inicio->tablero[temp->X][temp->Y]=1;
+  if(Inicio->turno%2==0)
+    Inicio->tablero[temp->X][temp->Y]=2;
+
+
+  borrar_imagen(Inicio);
+  
+  Inicio->turno++;
+  
+}
+

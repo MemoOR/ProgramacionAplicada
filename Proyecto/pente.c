@@ -26,7 +26,8 @@ typedef struct _node3{
 }Jugadas;
 
 
-//estructura de datos generales, esta es la que se pasa a las funciones y tiene apuntadores a las otras estructuras.
+//estructura de datos generales, esta es la que se pasa
+//a las funciones y tiene apuntadores a las otras estructuras.
 typedef struct _node2{
   GtkWidget *entry,*entry2;
   GtkWidget *ventana;
@@ -44,10 +45,14 @@ typedef struct _node2{
 }Lista;
 
 //funciones de graficos//
-GtkWidget *AddButton(GtkWidget *theBox, const gchar *buttonText,gpointer CallBackFunction, Lista *EntryBox);
-GtkWidget *AddButton1(GtkWidget *window,GtkWidget *theBox,const gchar *buttonText, gpointer CallBackFunction,Lista *EntryBox);
+GtkWidget *AddButton(GtkWidget *theBox, const gchar *buttonText,
+		     gpointer CallBackFunction, Lista *EntryBox);
+GtkWidget *AddButton1(GtkWidget *window,GtkWidget *theBox,
+		      const gchar *buttonText, gpointer CallBackFunction,
+		      Lista *EntryBox);
 GtkWidget *Addlabel(GtkWidget *theBox, const gchar *buttonText);
-static gboolean delete_event(GtkWidget *widget, GdkEvent *event, gpointer *data);
+static gboolean delete_event(GtkWidget *widget, GdkEvent *event,
+			     gpointer *data);
 void StopTheApp(GtkWidget *window, gpointer data);
 void Nuevo(GtkWidget *window, gpointer data);
 void Cargar(GtkWidget *window, gpointer data);
@@ -56,6 +61,7 @@ void quick_message (gchar *message, GtkWidget *parent);
 void close_window(GtkWidget *window, gpointer data);
 GtkWidget *create_pad();
 void set_image(int x,int y,gpointer data,GtkWidget *widget);
+void borrar_imagen(gpointer data);
 //funciones de graficos//
 
 //funciones de funcionamiento//
@@ -70,21 +76,20 @@ void Ganador(GtkWidget *window, gpointer data);
 void GUARDAR(GtkWidget *window, gpointer data);
 void obtener_coordenada(GtkWidget *button, gpointer data);
 void insertar_turno(Jugadas **inicio,int x,int y);
+void JugXJug(gpointer data);
+void nul();
 //funciones de funcionamiento//
 
 
 #include "funcion_pente.h"
 
 /**
-*  Esta función recibe un caracter en el primer argumento y si
-*  este es una letra minuscula lo convierte a mayuscula y regresa 
-*  elnuevo valor en el segundo argumento.
-*  Regresa un 1 si pudo convertir a mayuscula el caracter
-*  y 0 si no pudo hacerlo.
-*  @author Iggy Pop
-*  @param chrData     El caracter a convertir (minuscula a mayuscula)
-*  @param *may        El caracter convertido en mayuscula
-*  @return int
+*  Esta función es el main del programa. inicia con la venta que
+*  pregunta si sera un juego nuevo o se carga una partida
+*  @author Mateo Larralde
+*  @param argc     El unmro de parametros recibidos
+*  @param *argv[]  El texto de los parametros recibidos
+*  @return gint
 */
 gint main ( gint argc, gchar *argv[]){
 
@@ -143,7 +148,8 @@ gint main ( gint argc, gchar *argv[]){
   gtk_box_pack_start(GTK_BOX(verticalbox),entrybox,TRUE,TRUE,5);
   */
 
-  gtk_signal_connect(GTK_OBJECT(window1),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
+  gtk_signal_connect(GTK_OBJECT(window1),"destroy",
+		     GTK_SIGNAL_FUNC(StopTheApp),NULL);
   gtk_widget_show_all(window1);
   gtk_main();
   
@@ -195,11 +201,13 @@ GtkWidget *AddButton(GtkWidget *Box, const gchar *Text,
 *  @return GtkButton
 */
 GtkWidget *AddButton1(GtkWidget *window, GtkWidget *Box,
-		      const gchar *Text, gpointer CallBack,Lista *List){
+		      const gchar *Text, gpointer CallBack,
+		      Lista *List){
   GtkWidget *button;
   button = gtk_button_new_with_label(Text);
   gtk_box_pack_start(GTK_BOX(Box),button,FALSE,TRUE,10);
-  gtk_signal_connect(GTK_OBJECT(button),"clicked",GTK_SIGNAL_FUNC(CallBack),List);
+  gtk_signal_connect(GTK_OBJECT(button),"clicked",
+		     GTK_SIGNAL_FUNC(CallBack),List);
   g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			    G_CALLBACK (gtk_widget_hide), G_OBJECT (window));
   gtk_widget_show(button);
@@ -207,42 +215,38 @@ GtkWidget *AddButton1(GtkWidget *window, GtkWidget *Box,
 }
 
 /**
-*  Esta función recibe un caracter en el primer argumento y si
-*  este es una letra minuscula lo convierte a mayuscula y regresa 
-*  elnuevo valor en el segundo argumento.
-*  Regresa un 1 si pudo convertir a mayuscula el caracter
-*  y 0 si no pudo hacerlo.
+*  Esta función crea un nuevo label dentro de una caja
 *  @author Guillermo Ortega
-*  @param chrData     El caracter a convertir (minuscula a mayuscula)
-*  @param *may        El caracter convertido en mayuscula
-*  @return int
+*  @param  *Box   La caja que contenera el label
+*  @param  *Text  El texto que contendrá el label
+*  @return GtkWidget
 */
-GtkWidget *Addlabel(GtkWidget *theBox, const gchar *buttonText){
+GtkWidget *Addlabel(GtkWidget *Box, const gchar *Text){
   GtkWidget *label;
-  label = gtk_label_new(buttonText);
-  gtk_box_pack_start(GTK_BOX(theBox),label,FALSE,FALSE,0);
+  label = gtk_label_new(Text);
+  gtk_box_pack_start(GTK_BOX(Box),label,FALSE,FALSE,0);
   gtk_widget_show(label);
   return label;
 }
 
 /**
-*  Esta función recibe un caracter en el primer argumento y si
-*  este es una letra minuscula lo convierte a mayuscula y regresa 
-*  elnuevo valor en el segundo argumento.
-*  Regresa un 1 si pudo convertir a mayuscula el caracter
-*  y 0 si no pudo hacerlo.
-*  @author Iggy Pop
-*  @param chrData     El caracter a convertir (minuscula a mayuscula)
-*  @param *may        El caracter convertido en mayuscula
-*  @return int
+*  Esta función destruye una ventana recibida
+*  @author 
+*  @param *window  La ventana a destruir
+*  @param data  estructura con datos generales
+*  @return void
 */
 void close_window(GtkWidget *window, gpointer data){
   gtk_widget_destroy(window);
 }
 
+
 /**
-*  Esta funcion termina la aplicacion
-*  
+*  Esta función destruye la aplicación
+*  @author 
+*  @param *window  La ventana a destruir
+*  @param data  estructura con datos generales
+*  @return void
 */
 void StopTheApp(GtkWidget *window, gpointer data){
   gtk_main_quit();
@@ -289,7 +293,8 @@ void Nuevo(GtkWidget *window, gpointer data){
   button = gtk_button_new_with_label("Continuar");
   gtk_box_pack_start(GTK_BOX(verticalbox),button,FALSE,TRUE,10);
   g_signal_connect_swapped (G_OBJECT (button),
-			    "clicked",G_CALLBACK (gtk_widget_hide), G_OBJECT (windownombres));
+			    "clicked",G_CALLBACK (gtk_widget_hide),
+			    G_OBJECT (windownombres));
   gtk_signal_connect(GTK_OBJECT(button),"clicked",GTK_SIGNAL_FUNC(NOMBRES),Inicio);
   gtk_widget_show(button);
   
@@ -310,7 +315,7 @@ void Nuevo(GtkWidget *window, gpointer data){
 *  @author Mateo Larrale
 *  @param *window     ventana Gtk
 *  @param data        Inicio
-*  @return 
+*  @return void
 */
 void Cargar(GtkWidget *window, gpointer data){
 
@@ -351,7 +356,7 @@ void Cargar(GtkWidget *window, gpointer data){
 *  @author Guillermo Ortega y Mateo Larralde
 *  @param window      ventana Gtk
 *  @param data        Inicio
-*  @return 
+*  @return void
 */
 void NOMBRES(GtkWidget *window, gpointer data){
   const gchar *text;
@@ -437,7 +442,7 @@ void NOMBRES(GtkWidget *window, gpointer data){
 
     box = gtk_hbox_new(TRUE,10);
 
-    button = AddButton1(window_tab,box,">>>",NULL,Inicio);
+    button = AddButton1(window_tab,box,">>>",nul,NULL);
     gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,5);
     
     //gtk_box_pack_start(GTK_BOX(row_t),verticalbox,TRUE,TRUE,5);
@@ -466,9 +471,9 @@ void NOMBRES(GtkWidget *window, gpointer data){
 *  se eligieron nombres iguales, no se lleno uno de los nombres, no se escogio
 *  el nombre del archivo a cargar o el nombre del archivo no existe.
 *  @author Guillermo Ortega
-*  @param 
-*  @param        
-*  @return 
+*  @param message    El mensaje a desplegar
+*  @param parent     La ventana desde la que ocurre el error       
+*  @return void
 */
 void quick_message (gchar *message, GtkWidget *parent) {
   GtkWidget *window, *button, *box;
@@ -503,10 +508,8 @@ void quick_message (gchar *message, GtkWidget *parent) {
 //---------------------------------------------------//***********************************************************//
 
 /**
-*  Esta funcion cambia el color de los botones al ser apretados. Dependiendo
-*  del turno, lo cambia a azul (Jugador1) o rojo (2). También llama a las 
-*  funciones de validacion para revisar si se hizo una linea de 4 o de 5,
-*  o si se comieron fichas. También avanza el turno. 
+*  Esta funcion cambia el turno del juagdor en el label
+*  del tablero
 *  @author Guillermo Ortega y Mateo Larralde
 *  @param widget      GtkWidget
 *  @param data        Inicio
@@ -540,12 +543,13 @@ void callback(GtkWidget *widget, gpointer data) {
 GtkWidget *create_pad(gpointer data) {
   Lista *Inicio=(Lista *)data;
   GtkWidget *container;
-  GtkWidget *row;//*img;
-  //GdkPixbuf *pix;
+  GtkWidget *row,*img;
+  GdkPixbuf *pix;
 
   for(int i=0;i<20;i++)
     for(int j=0;j<20;j++)
       Inicio->tablero[i][j]=0;
+
 
   container = gtk_vbox_new(FALSE, 3);
   
@@ -556,18 +560,19 @@ GtkWidget *create_pad(gpointer data) {
     
     for(int i = 0; i < 20; i++){
       
-      //pix=gdk_pixbuf_new_from_file("arena.jpeg",NULL);
-      //pix=gdk_pixbuf_scale_simple(pix,25,25,GDK_INTERP_BILINEAR);
-      // img = gtk_image_new_from_pixbuf(pix);
-       
+      pix=gdk_pixbuf_new_from_file("empty.png",NULL);
+      pix=gdk_pixbuf_scale_simple(pix,25,25,GDK_INTERP_BILINEAR);
+      img = gtk_image_new_from_pixbuf(pix);
+        
       Inicio->buttons[i][j] = gtk_button_new_with_label(Inicio->tablero[i][j]);
       
       gtk_widget_set_size_request(Inicio->buttons[i][j], 35, 35);
-      
-      //gtk_button_set_image (GTK_BUTTON (Inicio->buttons[i][j]), img);
+
+      gtk_button_set_image (GTK_BUTTON (Inicio->buttons[i][j]), img);
       
       g_signal_connect(Inicio->buttons[i][j], "clicked", G_CALLBACK(callback), Inicio);
-      g_signal_connect(Inicio->buttons[i][j], "clicked", G_CALLBACK(obtener_coordenada), Inicio);
+      g_signal_connect(Inicio->buttons[i][j], "clicked",
+		       G_CALLBACK(obtener_coordenada), Inicio);
       
       gtk_box_pack_start(GTK_BOX(row), Inicio->buttons[i][j], FALSE, TRUE, 2);
       gtk_widget_show(Inicio->buttons[i][j]);
@@ -578,10 +583,11 @@ GtkWidget *create_pad(gpointer data) {
 }
 
 /**
-*  Esta función recibe la estructura con los datos generales
-*  y genera el tablero de juego.
+*  Esta función obtiene las corrdenadas del boton que 
+*  se clickeo para posicionar una ficha
 *  @author Guillermo Ortega
-*  @param data    Inicio
+*  @param  *button  boton que recibe la señal
+*  @param  data     estructura de datos
 *  @return GtkWidget
 */
 void obtener_coordenada(GtkWidget *button, gpointer data){
@@ -591,7 +597,8 @@ void obtener_coordenada(GtkWidget *button, gpointer data){
   for(j=0;j<20;j++){
     for(i=0;i<20;i++){
       if(Inicio->buttons[i][j]==button){
-	set_image(i,j,Inicio,button);
+	if(Inicio->tablero[i][j]==0)
+	  Inicio->turno++;
 	
 	if(Inicio->turno==3){
 	  Inicio->X1=i;
@@ -602,7 +609,7 @@ void obtener_coordenada(GtkWidget *button, gpointer data){
 	}
 	else{
 	  insertar_turno(&Inicio->turnos_l,i,j);
-
+	  
 	  if(Inicio->turno%2==0)
 	    Inicio->tablero[i][j]=1;
 	  else
@@ -611,6 +618,8 @@ void obtener_coordenada(GtkWidget *button, gpointer data){
 	  ComeFichas(j,i,Inicio);
 	  FilasDe4(j,i,Inicio);
 	}
+	
+	set_image(i,j,Inicio,button);
 	return;
       }
     }
@@ -620,11 +629,13 @@ void obtener_coordenada(GtkWidget *button, gpointer data){
 
 
 /**
-*  Esta función recibe la estructura con los datos generales
-*  y genera el tablero de juego.
+*  Esta función inserta las coordenadas de la ultima ficha 
+*  posicionada en una lista
 *  @author Guillermo Ortega
-*  @param data    Inicio
-*  @return GtkWidget
+*  @param **inicio  doble apumtador a una estructura de lista
+*  @param x         coordenada
+*  @param y         coordenada
+*  @return void
 */
 void insertar_turno(Jugadas **inicio,int x,int y){
   Jugadas *temp,*temp2;
@@ -648,13 +659,14 @@ void insertar_turno(Jugadas **inicio,int x,int y){
 }
 
 /**
-*  Esta función recibe la estructura con los datos generales
+*  Esta función pone la imagen de la ficha en el boton seleccionado
+*  por el juagor
 *  y genera el tablero de juego.
 *  @author Guillermo Ortega
 *  @param x      Coordenada
 *  @param y      Coordenada
 *  @param data   estructura con datos
-*  @param *widget 
+*  @param *widget boton al que se le pondrá la imagen
 *  @return void
 */
 void set_image(int x,int y,gpointer data,GtkWidget *widget){
@@ -670,12 +682,53 @@ void set_image(int x,int y,gpointer data,GtkWidget *widget){
   GtkWidget *img_r = gtk_image_new_from_pixbuf(pix1);
   GtkWidget *img_b = gtk_image_new_from_pixbuf(pix2);
     
-  if (Inicio->tablero[x][y] == 0 && (Inicio->turno)%2 == 1){
+  if (Inicio->tablero[x][y] == 1 /*&& (Inicio->turno)%2 == 1*/){
     gtk_button_set_image (GTK_BUTTON (widget), img_b);
-    Inicio->turno++;
   }
-  else if (Inicio->tablero[x][y] == 0 && (Inicio->turno)%2 == 0){
+  else if (Inicio->tablero[x][y] == 2 /*&& (Inicio->turno)%2 == 0*/){
     gtk_button_set_image (GTK_BUTTON (widget), img_r);
-    Inicio->turno++;
+  }
+}
+
+
+void borrar_imagen(gpointer data){
+  Lista *Inicio=(Lista *)data;
+  GdkPixbuf *pix1, *pix2, *pix3;
+
+  for (int j = 0; j < 20; j++){
+    for(int i = 0; i < 20; i++){
+      printf("%d ",Inicio->tablero[i][j]);
+    }
+    printf("\n");
+  }
+  printf("\n");printf("\n");
+
+  pix1=gdk_pixbuf_new_from_file("red.png",NULL);
+  pix2=gdk_pixbuf_new_from_file("blue.png",NULL);
+  pix3=gdk_pixbuf_new_from_file("empty.png",NULL);
+  
+  pix1=gdk_pixbuf_scale_simple(pix1,25,25,GDK_INTERP_BILINEAR);
+  pix2=gdk_pixbuf_scale_simple(pix2,25,25,GDK_INTERP_BILINEAR);
+  pix3=gdk_pixbuf_scale_simple(pix3,25,25,GDK_INTERP_BILINEAR);
+  
+  GtkWidget *img_r;
+  GtkWidget *img_b;
+  GtkWidget *img;
+
+  for (int j = 0; j < 20; j++){
+    for(int i = 0; i < 20; i++){
+      if(Inicio->tablero[i][j]==1){
+	img_b = gtk_image_new_from_pixbuf(pix2);
+	gtk_button_set_image (GTK_BUTTON (Inicio->buttons[i][j]), img_b);
+      }
+      if(Inicio->tablero[i][j]==2){
+	img_r = gtk_image_new_from_pixbuf(pix1);
+	gtk_button_set_image (GTK_BUTTON (Inicio->buttons[i][j]), img_r);
+      }
+      if(Inicio->tablero[i][j]==0){
+	img = gtk_image_new_from_pixbuf(pix3);
+	gtk_button_set_image (GTK_BUTTON (Inicio->buttons[i][j]), img);
+      }
+    }
   }
 }
