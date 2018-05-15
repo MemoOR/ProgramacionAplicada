@@ -37,6 +37,7 @@ typedef struct _node2{
   int X1,Y1;
   int ax,ay;
   int turno;
+  int bandera;
   Jug *Jugador1;
   Jug *Jugador2;
   char archivo[50];
@@ -76,11 +77,11 @@ void Ganador(GtkWidget *window, gpointer data);
 void GUARDAR(GtkWidget *window, gpointer data);
 void obtener_coordenada(GtkWidget *button, gpointer data);
 void insertar_turno(Jugadas **inicio,int x,int y);
-void JugXJug(gpointer data);
+void JugXJug(GtkWidget *widget, gpointer data);
 void nul();
 //funciones de funcionamiento//
 
-
+//fichero con las validaciones del juego
 #include "funcion_pente.h"
 
 /**
@@ -142,12 +143,6 @@ gint main ( gint argc, gchar *argv[]){
 
   gtk_container_add(GTK_CONTAINER(window1),verticalbox);
   
-  /*
-  verticalbox = gtk_vbox_new(TRUE,5);
-  entrybox = gtk_entry_new();
-  gtk_box_pack_start(GTK_BOX(verticalbox),entrybox,TRUE,TRUE,5);
-  */
-
   gtk_signal_connect(GTK_OBJECT(window1),"destroy",
 		     GTK_SIGNAL_FUNC(StopTheApp),NULL);
   gtk_widget_show_all(window1);
@@ -165,7 +160,8 @@ gint main ( gint argc, gchar *argv[]){
 *  @param data         La estructura inicial
 *  @return gboolean
 */
-static gboolean delete_event(GtkWidget *widget, GdkEvent *event, gpointer *data) {
+static gboolean delete_event(GtkWidget *widget, GdkEvent *event,
+			     gpointer *data) {
   return FALSE;
 }
 
@@ -184,7 +180,8 @@ GtkWidget *AddButton(GtkWidget *Box, const gchar *Text,
   GtkWidget *button;
   button = gtk_button_new_with_label(Text);
   gtk_box_pack_start(GTK_BOX(Box),button,FALSE,TRUE,10);
-  gtk_signal_connect(GTK_OBJECT(button),"clicked",GTK_SIGNAL_FUNC(CallBack),List);
+  gtk_signal_connect(GTK_OBJECT(button),"clicked",GTK_SIGNAL_FUNC(CallBack),
+		     List);
   gtk_widget_show(button);
   return button;
 }
@@ -266,9 +263,8 @@ void Nuevo(GtkWidget *window, gpointer data){
   GtkWidget *verticalbox,*button;
   GtkWidget *entrybox,*label1,*label2;
   Lista *Inicio = (Lista *)data;
+  Inicio->bandera=0;
 
-
-  
   windownombres = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_default_size(GTK_WINDOW(windownombres),320,200);
   gtk_container_border_width(GTK_CONTAINER(windownombres),5);
@@ -295,19 +291,15 @@ void Nuevo(GtkWidget *window, gpointer data){
   g_signal_connect_swapped (G_OBJECT (button),
 			    "clicked",G_CALLBACK (gtk_widget_hide),
 			    G_OBJECT (windownombres));
-  gtk_signal_connect(GTK_OBJECT(button),"clicked",GTK_SIGNAL_FUNC(NOMBRES),Inicio);
+  gtk_signal_connect(GTK_OBJECT(button),"clicked",GTK_SIGNAL_FUNC(NOMBRES),
+		     Inicio);
   gtk_widget_show(button);
-  
 
- 
   Inicio->ventana = windownombres;
   
-
   gtk_container_add(GTK_CONTAINER(windownombres),verticalbox);
   gtk_widget_show_all(windownombres);
 }
-
-/*********************************************************/
 
 /**
 *  Esta funcion despliega una ventana en donde se pide el nombre del
@@ -323,6 +315,7 @@ void Cargar(GtkWidget *window, gpointer data){
   GtkWidget *verticalbox,*button;
   GtkWidget *entrybox,*label1;
   Lista *Inicio= (Lista *)data;
+  Inicio->bandera=1;
   
   //Armar ventana y Pedir nombre de archivo
   
@@ -337,7 +330,8 @@ void Cargar(GtkWidget *window, gpointer data){
   Inicio->entry = entrybox;
   gtk_box_pack_start(GTK_BOX(verticalbox),entrybox,TRUE,TRUE,5);
 
-  gtk_signal_connect(GTK_OBJECT(windownombres),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
+  gtk_signal_connect(GTK_OBJECT(windownombres),"destroy",
+		     GTK_SIGNAL_FUNC(StopTheApp),NULL);
 
   button = AddButton1(windownombres,verticalbox,"Continuar",CARGAR,Inicio);
 
@@ -367,8 +361,6 @@ void NOMBRES(GtkWidget *window, gpointer data){
   GtkWidget *row_t, *box_t,*button,*box2,*box3;
   GtkWidget *box,*box4,*label,*label1,*label2,*bigbox;
   char comid1[30], comid2[30];
-  
-
 
   //Guarda los nombres en la memoria
   text = gtk_entry_get_text(GTK_ENTRY(Inicio->Jugador1->entry));
@@ -390,15 +382,19 @@ void NOMBRES(GtkWidget *window, gpointer data){
   if(Inicio->Jugador1->nombre[0]!='\0' && Inicio->Jugador2->nombre[0]!='\0'){
     
     if(strcmp(Inicio->Jugador1->nombre,Inicio->Jugador2->nombre)==0){
-      quick_message("Los nombres de los jugadores no pueden ser iguales",Inicio->ventana);
+      quick_message("Los nombres de los jugadores no pueden ser iguales",
+		    Inicio->ventana);
       return;
     }
     
     //Aqui termina la validacion y se empieza a crear el tablero
     
     window_tab = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    
+    g_signal_connect(window_tab, "destroy", G_CALLBACK(StopTheApp), NULL);
 
-    gtk_signal_connect(GTK_OBJECT(window_tab),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
+    gtk_signal_connect(GTK_OBJECT(window_tab),"destroy",
+		       GTK_SIGNAL_FUNC(StopTheApp),NULL);
     
     box_t = gtk_vbox_new(TRUE, 0);
     
@@ -445,16 +441,12 @@ void NOMBRES(GtkWidget *window, gpointer data){
     button = AddButton1(window_tab,box,">>>",nul,NULL);
     gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,5);
     
-    //gtk_box_pack_start(GTK_BOX(row_t),verticalbox,TRUE,TRUE,5);
-
     bigbox=gtk_hbox_new(FALSE,10);
-
-
-    g_signal_connect(window_tab, "delete-event", G_CALLBACK(delete_event), NULL);
+    
+    g_signal_connect(window_tab, "delete-event", G_CALLBACK(delete_event),
+		     NULL);
     g_signal_connect(window_tab, "destroy", G_CALLBACK(StopTheApp), NULL);
 
-    
-    //gtk_container_add(GTK_CONTAINER(windownombres),verticalbox);
 
     gtk_container_add(GTK_CONTAINER(bigbox), box_t);
     gtk_box_pack_start(GTK_BOX(bigbox),verticalbox,TRUE,TRUE,60);
@@ -493,19 +485,12 @@ void quick_message (gchar *message, GtkWidget *parent) {
 			   G_CALLBACK(gtk_widget_show),GTK_OBJECT(parent));
   gtk_widget_show(button);
 
-  gtk_signal_connect(GTK_OBJECT(window),"destroy",GTK_SIGNAL_FUNC(StopTheApp),NULL);
+  gtk_signal_connect(GTK_OBJECT(window),"destroy",GTK_SIGNAL_FUNC(StopTheApp),
+		     NULL);
   
   gtk_container_add (GTK_CONTAINER (window),box);
   gtk_widget_show_all (window);
 }
-
-
-
-//---------------------------------------------------//***********************************************************//
-//---------------------------------------------------//***********************************************************//
-//---------------------------------------------------//***********************************************************//
-//---------------------------------------------------//***********************************************************//
-//---------------------------------------------------//***********************************************************//
 
 /**
 *  Esta funcion cambia el turno del juagdor en el label
@@ -515,9 +500,7 @@ void quick_message (gchar *message, GtkWidget *parent) {
 *  @param data        Inicio
 *  @return 
 */
-void callback(GtkWidget *widget, gpointer data) {
-  gchar *label;
-  
+void callback(GtkWidget *widget, gpointer data) {  
   Lista *Inicio=(Lista *)data;
   char turn1[30],turn2[30];
   
@@ -570,9 +553,12 @@ GtkWidget *create_pad(gpointer data) {
 
       gtk_button_set_image (GTK_BUTTON (Inicio->buttons[i][j]), img);
       
-      g_signal_connect(Inicio->buttons[i][j], "clicked", G_CALLBACK(callback), Inicio);
-      g_signal_connect(Inicio->buttons[i][j], "clicked",
-		       G_CALLBACK(obtener_coordenada), Inicio);
+      if(Inicio->bandera==0){
+	g_signal_connect(Inicio->buttons[i][j], "clicked", G_CALLBACK(callback),
+			 Inicio);
+	g_signal_connect(Inicio->buttons[i][j], "clicked",
+			 G_CALLBACK(obtener_coordenada), Inicio);
+      }
       
       gtk_box_pack_start(GTK_BOX(row), Inicio->buttons[i][j], FALSE, TRUE, 2);
       gtk_widget_show(Inicio->buttons[i][j]);
@@ -690,18 +676,17 @@ void set_image(int x,int y,gpointer data,GtkWidget *widget){
   }
 }
 
-
+/**
+*  Esta función inserta las imagenes de las fichas
+*  en cada posicion y elimina las fichas en caso de 
+*  que haya una comida 
+*  @author Guillermo Ortega
+*  @param data  estructura general de datos
+*  @return void
+*/
 void borrar_imagen(gpointer data){
   Lista *Inicio=(Lista *)data;
   GdkPixbuf *pix1, *pix2, *pix3;
-
-  for (int j = 0; j < 20; j++){
-    for(int i = 0; i < 20; i++){
-      printf("%d ",Inicio->tablero[i][j]);
-    }
-    printf("\n");
-  }
-  printf("\n");printf("\n");
 
   pix1=gdk_pixbuf_new_from_file("red.png",NULL);
   pix2=gdk_pixbuf_new_from_file("blue.png",NULL);

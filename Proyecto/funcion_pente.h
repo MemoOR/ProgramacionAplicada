@@ -86,7 +86,7 @@ void CARGAR(GtkWidget *window, gpointer data){
 	
 	fscanf(Archivo,"%d,",&temp->X);
 	fscanf(Archivo,"%d\n",&temp->Y);
-	Inicio->turno++;
+
 	temp2=temp;
 	a++;
 	
@@ -143,8 +143,10 @@ void CARGAR(GtkWidget *window, gpointer data){
       gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,50);
       
       box = gtk_hbox_new(TRUE,10);
-      button = AddButton1(window_tab,box,"Reanudar",nul,Inicio);
-      button = AddButton1(window_tab,box,">>>",JugXJug,Inicio);
+      button = AddButton(box,"Reanudar",nul,Inicio);
+
+
+      button = AddButton(box,">>>",JugXJug,Inicio);
       gtk_box_pack_start(GTK_BOX(verticalbox),box,FALSE,FALSE,5);
       
       //gtk_box_pack_start(GTK_BOX(row_t),verticalbox,TRUE,TRUE,5);
@@ -873,10 +875,14 @@ void GUARDAR(GtkWidget *window, gpointer data){
 void nul(){}
 
 
-void JugXJug(gpointer data){
+void JugXJug(GtkWidget *widget,gpointer data){
   Lista *Inicio = (Lista *) data;
   Jugadas *temp;
   int x;
+
+  
+
+  
 
   temp=Inicio->turnos_l;
 
