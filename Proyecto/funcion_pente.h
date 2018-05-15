@@ -136,9 +136,6 @@ void CARGAR(GtkWidget *window, gpointer data){
       box = gtk_hbox_new(TRUE,10);
       button = gtk_button_new_with_label("Reanudar");
       gtk_box_pack_start(GTK_BOX(box),button,FALSE,TRUE,10);
-      g_signal_connect_swapped (G_OBJECT (button), "clicked",
-				G_CALLBACK (gtk_widget_hide),
-				G_OBJECT (window_tab));
       gtk_signal_connect(GTK_OBJECT(button),"clicked",
 			 GTK_SIGNAL_FUNC(nul),Inicio);
      
